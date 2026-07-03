@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active English – World Press Readings</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D0241C;
+    --navy: #1B3A5C;
+    --cream: #F5F0E8;
+    --gold: #FFD166;
+    --green: #06D6A0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 13px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.28);
+  }
+
+  .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+  }
+  .brand span:first-child { color: var(--red); }
+  .brand span:last-child  { color: white; margin-left: 6px; }
+
+  .social-links { display: flex; gap: 9px; }
+
+  .social-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 15px; border-radius: 50px;
+    text-decoration: none; font-size: 13px; font-weight: 800;
+    color: white; transition: transform .18s, opacity .18s;
+    white-space: nowrap;
+  }
+  .social-btn:hover { transform: translateY(-2px); opacity: .85; }
+  .btn-insta { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .btn-yt    { background: #FF0000; }
+
+  /* BAND */
+  .band {
+    background: var(--red);
+    color: white;
+    text-align: center;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .03em;
+  }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px 18px 60px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 6px 28px rgba(27,58,92,0.12);
+    padding: 30px 28px 24px;
+    animation: fadeUp .4s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .card-label {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: .13em; color: var(--red);
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--navy);
+    margin-bottom: 20px; letter-spacing: .03em;
+  }
+
+  /* TEXT */
+  .reading-text {
+    font-size: 18px;
+    line-height: 1.95;
+    color: #1a1a2e;
+  }
+
+  .word {
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 1px 3px;
+    transition: background .15s, color .15s;
+    display: inline;
+    position: relative;
+  }
+  .word.content:hover { background: #e8eef7; color: var(--navy); }
+  .word.func:hover    { background: #f0f0f0; }
+  .word.active        { background: var(--navy) !important; color: white !important; border-radius: 5px; }
+
+  .hint {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+  }
+  .hint b { color: var(--navy); }
+
+
+
+  /* TOOLTIP */
+  .tooltip-box {
+    position: fixed;
+    will-change: left, top;
+    background: var(--navy);
+    color: white;
+    border-radius: 14px;
+    padding: 14px 18px;
+    max-width: 260px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .18s, transform .18s;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.25);
+    font-size: 14px;
+  }
+  .tooltip-box.show { opacity:1; transform:translateY(0); }
+
+  .t-word  { font-size:17px; color: var(--gold); font-weight:800; display:block; margin-bottom:6px; }
+  .t-tr    { display:flex; align-items:flex-start; gap:6px; margin-bottom:4px; }
+  .t-tr .flag { font-size:15px; flex-shrink:0; }
+  .t-tr .val  { font-size:14px; font-weight:700; color:white; }
+  .t-syn   { display:flex; align-items:flex-start; gap:6px; }
+  .t-syn .flag { font-size:15px; flex-shrink:0; }
+  .t-syn .val  { font-size:13px; font-weight:600; color: var(--green); }
+  .t-note  { font-size:11.5px; color:#9ab3cc; margin-top:5px; display:block; font-style:italic; }
+  .t-func-label { font-size:12px; color:#aac8e8; font-weight:600; }
+
+  /* SAVE BUTTON in tooltip */
+  .t-save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: none;
+    background: var(--gold);
+    color: #1a1a2e;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background .15s, transform .12s;
+    pointer-events: all;
+  }
+  .t-save-btn:hover  { background: #ffc933; transform: scale(1.03); }
+  .t-save-btn.saved  { background: var(--green); color: #0a2a20; }
+
+  /* SAVED WORDS SECTION */
+  .saved-section {
+    margin-top: 24px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 6px 28px rgba(27,58,92,0.10);
+    overflow: hidden;
+    display: none;
+  }
+  .saved-section.has-words { display: block; animation: fadeUp .35s ease; }
+
+  .saved-header {
+    background: var(--navy);
+    color: white;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .saved-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .04em;
+  }
+  .saved-header-right { display: flex; gap: 8px; align-items: center; }
+
+  .clear-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .clear-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .word-count {
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 50px;
+    padding: 3px 11px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .saved-list {
+    padding: 16px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .saved-item {
+    background: #f7f9fc;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    border-left: 4px solid var(--navy);
+    animation: fadeUp .25s ease;
+  }
+  .saved-item-body { flex: 1; min-width: 0; }
+  .saved-word { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 3px; }
+  .saved-tr   { font-size: 13px; color: #333; margin-bottom: 2px; }
+  .saved-syn  { font-size: 12px; color: #06a07a; font-weight: 600; }
+  .saved-note { font-size: 11px; color: #888; font-style: italic; margin-top: 2px; }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 6px;
+    transition: color .15s, background .15s;
+    flex-shrink: 0;
+  }
+  .remove-btn:hover { color: var(--red); background: #ffeaea; }
+
+  /* TOOLTIP pointer-events on when shown */
+  .tooltip-box.show { pointer-events: all; }
+
+  /* STATS CARD */
+  .stats-section {
+    margin-top: 24px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 6px 28px rgba(27,58,92,0.10);
+    overflow: hidden;
+    display: none;
+  }
+  .stats-section.visible { display: block; animation: fadeUp .35s ease; }
+
+  .stats-header {
+    background: linear-gradient(135deg, var(--navy), #2a5298);
+    color: white;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stats-header h2 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .stats-reset-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: white; border-radius:50px;
+    padding: 5px 14px; font-size:12px; font-weight:700;
+    font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s;
+  }
+  .stats-reset-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .stats-body { padding: 18px 18px 22px; display:flex; flex-direction:column; gap:14px; }
+
+  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .stat-box {
+    background: #f4f7fc;
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: center;
+    border-top: 4px solid var(--navy);
+  }
+  .stat-box.accent { border-top-color: var(--green); }
+  .stat-box.warn   { border-top-color: var(--gold); }
+  .stat-box.danger { border-top-color: var(--red); }
+
+  .stat-value { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--navy); line-height:1; }
+  .stat-box.accent .stat-value { color: #06a07a; }
+  .stat-box.warn   .stat-value { color: #c9960a; }
+  .stat-box.danger .stat-value { color: var(--red); }
+  .stat-label { font-size:12px; font-weight:700; color:#888; margin-top:4px; }
+
+  .hard-words-box {
+    background: #fff8e1;
+    border-radius: 14px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--gold);
+  }
+  .hard-words-title { font-size:13px; font-weight:800; color:#c9960a; margin-bottom:10px; }
+  .hard-words-list  { display:flex; flex-wrap:wrap; gap:7px; }
+  .hard-chip {
+    background: white;
+    border: 1.5px solid #f0d070;
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size:13px;
+    font-weight:700;
+    color: var(--navy);
+    display:flex; align-items:center; gap:5px;
+  }
+  .hard-chip .miss-count { font-size:11px; color:var(--red); font-weight:800; }
+
+  .streak-box {
+    background: linear-gradient(135deg, #fff3f3, #fff8e1);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1.5px solid #fde8c0;
+  }
+  .streak-icon { font-size:32px; line-height:1; }
+  .streak-text { font-size:13px; font-weight:700; color:#555; }
+  .streak-num  { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--red); }
+  .exercise-section {
+    margin-top: 16px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 6px 28px rgba(27,58,92,0.10);
+    overflow: hidden;
+    display: none;
+  }
+  .exercise-section.visible { display: block; animation: fadeUp .35s ease; }
+  .exercise-header {
+    background: var(--red);
+    color: white;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .exercise-header h2 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .exercise-body { padding: 20px 18px 24px; }
+  .ex-instruction { font-size:13.5px; color:#555; font-weight:600; margin-bottom:18px; text-align:center; }
+
+  .match-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .match-col  { display:flex; flex-direction:column; gap:8px; }
+
+  .match-card {
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    border: 2.5px solid transparent;
+    transition: all .18s;
+    user-select: none;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+  }
+  .match-card.eng { background:#eef2fb; color:var(--navy); border-color:#c5d2ee; }
+  .match-card.tr  { background:#f0faf6; color:#0a5c40; border-color:#a8e6d0; }
+  .match-card.selected { border-color:var(--gold); background:#fff8e1; transform:scale(1.03); box-shadow:0 4px 14px rgba(255,209,102,.35); }
+  .match-card.correct  { border-color:var(--green); background:#d4fdf0; color:#056b44; cursor:default; animation:pop .25s ease; }
+  .match-card.wrong    { border-color:var(--red); background:#fde8e7; animation:shake .3s ease; }
+  .match-card.dimmed   { opacity:.3; cursor:default; pointer-events:none; }
+
+  @keyframes pop   { 0%{transform:scale(1)} 50%{transform:scale(1.07)} 100%{transform:scale(1)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .score-bar { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; font-size:14px; font-weight:700; color:var(--navy); }
+  .score-num { font-size:24px; font-weight:800; color:var(--red); }
+
+  .ex-result { display:none; text-align:center; margin-top:18px; padding:18px; background:#d4fdf0; border-radius:14px; font-size:16px; font-weight:800; color:#056b44; }
+  .ex-result.show { display:block; animation:fadeUp .3s ease; }
+
+  .ex-btn {
+    display:inline-block; margin-top:12px; padding:10px 28px;
+    background:var(--navy); color:white; border:none; border-radius:50px;
+    font-family:'Nunito',sans-serif; font-size:14px; font-weight:800;
+    cursor:pointer; transition:background .15s, transform .12s;
+  }
+  .ex-btn:hover { background:#152d48; transform:scale(1.03); }
+
+  .start-ex-btn {
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    width:calc(100% - 36px); margin:0 18px 18px;
+    padding:12px; background:var(--red); color:white; border:none; border-radius:12px;
+    font-family:'Nunito',sans-serif; font-size:15px; font-weight:800;
+    cursor:pointer; transition:background .15s, transform .12s;
+  }
+  .start-ex-btn:hover { background:#b01e17; transform:scale(1.02); }
+  .start-ex-btn:disabled { background:#ccc; cursor:default; transform:none; }
+
+  footer {
+    background: #0f1923;
+    color: #5a7a99;
+    text-align: center;
+    padding: 14px;
+    font-size: 12px;
+  }
+  footer strong { color: white; }
+
+  @media (max-width:520px) {
+    .reading-text { font-size:16px; }
+    .card { padding:20px 15px 18px; }
+  }
+
+  .tabs-wrapper { margin-bottom: 18px; }
+  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+  .tab-btn { padding: 9px 6px; border-radius: 12px; border: 2px solid var(--navy); background: white; color: var(--navy); font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: background .18s, color .18s, transform .12s, box-shadow .18s; text-align: center; line-height: 1.25; }
+  .tab-btn:hover { background: #e8eef7; transform: translateY(-1px); }
+  .tab-btn.active { background: var(--navy); color: white; box-shadow: 0 4px 14px rgba(27,58,92,0.28); }
+  @media(max-width:400px){ .tab-btn{ font-size:11px; padding:8px 4px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span>ACTIVE</span><span>ENGLISH</span>
+  </div>
+  <div class="social-links">
+    <a class="social-btn btn-insta" href="https://www.instagram.com/aktifingilizceonline" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+      <span>Instagram</span>
+    </a>
+    <a class="social-btn btn-yt" href="https://www.youtube.com/@aktifingilizce" target="_blank">
+      <svg width="17" height="15" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v1.9C.7 15.2 1 17.3 1 17.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 21.5 12 21.5 12 21.5s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3C22.7 19 23 17 23 17s.3-2.1.3-4.2v-1.9C23.3 8.8 23 7 23 7zm-13.5 8.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
+      <span>YouTube</span>
+    </a>
+  </div>
+</header>
+
+<div class="band">📖 Kelimeye tıkla → 🇹🇷 Türkçesi + 🔤 İngilizce eş anlamlısını gör!</div>
+
+<main>
+  <!-- TABS -->
+  <div class="tabs-wrapper">
+    <div class="tabs" id="tabsBar"></div>
+  </div>
+
+  <div class="card" id="readingCard">
+    <div class="card-label" id="cardLabel">Aktif İngilizce – İnteraktif Okuma</div>
+    <div class="card-title" id="cardTitle"></div>
+    <div class="reading-text" id="readingText"></div>
+    <p class="hint">👆 Herhangi bir kelimeye tıkla — <b>Türkçe anlamı</b> ve <b>İngilizce eş anlamlısı</b> çıksın!</p>
+  </div>
+
+  <!-- SAVED WORDS -->
+  <div class="saved-section" id="savedSection">
+    <div class="saved-header">
+      <h2>📚 Kaydettiğim Kelimeler</h2>
+      <div class="saved-header-right">
+        <span class="word-count" id="wordCount">0</span>
+        <button class="clear-btn" onclick="clearAll()">Tümünü Sil</button>
+      </div>
+    </div>
+    <div class="saved-list" id="savedList"></div>
+    <button class="start-ex-btn" id="startExBtn" onclick="startExercise()" disabled>
+      🎯 Eşleştirme Egzersizi Başlat
+    </button>
+  </div>
+
+  <!-- STATS CARD -->
+  <div class="stats-section" id="statsSection">
+    <div class="stats-header">
+      <h2>📊 Kelime Skorum</h2>
+      <button class="stats-reset-btn" onclick="resetStats()">Sıfırla</button>
+    </div>
+    <div class="stats-body">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="statLearned">0</div>
+          <div class="stat-label">Bu hafta kaydedilen kelime</div>
+        </div>
+        <div class="stat-box accent">
+          <div class="stat-value" id="statAccuracy">—</div>
+          <div class="stat-label">Doğru eşleştirme oranı</div>
+        </div>
+        <div class="stat-box warn">
+          <div class="stat-value" id="statAttempts">0</div>
+          <div class="stat-label">Toplam egzersiz turu</div>
+        </div>
+        <div class="stat-box danger">
+          <div class="stat-value" id="statMistakes">0</div>
+          <div class="stat-label">Toplam hatalı deneme</div>
+        </div>
+      </div>
+      <div class="streak-box">
+        <div class="streak-icon">🔥</div>
+        <div>
+          <div class="streak-text">Günlük seri</div>
+          <div class="streak-num" id="statStreak">0 gün</div>
+        </div>
+      </div>
+      <div class="hard-words-box" id="hardWordsBox" style="display:none">
+        <div class="hard-words-title">😅 En zorlandığın kelimeler</div>
+        <div class="hard-words-list" id="hardWordsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXERCISE SECTION -->
+  <div class="exercise-section" id="exerciseSection">
+    <div class="exercise-header">
+      <h2>🎯 Eşleştirme Egzersizi</h2>
+      <button class="ex-btn" style="margin-top:0;padding:6px 16px;font-size:13px;" onclick="closeExercise()">✕ Kapat</button>
+    </div>
+    <div class="exercise-body">
+      <p class="ex-instruction">Sol sütundan bir İngilizce kelime, sağ sütundan Türkçesi'ni seç — eşleştir!</p>
+      <div class="match-grid">
+        <div class="match-col" id="colEng"></div>
+        <div class="match-col" id="colTr"></div>
+      </div>
+      <div class="score-bar">
+        Doğru: <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span>
+      </div>
+      <div class="ex-result" id="exResult">
+        🎉 Tebrikler! Hepsini doğru eşleştirdin!
+        <br><button class="ex-btn" onclick="startExercise()">🔄 Tekrar Oyna</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer><strong>Active English</strong> &copy; 2025 · aktifingilizceonline</footer>
+
+<!-- TOOLTIP -->
+<div class="tooltip-box" id="tooltip">
+  <span class="t-word" id="tWord"></span>
+  <div class="t-tr"><span class="flag">🇹🇷</span><span class="val" id="tTr"></span></div>
+  <div class="t-syn"><span class="flag">🔤</span><span class="val" id="tSyn"></span></div>
+  <span class="t-note" id="tNote"></span>
+  <button class="t-save-btn" id="tSaveBtn" onclick="toggleSave()">⭐ Kaydet</button>
+</div>
+
+<script>
+// ── WORD DATA ─────────────────────────────────────────────────────
+// format: "word": { tr, syn, note, func }
+// func:true = function word (grammar), else content word
+const WORDS = {
+  // ── Function words ─────────────────────────────────────────
+  "the":       { tr:"o / bu (belirli artikel)", syn:"—", func:true },
+  "a":         { tr:"bir (belirsiz artikel)", syn:"—", func:true },
+  "an":        { tr:"bir (ünlü önü artikel)", syn:"—", func:true },
+  "of":        { tr:"'-nın / -in'", syn:"—", func:true },
+  "in":        { tr:"içinde / -de", syn:"within, inside", func:true },
+  "to":        { tr:"'-e / için'", syn:"—", func:true },
+  "and":       { tr:"ve", syn:"—", func:true },
+  "is":        { tr:"olmak (3.tekil)", syn:"—", func:true },
+  "are":       { tr:"olmak (çoğul)", syn:"—", func:true },
+  "was":       { tr:"idi / -dı", syn:"—", func:true },
+  "were":      { tr:"idiler (çoğul geçmiş)", syn:"—", func:true },
+  "be":        { tr:"olmak", syn:"—", func:true },
+  "been":      { tr:"olmuş", syn:"—", func:true },
+  "have":      { tr:"sahip olmak / yardımcı", syn:"—", func:true },
+  "has":       { tr:"sahip (3.tekil)", syn:"—", func:true },
+  "had":       { tr:"sahipti / vardı", syn:"—", func:true },
+  "for":       { tr:"için / boyunca", syn:"—", func:true },
+  "with":      { tr:"ile / birlikte", syn:"—", func:true },
+  "on":        { tr:"üzerinde / -de", syn:"—", func:true },
+  "at":        { tr:"-de / -da", syn:"—", func:true },
+  "by":        { tr:"tarafından", syn:"—", func:true },
+  "from":      { tr:"'-den / -dan'", syn:"—", func:true },
+  "that":      { tr:"o / ki", syn:"which", func:true },
+  "this":      { tr:"bu", syn:"—", func:true },
+  "these":     { tr:"bunlar / bu (çoğul)", syn:"—", func:true },
+  "those":     { tr:"onlar / o (çoğul)", syn:"—", func:true },
+  "it":        { tr:"o (nesne)", syn:"—", func:true },
+  "its":       { tr:"onun (iyelik)", syn:"—", func:true },
+  "he":        { tr:"o (erkek)", syn:"—", func:true },
+  "she":       { tr:"o (kadın)", syn:"—", func:true },
+  "they":      { tr:"onlar", syn:"—", func:true },
+  "we":        { tr:"biz", syn:"—", func:true },
+  "his":       { tr:"onun (erkek iyelik)", syn:"—", func:true },
+  "her":       { tr:"onun (kadın iyelik)", syn:"—", func:true },
+  "our":       { tr:"bizim", syn:"—", func:true },
+  "their":     { tr:"onların", syn:"—", func:true },
+  "who":       { tr:"kim / ki o (kişi)", syn:"—", func:true },
+  "which":     { tr:"hangi / ki o", syn:"that", func:true },
+  "what":      { tr:"ne / hangi", syn:"—", func:true },
+  "how":       { tr:"nasıl", syn:"—", func:true },
+  "not":       { tr:"değil", syn:"—", func:true },
+  "no":        { tr:"hayır / hiç", syn:"—", func:true },
+  "but":       { tr:"ama / fakat", syn:"however, yet", func:true },
+  "or":        { tr:"veya / ya da", syn:"—", func:true },
+  "as":        { tr:"olarak / gibi", syn:"like, such as", func:true },
+  "so":        { tr:"bu yüzden / öylesine", syn:"therefore, thus", func:true },
+  "if":        { tr:"eğer / -se", syn:"provided that", func:true },
+  "than":      { tr:"'-den / -dan' (karşılaştırma)", syn:"—", func:true },
+  "do":        { tr:"yapmak / yardımcı", syn:"—", func:true },
+  "did":       { tr:"yaptı (geçmiş yardımcı)", syn:"—", func:true },
+  "does":      { tr:"yapar (3.tekil)", syn:"—", func:true },
+  "will":      { tr:"'-ecek' (gelecek)", syn:"—", func:true },
+  "would":     { tr:"'-ecekti / -abilirdi'", syn:"—", func:true },
+  "could":     { tr:"yapabilirdi", syn:"—", func:true },
+  "should":    { tr:"yapmalı / -meli", syn:"—", func:true },
+  "may":       { tr:"olabilir", syn:"might", func:true },
+  "might":     { tr:"olabilirdi", syn:"may", func:true },
+  "can":       { tr:"yapabilmek", syn:"—", func:true },
+  "cannot":    { tr:"yapamaz / yapamayız", syn:"can't", func:true },
+  "also":      { tr:"ayrıca / da", syn:"too, as well", func:true },
+  "more":      { tr:"daha fazla", syn:"—", func:true },
+  "most":      { tr:"en çok / çoğu", syn:"—", func:true },
+  "many":      { tr:"birçok / pek çok", syn:"numerous", func:true },
+  "much":      { tr:"çok (miktar)", syn:"greatly", func:true },
+  "some":      { tr:"bazı / biraz", syn:"certain, several", func:true },
+  "any":       { tr:"herhangi / hiç", syn:"—", func:true },
+  "all":       { tr:"tüm / hepsi", syn:"every, whole", func:true },
+  "both":      { tr:"her ikisi de", syn:"—", func:true },
+  "each":      { tr:"her / her biri", syn:"every", func:true },
+  "even":      { tr:"bile / hatta", syn:"—", func:true },
+  "still":     { tr:"hâlâ / yine de", syn:"yet, even now", func:true },
+  "just":      { tr:"sadece / tam", syn:"simply, only", func:true },
+  "very":      { tr:"çok / son derece", syn:"extremely", func:true },
+  "too":       { tr:"de / da / çok fazla", syn:"as well, also", func:true },
+  "only":      { tr:"sadece / yalnızca", syn:"merely, solely", func:true },
+  "now":       { tr:"şimdi / artık", syn:"currently", func:true },
+  "however":   { tr:"ancak / bununla birlikte", syn:"nevertheless, yet", func:true },
+  "although":  { tr:"her ne kadar / -se de", syn:"even though, whilst", func:true },
+  "because":   { tr:"çünkü / nedeniyle", syn:"since, as", func:true },
+  "since":     { tr:"'-den beri / çünkü'", syn:"because, as", func:true },
+  "after":     { tr:"sonra / ardından", syn:"following, subsequent to", func:true },
+  "before":    { tr:"önce / öncesinde", syn:"prior to, earlier than", func:true },
+  "during":    { tr:"boyunca / sırasında", syn:"throughout, in the course of", func:true },
+  "until":     { tr:"'-e kadar / dek'", syn:"till, up to", func:true },
+  "about":     { tr:"hakkında / yaklaşık", syn:"regarding, approximately", func:true },
+  "into":      { tr:"içine", syn:"—", func:true },
+  "over":      { tr:"üzerinde / aşan", syn:"above, across", func:true },
+  "under":     { tr:"altında", syn:"beneath, below", func:true },
+  "between":   { tr:"arasında", syn:"amid", func:true },
+  "through":   { tr:"boyunca / aracılığıyla", syn:"via, across", func:true },
+  "against":   { tr:"karşı / -e karşı", syn:"opposing, versus", func:true },
+  "without":   { tr:"olmaksızın / -siz", syn:"lacking", func:true },
+  "around":    { tr:"yaklaşık / etrafında", syn:"approximately, about", func:true },
+  "along":     { tr:"boyunca", syn:"throughout, across", func:true },
+  "per":       { tr:"başına / her", syn:"each, for every", func:true },
+  "such":      { tr:"böyle / bu tür", syn:"this kind of", func:true },
+  "like":      { tr:"gibi / -e benzer", syn:"such as, similar to", func:true },
+  "other":     { tr:"diğer / başka", syn:"alternative, different", func:true },
+  "own":       { tr:"kendi / sahip olmak", syn:"possess, personal", func:true },
+  "same":      { tr:"aynı", syn:"identical, equal", func:true },
+  "another":   { tr:"bir başka / diğer", syn:"an additional, a further", func:true },
+  "while":     { tr:"iken / oysa", syn:"whereas, during", func:true },
+  "whether":   { tr:"olup olmadığını / -ip -mediğini", syn:"if", func:true },
+  "despite":   { tr:"rağmen", syn:"in spite of", func:true },
+  "though":    { tr:"her ne kadar / yine de", syn:"although, even if", func:true },
+  "unlike":    { tr:"aksine / -den farklı olarak", syn:"in contrast to, contrary to", func:true },
+  "according": { tr:"göre / -e göre", syn:"as per, based on", func:true },
+  "due":       { tr:"nedeniyle / dolayı", syn:"because of, owing to", func:true },
+  "via":       { tr:"aracılığıyla / yoluyla", syn:"through, by means of", func:true },
+  "following": { tr:"ardından / takiben", syn:"after, subsequent to", func:true },
+  "including": { tr:"dahil / kapsayan", syn:"encompassing, comprising", func:true },
+  "regarding": { tr:"ile ilgili / hakkında", syn:"concerning, about", func:true },
+  "among":     { tr:"arasında (üçten fazla)", syn:"amid, within", func:true },
+  "within":    { tr:"içinde / dahilinde", syn:"inside, in", func:true },
+  "beside":    { tr:"yanında / yanı sıra", syn:"next to, alongside", func:true },
+  "hence":     { tr:"bu nedenle / dolayısıyla", syn:"therefore, thus", func:true },
+  "thus":      { tr:"böylece / bu nedenle", syn:"therefore, as a result", func:true },
+  "therefore": { tr:"bu nedenle / dolayısıyla", syn:"thus, hence, as a result", func:true },
+  "nor":       { tr:"ne de", syn:"neither", func:true },
+  "either":    { tr:"her ikisi de / ya da", syn:"—", func:true },
+  "neither":   { tr:"ne biri ne de diğeri", syn:"—", func:true },
+  "said":      { tr:"dedi / belirtti", syn:"stated, noted", func:true },
+  "says":      { tr:"diyor / söylüyor", syn:"states, notes", func:true },
+  "say":       { tr:"demek / söylemek", syn:"state, note", func:true },
+  "make":      { tr:"yapmak / oluşturmak", syn:"create, produce", func:true },
+  "made":      { tr:"yaptı / oluşturdu", syn:"created, produced", func:true },
+  "take":      { tr:"almak / götürmek", syn:"grab, acquire", func:true },
+  "took":      { tr:"aldı / üstlendi", syn:"seized, assumed", func:true },
+  "get":       { tr:"almak / elde etmek", syn:"obtain, acquire", func:true },
+  "got":       { tr:"aldı / elde etti", syn:"obtained, acquired", func:true },
+  "give":      { tr:"vermek", syn:"provide, offer", func:true },
+  "given":     { tr:"verilmiş / göz önüne alındığında", syn:"provided, considering", func:true },
+  "see":       { tr:"görmek", syn:"observe, notice", func:true },
+  "seen":      { tr:"görülmüş / görülen", syn:"observed, witnessed", func:true },
+  "know":      { tr:"bilmek", syn:"understand, recognize", func:true },
+  "known":     { tr:"bilinen / tanınan", syn:"recognized, familiar", func:true },
+  "think":     { tr:"düşünmek", syn:"believe, consider", func:true },
+  "thought":   { tr:"düşündü / düşünce", syn:"believed, considered", func:true },
+  "set":       { tr:"ayarlamak / grup", syn:"establish, arrange", func:true },
+  "put":       { tr:"koymak / yerleştirmek", syn:"place, position", func:true },
+  "left":      { tr:"ayrıldı / sol / bıraktı", syn:"departed, remaining", func:true },
+  "use":       { tr:"kullanmak", syn:"employ, apply", func:true },
+  "used":      { tr:"kullanıldı / kullanışlı", syn:"employed, applied", func:true },
+  "help":      { tr:"yardım etmek", syn:"assist, aid", func:true },
+  "find":      { tr:"bulmak", syn:"discover, locate", func:true },
+  "found":     { tr:"buldu / kurdu", syn:"discovered, established", func:true },
+  "need":      { tr:"ihtiyaç duymak", syn:"require, necessitate", func:true },
+  "needed":    { tr:"ihtiyaç duyuldu", syn:"required, necessary", func:true },
+  "let":       { tr:"izin vermek / bırakmak", syn:"allow, permit", func:true },
+  "keep":      { tr:"tutmak / devam etmek", syn:"maintain, continue", func:true },
+  "kept":      { tr:"tuttu / sakladı", syn:"maintained, retained", func:true },
+  "want":      { tr:"istemek", syn:"desire, wish", func:true },
+  "wanted":    { tr:"istedi", syn:"desired, wished", func:true },
+  "ask":       { tr:"sormak", syn:"inquire, question", func:true },
+  "asked":     { tr:"sordu", syn:"inquired, questioned", func:true },
+  "add":       { tr:"eklemek", syn:"include, append", func:true },
+  "added":     { tr:"ekledi", syn:"included, appended", func:true },
+  "begin":     { tr:"başlamak", syn:"start, commence", func:true },
+  "began":     { tr:"başladı", syn:"started, commenced", func:true },
+  "become":    { tr:"olmak / haline gelmek", syn:"turn into, grow into", func:true },
+  "became":    { tr:"oldu / haline geldi", syn:"turned into, grew into", func:true },
+  "come":      { tr:"gelmek", syn:"arrive, approach", func:true },
+  "came":      { tr:"geldi", syn:"arrived, approached", func:true },
+  "tell":      { tr:"söylemek / anlatmak", syn:"inform, relate", func:true },
+  "told":      { tr:"söyledi / anlattı", syn:"informed, related", func:true },
+  "show":      { tr:"göstermek", syn:"display, demonstrate", func:true },
+  "showed":    { tr:"gösterdi", syn:"displayed, demonstrated", func:true },
+  "start":     { tr:"başlamak / başlatmak", syn:"begin, initiate", func:true },
+  "started":   { tr:"başladı", syn:"began, initiated", func:true },
+  "move":      { tr:"hareket etmek / taşınmak", syn:"shift, transfer", func:true },
+  "moved":     { tr:"hareket etti / taşındı", syn:"shifted, transferred", func:true },
+  "go":        { tr:"gitmek", syn:"proceed, travel", func:true },
+  "goes":      { tr:"gider / gidiyor", syn:"proceeds, travels", func:true },
+  "went":      { tr:"gitti", syn:"proceeded, traveled", func:true },
+  "gone":      { tr:"gitmiş / tükenmiş", syn:"departed, finished", func:true },
+  "going":     { tr:"gidiyor / gitmek üzere", syn:"proceeding, heading", func:true },
+  "come":      { tr:"gelmek", syn:"arrive, approach", func:true },
+  "getting":   { tr:"almak / elde etmek", syn:"obtaining, acquiring", func:true },
+  "being":     { tr:"olmak / varlık", syn:"existing, existence", func:true },
+  "having":    { tr:"sahip olmak / yaparak", syn:"possessing, holding", func:true },
+  "buying":    { tr:"satın almak", syn:"purchasing, acquiring", func:true },
+  "saying":    { tr:"söyleyerek / söylemek", syn:"stating, expressing", func:true },
+  "staying":   { tr:"kalmak", syn:"remaining, residing", func:true },
+  "holding":   { tr:"tutmak / elinde bulundurmak", syn:"keeping, maintaining", func:true },
+  "reducing":  { tr:"azaltmak / düşürmek", syn:"decreasing, lowering", func:true },
+  "growing":   { tr:"büyüyen / artan", syn:"increasing, expanding", func:true },
+  "living":    { tr:"yaşayan / yaşayış", syn:"existing, residing", func:true },
+  "seeing":    { tr:"görerek / görmek", syn:"observing, witnessing", func:true },
+  "feeling":   { tr:"hissetmek / his", syn:"sensing, experiencing", func:true },
+  "calling":   { tr:"çağırmak / aramak", syn:"summoning, urging", func:true },
+  "falling":   { tr:"düşmek", syn:"declining, dropping", func:true },
+  "following": { tr:"takip etmek / ardından", syn:"after, subsequent to", func:true },
+  "telling":   { tr:"söylemek / anlatmak", syn:"informing, describing", func:true },
+  "back":      { tr:"geri / arka", syn:"return, reverse", func:true },
+  "out":       { tr:"dışarı / dışında", syn:"outside, outward", func:true },
+  "well":      { tr:"iyi / ayrıca", syn:"also, in addition", func:true },
+  "far":       { tr:"uzak / çok", syn:"distant, considerably", func:true },
+  "near":      { tr:"yakın / yakınında", syn:"close to, nearby", func:true },
+  "down":      { tr:"aşağı / yere", syn:"—", func:true },
+  "up":        { tr:"yukarı / kadar", syn:"—", func:true },
+  "next":      { tr:"sonraki / yanındaki", syn:"following, adjacent", func:true },
+  "last":      { tr:"son / geçen / sürmek", syn:"final, previous, endure", func:true },
+  "already":   { tr:"zaten / çoktan", syn:"by now, previously", func:true },
+  "soon":      { tr:"yakında / kısa sürede", syn:"shortly, before long", func:true },
+  "always":    { tr:"her zaman / daima", syn:"constantly, forever", func:true },
+  "often":     { tr:"sık sık / çoğunlukla", syn:"frequently, commonly", func:true },
+  "never":     { tr:"hiçbir zaman", syn:"not ever, at no time", func:true },
+  "ever":      { tr:"hiç / her zaman", syn:"at any time", func:true },
+  "rather":    { tr:"oldukça / aksine", syn:"quite, instead", func:true },
+  "instead":   { tr:"yerine / bunun yerine", syn:"in place of, alternatively", func:true },
+  "enough":    { tr:"yeterince / yeter", syn:"sufficiently, adequately", func:true },
+  "above":     { tr:"yukarısında / üzerinde", syn:"over, higher than", func:true },
+  "below":     { tr:"altında / aşağısında", syn:"beneath, under", func:true },
+  "almost":    { tr:"neredeyse / hemen hemen", syn:"nearly, approximately", func:true },
+  "nearly":    { tr:"neredeyse / yaklaşık", syn:"almost, approximately", func:true },
+  "quite":     { tr:"oldukça / epey", syn:"fairly, rather", func:true },
+  "actually":  { tr:"aslında / gerçekte", syn:"in fact, in reality", func:true },
+  "really":    { tr:"gerçekten / çok", syn:"truly, very", func:true },
+  "simply":    { tr:"sadece / basitçe", syn:"merely, just", func:true },
+  "currently": { tr:"şu an / mevcut durumda", syn:"presently, at the moment", func:true },
+  "relatively": { tr:"görece / nispeten", syn:"comparatively, fairly", func:true },
+  "particularly": { tr:"özellikle / bilhassa", syn:"especially, specifically", func:true },
+  "deliberately": { tr:"kasıtlı olarak / bilerek", syn:"intentionally, on purpose", func:true },
+  "beautifully": { tr:"güzel biçimde", syn:"elegantly, wonderfully", func:true },
+  "naturally":  { tr:"doğal olarak / tabii ki", syn:"of course, inherently", func:true },
+  "legally":    { tr:"yasal olarak", syn:"lawfully, officially", func:true },
+  "typically":  { tr:"genellikle / tipik olarak", syn:"usually, normally", func:true },
+
+  // ── Content Words ─────────────────────────────────────────
+
+  // 🏪 Convenience Stores
+  "convenience":  { tr:"kolaylık / pratiklik", syn:"ease, accessibility, practicality" },
+  "stores":       { tr:"mağazalar / dükkanlar", syn:"shops, outlets, retailers" },
+  "provide":      { tr:"sağlamak / sunmak", syn:"offer, supply, give" },
+  "handy":        { tr:"kullanışlı / pratik / yakın", syn:"practical, useful, convenient" },
+  "pop":          { tr:"uğramak / patlamak", syn:"drop in, visit quickly" },
+  "hours":        { tr:"saatler", syn:"time periods" },
+  "day":          { tr:"gün", syn:"daytime, 24-hour period" },
+  "buy":          { tr:"satın almak", syn:"purchase, acquire, obtain" },
+  "things":       { tr:"şeyler", syn:"items, matters, aspects" },
+  "forgotten":    { tr:"unutulmuş / unutulan", syn:"overlooked, neglected, missed" },
+  "time":         { tr:"zaman / dönem", syn:"period, moment, era" },
+  "part-time":    { tr:"yarı zamanlı", syn:"part-time, short-hours", note:"Tam zamanlı değil, kısmi çalışma" },
+  "jobs":         { tr:"işler / meslekler", syn:"occupations, positions, work" },
+  "thousands":    { tr:"binlerce", syn:"many hundreds, vast numbers" },
+  "people":       { tr:"insanlar / halk", syn:"individuals, persons, public" },
+  "convenient":   { tr:"elverişli / uygun", syn:"practical, accessible, easy" },
+  "workers":      { tr:"çalışanlar / işçiler", syn:"employees, staff, laborers" },
+  "overbearing":  { tr:"baskıcı / zorba", syn:"domineering, oppressive, tyrannical" },
+  "unrealistic":  { tr:"gerçekçi olmayan", syn:"impractical, unfeasible, unachievable" },
+  "sales":        { tr:"satışlar / satış", syn:"revenue, transactions, commerce" },
+  "quotas":       { tr:"kotalar / hedefler", syn:"targets, limits, allocations" },
+  "imposed":      { tr:"dayatılmış / empoze edilmiş", syn:"enforced, forced, mandated" },
+  "labour":       { tr:"emek / işgücü / çalışma", syn:"work, workforce, toil" },
+  "rights":       { tr:"haklar", syn:"entitlements, freedoms, protections" },
+  "experts":      { tr:"uzmanlar", syn:"specialists, authorities, professionals" },
+  "bosses":       { tr:"patronlar / amirler", syn:"managers, supervisors, employers" },
+  "stop":         { tr:"durdurmak / önlemek", syn:"halt, cease, prevent" },
+  "deem":         { tr:"saymak / kabul etmek", syn:"consider, regard, judge" },
+  "exploitative": { tr:"sömürücü / istismar edici", syn:"predatory, abusive, unfair" },
+  "practice":     { tr:"uygulama / pratik", syn:"method, procedure, conduct" },
+  "reports":      { tr:"raporlar / haberler", syn:"accounts, findings, news" },
+  "hundreds":     { tr:"yüzlerce", syn:"large numbers, many" },
+  "dollars":      { tr:"dolar(lar)", syn:"money, currency" },
+  "deducted":     { tr:"kesilmiş / düşülmüş", syn:"subtracted, withheld, removed" },
+  "salaries":     { tr:"maaşlar / ücretler", syn:"wages, pay, earnings" },
+  "unsold":       { tr:"satılmamış", syn:"leftover, remaining, unclaimed" },
+  "stock":        { tr:"stok / hisse", syn:"inventory, goods, supply" },
+  "failing":      { tr:"başarısız olmak / yerine getirememek", syn:"not meeting, unable to achieve" },
+  "meet":         { tr:"karşılamak / buluşmak", syn:"fulfill, satisfy, achieve" },
+  "expert":       { tr:"uzman / bilirkişi", syn:"specialist, authority, professional" },
+  "japanese":     { tr:"Japon / Japonca / Japonya'ya ait", syn:"of Japan, Nipponese" },
+  "law":          { tr:"yasa / hukuk / kanun", syn:"regulation, legislation, rule" },
+  "deducting":    { tr:"düşmek / kesmek (maaştan)", syn:"subtracting, withholding, deducting" },
+  "quota's":      { tr:"kotanın / hedefin", syn:"of the quota, of the target" },
+  "worth":        { tr:"değer / değerinde", syn:"value, equivalent, amount" },
+  "products":     { tr:"ürünler / mamüller", syn:"goods, items, merchandise" },
+  "violates":     { tr:"ihlal etmek / çiğnemek", syn:"breaches, breaks, infringes" },
+  "laws":         { tr:"yasalar / kanunlar", syn:"regulations, legislation, rules" },
+  "urges":        { tr:"çağrıda bulunmak / teşvik etmek", syn:"encourages, calls on, pushes" },
+  "headquarters": { tr:"genel merkez / karargah", syn:"main office, base, center" },
+  "chains":       { tr:"zincirler / mağaza zincirleri", syn:"networks, franchises, brands" },
+  "tackle":       { tr:"üstesinden gelmek / ele almak", syn:"address, handle, deal with" },
+  "problem":      { tr:"sorun / problem", syn:"issue, difficulty, challenge" },
+  "part-timers":  { tr:"yarı zamanlı çalışanlar", syn:"part-time staff, casual workers" },
+  "exploited":    { tr:"sömürülen / istismar edilen", syn:"abused, taken advantage of" },
+  "drowning":     { tr:"boğulmak / bunalmak", syn:"overwhelmed, swamped, engulfed" },
+  "lose":         { tr:"kaybetmek", syn:"forfeit, miss out on, give up" },
+  "monthly":      { tr:"aylık", syn:"per month, each month" },
+  "salary":       { tr:"maaş / aylık ücret", syn:"wage, pay, income" },
+  "losses":       { tr:"kayıplar / zararlar", syn:"deficits, shortfalls, damages" },
+  "seasonal":     { tr:"mevsimsel / sezonluk", syn:"periodic, cyclical, time-limited" },
+  "items":        { tr:"öğeler / ürünler", syn:"products, goods, articles" },
+  "valentines":   { tr:"Sevgililer Günü ürünleri", syn:"Valentine's Day goods" },
+  "christmas":    { tr:"Noel", syn:"Christmas holiday, festive season" },
+  "goods":        { tr:"mallar / ürünler", syn:"merchandise, products, items" },
+  "special":      { tr:"özel / hususi", syn:"particular, unique, specific" },
+  "sushi":        { tr:"suşi (Japon yemeği)", syn:"Japanese rice roll, Japanese dish" },
+  "rolls":        { tr:"ruloları / toplar", syn:"rolled items, wraps" },
+
+  // 🇳🇱 Old Holland Tourism
+  "tourist":      { tr:"turist", syn:"visitor, traveler, sightseer" },
+  "leisurely":    { tr:"keyifli / acelesi olmadan", syn:"unhurried, relaxed, at a slow pace" },
+  "wander":       { tr:"dolaşmak / gezmek", syn:"stroll, roam, meander" },
+  "old":          { tr:"eski / yaşlı", syn:"ancient, aged, longstanding" },
+  "towns":        { tr:"kasabalar / şehirler", syn:"villages, cities, settlements" },
+  "villages":     { tr:"köyler", syn:"hamlets, rural communities, settlements" },
+  "sites":        { tr:"yerler / alanlar", syn:"locations, attractions, spots" },
+  "thrill":       { tr:"heyecan / heyecanlandırmak", syn:"excitement, sensation, thrill" },
+  "local":        { tr:"yerel / mahalli", syn:"regional, community, nearby" },
+  "residents":    { tr:"sakinler / ikamet edenler", syn:"inhabitants, locals, dwellers" },
+  "villagers":    { tr:"köylüler", syn:"rural inhabitants, local people" },
+  "area":         { tr:"alan / bölge", syn:"region, zone, district" },
+  "amsterdam":    { tr:"Amsterdam (Hollanda'nın başkenti)", syn:"Dutch capital" },
+  "visitors":     { tr:"ziyaretçiler", syn:"tourists, guests, sightseers" },
+  "traipsing":    { tr:"ortalıkta dolaşmak / gezip durma", syn:"trudging around, wandering, roaming" },
+  "tour":         { tr:"tur / gezi", syn:"excursion, trip, visit" },
+  "guides":       { tr:"rehberler", syn:"leaders, escorts, instructors" },
+  "megaphones":   { tr:"megafonlar / hoparlörler", syn:"loudspeakers, amplifiers" },
+  "disturbing":   { tr:"rahatsız edici / tedirgin edici", syn:"disrupting, bothering, upsetting" },
+  "peace":        { tr:"huzur / barış", syn:"tranquility, quiet, calm" },
+  "together":     { tr:"birlikte", syn:"jointly, as one, collectively" },
+  "companies":    { tr:"şirketler / firmalar", syn:"firms, businesses, corporations" },
+  "create":       { tr:"oluşturmak / yaratmak", syn:"make, establish, develop" },
+  "rules":        { tr:"kurallar / yönetmelikler", syn:"regulations, guidelines, policies" },
+  "conduct":      { tr:"davranış / yönetmek", syn:"behavior, management, action" },
+  "tourists":     { tr:"turistler", syn:"visitors, travelers, sightseers" },
+  "include":      { tr:"içermek / kapsamak", syn:"contain, encompass, cover" },
+  "photographing": { tr:"fotoğraflamak", syn:"taking photos of, shooting, snapping" },
+  "permission":   { tr:"izin / onay", syn:"consent, authorization, approval" },
+  "strolling":    { tr:"yavaşça yürümek / tur atmak", syn:"walking, sauntering, meandering" },
+  "gardens":      { tr:"bahçeler", syn:"yards, green spaces, parks" },
+  "dropping":     { tr:"bırakmak / düşürmek", syn:"littering, leaving, discarding" },
+  "litter":       { tr:"çöp / saçılı çöp", syn:"rubbish, trash, waste" },
+  "code":         { tr:"kod / kural dizisi", syn:"rule set, guideline, standard" },
+  "attempt":      { tr:"girişim / deneme", syn:"effort, try, endeavor" },
+  "deal":         { tr:"ilgilenmek / anlaşmak / fırsatı", syn:"handle, manage, agreement" },
+  "popularity":   { tr:"popülerlik / yaygınlık", syn:"fame, demand, recognition" },
+  "region":       { tr:"bölge / yöre", syn:"area, zone, district" },
+  "tourism":      { tr:"turizm", syn:"travel industry, hospitality" },
+  "booming":      { tr:"hızla büyüyen / patlama yapan", syn:"thriving, surging, flourishing" },
+  "number":       { tr:"sayı / numara", syn:"count, figure, amount" },
+  "expected":     { tr:"beklenen / tahmin edilen", syn:"anticipated, predicted, projected" },
+  "rise":         { tr:"yükselmek / artmak", syn:"increase, grow, climb" },
+  "cent":         { tr:"sent / yüzde (per cent)", syn:"percentage point" },
+  "decade":       { tr:"on yıl / on yıllık dönem", syn:"ten years, period of ten" },
+  "idyllic":      { tr:"çok güzel / pastoral / huzurlu", syn:"peaceful, picturesque, perfect" },
+  "matches":      { tr:"eşleşmek / uymak", syn:"fits, corresponds to, aligns with" },
+  "image":        { tr:"imaj / görüntü", syn:"picture, impression, vision" },
+  "dutch":        { tr:"Hollandalı / Hollandaca", syn:"of the Netherlands, Netherlandish" },
+  "life":         { tr:"yaşam / hayat", syn:"existence, living, daily routine" },
+  "slower":       { tr:"daha yavaş", syn:"at a lower pace, more gradually" },
+  "bygone":       { tr:"geçmiş / artık geçmişte kalan", syn:"past, former, olden", note:"'bygone age' = geçmiş çağ" },
+  "age":          { tr:"yaş / çağ / dönem", syn:"era, period, epoch" },
+  "windmills":    { tr:"yel değirmenleri", syn:"wind turbines (historical), Dutch mills" },
+  "everywhere":   { tr:"her yerde / her tarafta", syn:"all over, throughout, ubiquitously" },
+  "locals":       { tr:"yerliler / yerel halk", syn:"residents, natives, inhabitants" },
+  "preserved":    { tr:"korunmuş / muhafaza edilmiş", syn:"maintained, protected, intact" },
+  "traditional":  { tr:"geleneksel / köklü", syn:"conventional, classic, historic" },
+  "wooden":       { tr:"ahşap / tahta / tahtadan yapılmış", syn:"timber, oak, made of wood" },
+  "houses":       { tr:"evler / konutlar", syn:"homes, dwellings, residences" },
+  "open-air":     { tr:"açık hava", syn:"outdoor, outside, in the open" },
+  "museum":       { tr:"müze", syn:"gallery, exhibition, heritage site" },
+
+  // 🇮🇩 Indonesia Islands
+  "indonesia":    { tr:"Endonezya", syn:"Southeast Asian archipelago nation" },
+  "embarked":     { tr:"girişmek / başlamak", syn:"undertaken, commenced, set out on" },
+  "task":         { tr:"görev / iş", syn:"mission, job, assignment" },
+  "counting":     { tr:"saymak", syn:"enumerating, tallying, recording" },
+  "islands":      { tr:"adalar", syn:"landmasses, isles, atolls" },
+  "order":        { tr:"düzen / emir / amacıyla", syn:"command, arrangement, purpose" },
+  "better":       { tr:"daha iyi / iyileştirmek", syn:"improve, enhance, superior" },
+  "protect":      { tr:"korumak / savunmak", syn:"defend, shield, safeguard" },
+  "territory":    { tr:"toprak / bölge", syn:"land, domain, region" },
+  "marine":       { tr:"deniz (sıfat) / denizcilik", syn:"oceanic, aquatic, nautical" },
+  "resources":    { tr:"kaynaklar", syn:"assets, supplies, reserves" },
+  "hopes":        { tr:"umuyor / ümit ediyor", syn:"expects, anticipates, wishes" },
+  "locate":       { tr:"konumlandırmak / bulmak", syn:"find, identify, pinpoint" },
+  "name":         { tr:"ad / isim / adlandırmak", syn:"title, label, identify" },
+  "additional":   { tr:"ek / ilave", syn:"extra, supplementary, further" },
+  "sovereignty":  { tr:"egemenlik / hakimiyet", syn:"authority, dominion, self-governance" },
+  "fishing":      { tr:"balıkçılık / balık avlama", syn:"angling, trawling, fish farming" },
+  "waters":       { tr:"sular / denizler", syn:"seas, oceans, maritime areas" },
+  "surrounding":  { tr:"çevreleyen / etrafındaki", syn:"neighboring, adjacent, nearby" },
+  "neighbours":   { tr:"komşular / komşu ülkeler", syn:"adjacent countries, bordering nations" },
+  "claim":        { tr:"iddia etmek / talep etmek", syn:"assert, demand, declare" },
+  "government":   { tr:"hükümet / yönetim", syn:"administration, authority, state" },
+  "illegal":      { tr:"yasadışı / kanunsuz", syn:"unlawful, unauthorized, illicit" },
+  "costing":      { tr:"mal olmak / fiyatı olmak", syn:"amounting to, pricing at" },
+  "billions":     { tr:"milyarlarca", syn:"vast sums, enormous amounts" },
+  "revenue":      { tr:"gelir / hasılat", syn:"income, earnings, proceeds" },
+  "year":         { tr:"yıl", syn:"twelve-month period, annual cycle" },
+  "world's":      { tr:"dünyanın", syn:"of the world, globally" },
+  "largest":      { tr:"en büyük", syn:"biggest, greatest, vast" },
+  "archipelago":  { tr:"takımada / ada grubu", syn:"island group, island chain" },
+  "conference":   { tr:"konferans / toplantı", syn:"summit, meeting, forum" },
+  "geographical": { tr:"coğrafi", syn:"territorial, spatial, regional" },
+  "names":        { tr:"adlar / isimler", syn:"titles, labels, designations" },
+  "registered":   { tr:"kayıtlı / tescil edilmiş", syn:"recorded, listed, documented" },
+  "estimated":    { tr:"tahmin edildi", syn:"calculated, approximated, assessed" },
+  "convention":   { tr:"konvansiyon / anlaşma", syn:"agreement, treaty, accord" },
+  "defines":      { tr:"tanımlamak / belirlemek", syn:"establishes, specifies, describes" },
+  "island":       { tr:"ada", syn:"isle, landmass, atoll" },
+  "formed":       { tr:"oluşmuş / biçimlenmiş", syn:"shaped, created, developed" },
+  "land":         { tr:"kara / toprak / arazi", syn:"ground, earth, territory" },
+  "surrounded":   { tr:"çevrilmiş / sarılmış", syn:"enclosed, ringed, encompassed" },
+  "water":        { tr:"su / sular", syn:"liquid, ocean, sea" },
+  "exposed":      { tr:"açığa çıkmış / maruz kalan", syn:"revealed, uncovered, visible" },
+  "tide":         { tr:"gelgit / med-cezir", syn:"tidal flow, sea level, ebb and flow" },
+  "spokeswoman":  { tr:"sözcü (kadın)", syn:"spokesperson, representative, official" },
+  "explained":    { tr:"açıkladı", syn:"described, clarified, stated" },
+  "scale":        { tr:"ölçek / boyut", syn:"size, extent, magnitude" },
+  "team":         { tr:"ekip / takım", syn:"group, crew, unit" },
+  "visit":        { tr:"ziyaret etmek", syn:"go to, call on, attend" },
+  "note":         { tr:"not almak / kaydetmek", syn:"record, write down, document" },
+  "coordinates":  { tr:"koordinatlar / konum bilgileri", syn:"GPS data, location points" },
+  "meaning":      { tr:"anlam / mana", syn:"sense, significance, definition" },
+  "history":      { tr:"tarih / geçmiş", syn:"past, chronicle, heritage" },
+  "describe":     { tr:"tanımlamak / betimlemek", syn:"explain, depict, outline" },
+  "landscape":    { tr:"manzara / peyzaj", syn:"scenery, terrain, view" },
+
+  // ⚔️ Julius Caesar
+  "roman":        { tr:"Roma'ya ait / Roma dönemi", syn:"of Rome, Latin, classical" },
+  "general":      { tr:"general / genel", syn:"commander, military leader, broad" },
+  "dictator":     { tr:"diktatör", syn:"tyrant, autocrat, absolute ruler" },
+  "lived":        { tr:"yaşadı", syn:"existed, resided, spent his life" },
+  "julius":       { tr:"Julius (özel isim)", syn:"—" },
+  "caesar":       { tr:"Sezar / Caesar (özel isim)", syn:"—" },
+  "rome":         { tr:"Roma", syn:"Italian capital, ancient city" },
+  "great":        { tr:"büyük / olağanüstü", syn:"grand, magnificent, important" },
+  "empire":       { tr:"imparatorluk", syn:"realm, dominion, sovereignty" },
+  "began":        { tr:"başladı", syn:"started, commenced, initiated" },
+  "political":    { tr:"siyasi / siyasal", syn:"governmental, civic, state-related" },
+  "career":       { tr:"kariyer / meslek hayatı", syn:"profession, vocation, occupation" },
+  "soon":         { tr:"kısa süre sonra / yakında", syn:"shortly, before long, quickly" },
+  "ladder":       { tr:"merdiven / kariyer basamakları", syn:"hierarchy, ranks, progression" },
+  "elected":      { tr:"seçildi", syn:"chosen, voted in, appointed" },
+  "consul":       { tr:"konsül / büyükelçi", syn:"official, high-ranking magistrate" },
+  "highest":      { tr:"en yüksek / en üst", syn:"top, supreme, greatest" },
+  "public":       { tr:"halka açık / kamuya ait / kamu", syn:"communal, civic, open" },
+  "office":       { tr:"ofis / görev / makam", syn:"position, post, bureau" },
+  "fought":       { tr:"savaştı / mücadele etti", syn:"battled, competed, struggled" },
+  "tribes":       { tr:"kabileler / aşiretler", syn:"clans, groups, peoples" },
+  "western":      { tr:"batılı / batı", syn:"occidental, West-based" },
+  "europe":       { tr:"Avrupa", syn:"European continent" },
+  "soldier":      { tr:"asker / er", syn:"warrior, fighter, combatant" },
+  "meanwhile":    { tr:"bu sırada / bu arada", syn:"at the same time, simultaneously" },
+  "friend":       { tr:"arkadaş / dost", syn:"companion, ally, associate" },
+  "pompey":       { tr:"Pompeius (özel isim)", syn:"Roman general, rival of Caesar" },
+  "rivals":       { tr:"rakipler", syn:"competitors, adversaries, opponents" },
+  "marched":      { tr:"yürüdü / ilerledi", syn:"advanced, walked, moved forward" },
+  "italy":        { tr:"İtalya", syn:"Italian peninsula" },
+  "army":         { tr:"ordu", syn:"military force, troops, armed forces" },
+  "romans":       { tr:"Romalılar", syn:"people of Rome, Roman citizens" },
+  "sided":        { tr:"taraf tutmak / yanında olmak", syn:"supported, backed, aligned with" },
+  "fled":         { tr:"kaçtı / firarda", syn:"escaped, ran away, retreated" },
+  "greece":       { tr:"Yunanistan", syn:"Hellenic Republic, Greek state" },
+  "permanent":    { tr:"kalıcı / sürekli", syn:"lasting, fixed, enduring" },
+  "head":         { tr:"baş / lider / kafa", syn:"leader, chief, top" },
+  "honoured":     { tr:"onurlandırılmış / saygı duyulan", syn:"respected, celebrated, revered" },
+  "powerful":     { tr:"güçlü / nüfuzlu", syn:"strong, influential, dominant" },
+  "created":      { tr:"yarattı / oluşturdu", syn:"made, built, established" },
+  "statues":      { tr:"heykeller", syn:"sculptures, monuments, figures" },
+  "compared":     { tr:"karşılaştırdı / benzetti", syn:"likened, equated, contrasted" },
+  "god":          { tr:"tanrı / ilah", syn:"deity, divine being" },
+  "enemies":      { tr:"düşmanlar", syn:"adversaries, opponents, foes" },
+  "senators":     { tr:"senatörler", syn:"legislators, council members, officials" },
+  "organized":    { tr:"organize etti / düzenledi", syn:"arranged, coordinated, planned" },
+  "murder":       { tr:"cinayet / öldürme", syn:"killing, assassination, homicide" },
+  "meeting":      { tr:"toplantı / buluşma", syn:"gathering, assembly, session" },
+  "senate":       { tr:"senato", syn:"council, legislature, governing body" },
+  "founded":      { tr:"kurdu / temellendi", syn:"established, created, set up" },
+  "julian":       { tr:"Jülyen (takvimle ilgili)", syn:"of Julius Caesar, related to the calendar" },
+  "calendar":     { tr:"takvim", syn:"planner, schedule, almanac" },
+  "parts":        { tr:"parçalar / bölümler", syn:"sections, regions, areas" },
+  "month":        { tr:"ay (zaman birimi)", syn:"30-day period, calendar month" },
+  "quintilis":    { tr:"Quintilis (eski Roma ayı)", syn:"Roman fifth month, later renamed July" },
+  "born":         { tr:"doğmuş / doğdu", syn:"delivered, brought into the world" },
+  "renamed":      { tr:"yeniden adlandırıldı", syn:"rechristened, relabeled, called" },
+  "july":         { tr:"Temmuz (ay)", syn:"seventh month, summer month" },
+  "honour":       { tr:"şeref / onur / onurlandırmak", syn:"respect, tribute, recognition" },
+
+  // ☕ Happiness Café
+  "abu":          { tr:"Ebu (özel isim parçası)", syn:"—" },
+  "dhabi":        { tr:"Dhabi (Abu Dhabi şehrinin parçası)", syn:"—" },
+  "opened":       { tr:"açıldı / açtı", syn:"launched, inaugurated, established" },
+  "café":         { tr:"kafe / kahvehane", syn:"coffee shop, bistro, eatery" },
+  "employees":    { tr:"çalışanlar / personel", syn:"staff, workers, workforce" },
+  "dedicated":    { tr:"adanmış / özel tahsis edilmiş", syn:"devoted, committed, set aside for" },
+  "happiness":    { tr:"mutluluk / sevinç", syn:"joy, contentment, well-being" },
+  "located":      { tr:"konumlanan / bulunan", syn:"situated, positioned, placed" },
+  "ministry":     { tr:"bakanlık", syn:"department, government body, bureau" },
+  "culture":      { tr:"kültür", syn:"society, civilization, heritage" },
+  "knowledge":    { tr:"bilgi / bilgisi", syn:"information, understanding, expertise" },
+  "development":  { tr:"gelişim / kalkınma", syn:"growth, progress, advancement" },
+  "staff":        { tr:"personel / kadro", syn:"employees, workforce, team" },
+  "encouraged":   { tr:"teşvik edilmiş", syn:"motivated, inspired, supported" },
+  "busy":         { tr:"meşgul / yoğun", syn:"hectic, occupied, active" },
+  "days":         { tr:"günler", syn:"daytimes, periods" },
+  "unwind":       { tr:"rahatlama / dinlenme", syn:"relax, de-stress, decompress" },
+  "revitalize":   { tr:"canlandırmak / yeniden güç kazanmak", syn:"restore, rejuvenate, energize" },
+  "rejuvenate":   { tr:"gençleştirmek / tazelemek", syn:"refresh, restore, renew" },
+  "themselves":   { tr:"kendileri / kendilerini", syn:"on their own, by themselves" },
+  "full":         { tr:"dolu / tam", syn:"packed, complete, filled" },
+  "plush":        { tr:"lüks / yumuşak / konforlu", syn:"luxurious, comfortable, soft" },
+  "sofas":        { tr:"kanepeler", syn:"couches, settees, sofas" },
+  "couches":      { tr:"koltuklar / kanepeler", syn:"sofas, lounges, seats" },
+  "specially":    { tr:"özellikle / hususi olarak", syn:"specifically, particularly, especially" },
+  "designed":     { tr:"tasarlanmış", syn:"crafted, planned, created" },
+  "decor":        { tr:"dekorasyon / iç tasarım", syn:"interior design, furnishings, arrangement" },
+  "perfect":      { tr:"mükemmel / kusursuz", syn:"ideal, flawless, excellent" },
+  "ambience":     { tr:"ortam / atmosfer / ambiyans", syn:"atmosphere, feel, mood" },
+  "atmosphere":   { tr:"atmosfer / hava / ortam", syn:"ambience, mood, environment" },
+  "positivity":   { tr:"pozitiflik / olumlu tutum", syn:"optimism, cheerfulness, good vibes" },
+  "garden":       { tr:"bahçe", syn:"yard, green space, park" },
+  "fountain":     { tr:"çeşme / fıskiye", syn:"water feature, jet, spring" },
+  "touch":        { tr:"dokunuş / biraz", syn:"hint, trace, element" },
+  "nature":       { tr:"doğa / yapı / özellik", syn:"environment, natural world, character" },
+  "surroundings": { tr:"çevre / etraf", syn:"environment, vicinity, neighborhood" },
+  "sheikh":       { tr:"Şeyh (unvan)", syn:"ruler, leader (Arab honorific)" },
+  "mubarak":      { tr:"Mübarak (özel isim)", syn:"—" },
+  "minister":     { tr:"bakan", syn:"secretary, official, governmental head" },
+  "positive":     { tr:"olumlu / pozitif", syn:"constructive, beneficial, good" },
+  "environment":  { tr:"ortam / çevre", syn:"setting, surroundings, atmosphere" },
+  "workplace":    { tr:"işyeri / çalışma ortamı", syn:"office, work setting, job environment" },
+  "allow":        { tr:"izin vermek / olanak tanımak", syn:"permit, enable, let" },
+  "release":      { tr:"serbest bırakmak / ortaya çıkarmak", syn:"free, discharge, let out" },
+  "productive":   { tr:"üretken / verimli", syn:"efficient, effective, fruitful" },
+  "energy":       { tr:"enerji / güç", syn:"power, vitality, force" },
+  "improve":      { tr:"geliştirmek / iyileştirmek", syn:"enhance, upgrade, better" },
+  "programme":    { tr:"program / proje", syn:"initiative, project, plan" },
+  "initiated":    { tr:"başlatıldı / hayata geçirildi", syn:"launched, begun, set in motion" },
+  "mohammed":     { tr:"Muhammed (özel isim)", syn:"—" },
+  "bin":          { tr:"bin (oğlu anlamında unvan)", syn:"son of (Arabic honorific)" },
+  "rashid":       { tr:"Raşid (özel isim)", syn:"—" },
+  "vice":         { tr:"yardımcı / yardımcı başkan", syn:"deputy, assistant, second-in-command" },
+  "president":    { tr:"cumhurbaşkanı / başkan", syn:"head of state, leader, chair" },
+  "ruler":        { tr:"hükümdar / yönetici", syn:"leader, sovereign, governor" },
+  "dubai":        { tr:"Dubai (BAE'de şehir)", syn:"Emirate city, UAE financial hub" },
+
+  // 🦷 DIY Dentistry
+  "britain":      { tr:"Britanya / İngiltere", syn:"UK, Great Britain, England" },
+  "repair":       { tr:"onarmak / tamir etmek", syn:"fix, restore, mend" },
+  "teeth":        { tr:"dişler", syn:"dental, choppers (informal)" },
+  "kits":         { tr:"setler / ekipman paketleri", syn:"packages, tools, supplies" },
+  "cost":         { tr:"maliyet / fiyat / mal olmak", syn:"price, expense, charge" },
+  "little":       { tr:"az / biraz / küçük", syn:"small, minimal, slight" },
+  "pounds":       { tr:"pound(lar) / İngiliz sterlini", syn:"sterling, GBP, British currency" },
+  "afford":       { tr:"karşılayabilmek / parasını yetirmek", syn:"pay for, manage, bear the cost" },
+  "dentist":      { tr:"diş hekimi", syn:"dental doctor, dental professional" },
+  "tooth":        { tr:"diş", syn:"dental, molar, incisor" },
+  "filled":       { tr:"doldurulmuş / dolduruldu", syn:"repaired, treated, sealed" },
+  "england":      { tr:"İngiltere", syn:"Britain, UK (England specifically)" },
+  "fifty":        { tr:"elli", syn:"50, half a hundred" },
+  "times":        { tr:"kez / çarpı / dönemler", syn:"occasions, multiplied by" },
+  "higher":       { tr:"daha yüksek / daha fazla", syn:"greater, elevated, increased" },
+  "price":        { tr:"fiyat / bedel", syn:"cost, charge, rate" },
+  "dental":       { tr:"diş / diş hekimliğiyle ilgili", syn:"oral, tooth-related" },
+  "kit":          { tr:"set / malzeme paketi", syn:"package, toolkit, supply set" },
+  "biggest":      { tr:"en büyük", syn:"largest, greatest, top" },
+  "selling":      { tr:"satılan / satış yapan", syn:"popular, marketed, traded" },
+  "called":       { tr:"adlı / çağrılan / arandı", syn:"named, termed, known as" },
+  "dentek":       { tr:"DenTek (ürün markası)", syn:"dental repair kit brand" },
+  "britons":      { tr:"Britanyalılar / İngilizler", syn:"British people, UK citizens" },
+  "bought":       { tr:"satın aldı", syn:"purchased, acquired, obtained" },
+  "britain's":    { tr:"Britanya'nın", syn:"of Britain, UK's" },
+  "health":       { tr:"sağlık", syn:"well-being, fitness, medical state" },
+  "foundation":   { tr:"vakıf / temel / kuruluş", syn:"institution, organization, basis" },
+  "five":         { tr:"beş", syn:"—" },
+  "uk":           { tr:"Birleşik Krallık", syn:"United Kingdom, Britain" },
+  "diy":          { tr:"kendin yap (Do It Yourself)", syn:"self-made, home repair, do-it-yourself" },
+  "dentistry":    { tr:"diş hekimliği", syn:"dental care, oral medicine" },
+  "family":       { tr:"aile / aileye ait", syn:"household, relatives, kin" },
+  "friends":      { tr:"arkadaşlar / dostlar", syn:"companions, acquaintances, pals" },
+
+  // 🎒 Bullying
+  "bullying":     { tr:"zorbalık / taciz", syn:"harassment, intimidation, victimization" },
+  "big":          { tr:"büyük / önemli", syn:"large, significant, major" },
+  "world":        { tr:"dünya", syn:"globe, planet, earth" },
+  "about":        { tr:"hakkında / yaklaşık", syn:"concerning, approximately" },
+  "children":     { tr:"çocuklar", syn:"kids, youngsters, minors" },
+  "stay":         { tr:"kalmak / ikamet etmek", syn:"remain, reside, keep" },
+  "home":         { tr:"ev / yuva", syn:"house, residence, dwelling" },
+  "school":       { tr:"okul", syn:"educational institution, academy" },
+  "bullied":      { tr:"zorbalığa uğramış", syn:"harassed, victimized, intimidated" },
+  "suffer":       { tr:"acı çekmek / zarar görmek", syn:"endure, experience, undergo" },
+  "exam":         { tr:"sınav", syn:"test, assessment, evaluation" },
+  "results":      { tr:"sonuçlar", syn:"outcomes, scores, findings" },
+  "chances":      { tr:"şanslar / fırsatlar", syn:"opportunities, possibilities, odds" },
+  "university":   { tr:"üniversite", syn:"college, higher education, academy" },
+  "good":         { tr:"iyi / güzel", syn:"quality, excellent, favorable" },
+  "serious":      { tr:"ciddi / ağır", syn:"severe, grave, significant" },
+  "illnesses":    { tr:"hastalıklar", syn:"ailments, conditions, sicknesses" },
+  "inability":    { tr:"yetersizlik / yapamamak", syn:"incapacity, failure, lack of ability" },
+  "thing":        { tr:"şey / nesne", syn:"matter, object, item" },
+  "poor":         { tr:"zayıf / yetersiz / fakir", syn:"weak, inadequate, low-quality" },
+  "social":       { tr:"sosyal / toplumsal", syn:"communal, interpersonal, collective" },
+  "skills":       { tr:"beceriler / yetenekler", syn:"abilities, competencies, talents" },
+  "trouble":      { tr:"sorun / sıkıntı", syn:"difficulty, problem, issue" },
+  "job":          { tr:"iş / görev", syn:"work, occupation, position" },
+  "relationship": { tr:"ilişki / bağ", syn:"connection, bond, partnership" },
+  "effort":       { tr:"çaba / gayret", syn:"work, attempt, endeavor" },
+  "teach":        { tr:"öğretmek", syn:"educate, instruct, train" },
+  "communicate":  { tr:"iletişim kurmak", syn:"interact, convey, talk" },
+
+  // 🚗 Airbag Recall
+  "authorities":  { tr:"yetkililer / makamlar", syn:"officials, bodies, powers" },
+  "usa":          { tr:"ABD / Amerika Birleşik Devletleri", syn:"United States, America" },
+  "recalling":    { tr:"geri çağırmak / hatırlamak", syn:"withdrawing, calling back, retrieving" },
+  "record":       { tr:"rekor / kayıt / kaydetmek", syn:"highest ever, best, register" },
+  "million":      { tr:"milyon", syn:"one thousand thousands" },
+  "cars":         { tr:"arabalar / otomobiller", syn:"vehicles, automobiles, autos" },
+  "safety":       { tr:"güvenlik / emniyet", syn:"security, protection, well-being" },
+  "concerns":     { tr:"endişeler / kaygılar", syn:"worries, issues, reservations" },
+  "airbags":      { tr:"hava yastıkları", syn:"safety bags, car safety devices" },
+  "fitted":       { tr:"takılmış / monte edilmiş", syn:"installed, equipped, attached" },
+  "mechanisms":   { tr:"mekanizmalar / düzenekler", syn:"devices, systems, workings" },
+  "inside":       { tr:"içinde / içeride", syn:"within, interior, inner" },
+  "bags":         { tr:"çantalar / torbalar / yastıklar", syn:"pouches, sacks, containers" },
+  "defective":    { tr:"kusurlu / arızalı", syn:"faulty, broken, flawed" },
+  "repaired":     { tr:"onarıldı / tamir edildi", syn:"fixed, restored, mended" },
+  "replaced":     { tr:"değiştirildi / yerine kondu", syn:"substituted, swapped, renewed" },
+  "cause":        { tr:"neden olmak / sebep olmak", syn:"result in, lead to, produce" },
+  "broken":       { tr:"kırık / bozuk", syn:"shattered, damaged, fractured" },
+  "glass":        { tr:"cam / bardak", syn:"crystal, pane, shard" },
+  "shards":       { tr:"kırıklar / parçalar", syn:"fragments, splinters, pieces" },
+  "metal":        { tr:"metal / madeni", syn:"steel, iron, alloy" },
+  "propelled":    { tr:"fırlatıldı / savuruldu", syn:"launched, hurled, thrust" },
+  "face":         { tr:"yüz / yüzey / karşı karşıya gelmek", syn:"visage, surface, confront" },
+  "driver":       { tr:"sürücü / şoför", syn:"motorist, chauffeur, pilot" },
+  "passenger":    { tr:"yolcu", syn:"traveler, rider, occupant" },
+  "eleven":       { tr:"on bir", syn:"11, a dozen minus one" },
+  "different":    { tr:"farklı / değişik", syn:"distinct, various, diverse" },
+  "models":       { tr:"modeller / çeşitler", syn:"types, versions, designs" },
+  "car":          { tr:"araba / otomobil", syn:"vehicle, automobile, auto" },
+  "recall":       { tr:"geri çağırma / hatırlama", syn:"withdrawal, retrieval, remembering" },
+  "constitutes":  { tr:"oluşturur / teşkil eder", syn:"makes up, forms, represents" },
+  "history":      { tr:"tarih / geçmiş", syn:"past, chronicle, heritage" },
+  "follows":      { tr:"takip eder / ardından gelir", syn:"comes after, proceeds" },
+  "string":       { tr:"dizi / seri / ip", syn:"series, sequence, chain" },
+  "recalls":      { tr:"geri çağırmalar", syn:"withdrawals, retrievals" },
+  "manufacturers": { tr:"üreticiler / imalatçılar", syn:"makers, producers, builders" },
+  "toyota":       { tr:"Toyota (Japon araba markası)", syn:"Japanese automaker, car brand" },
+  "honda":        { tr:"Honda (Japon araba markası)", syn:"Japanese automaker, car brand" },
+
+  // 💧 California Water
+  "california's": { tr:"Kaliforniya'nın", syn:"of California" },
+  "system":       { tr:"sistem / düzen", syn:"network, structure, mechanism" },
+  "serves":       { tr:"hizmet eder / sağlar", syn:"provides for, supports, supplies" },
+  "thirty":       { tr:"otuz", syn:"30" },
+  "irrigates":    { tr:"sulama yapmak / sulamak", syn:"waters, hydrates, supplies" },
+  "six":          { tr:"altı", syn:"6" },
+  "acres":        { tr:"dönüm (alan ölçüsü)", syn:"land area, hectares (approx.)" },
+  "farmland":     { tr:"tarım arazisi", syn:"agricultural land, cropland, fields" },
+  "productive":   { tr:"üretken / verimli", syn:"efficient, effective, fruitful" },
+  "difficult":    { tr:"zor / güç", syn:"challenging, hard, complex" },
+  "systems":      { tr:"sistemler", syn:"networks, structures, setups" },
+  "share":        { tr:"pay / hisse / paylaşmak", syn:"portion, part, divide" },
+  "state":        { tr:"devlet / eyalet / durum", syn:"government, region, condition" },
+  "demand":       { tr:"talep / istemek", syn:"request, need, requirement" },
+  "crops":        { tr:"ekinler / tarım ürünleri", syn:"produce, harvest, agricultural goods" },
+  "almond":       { tr:"badem", syn:"nut, tree nut" },
+  "trees":        { tr:"ağaçlar", syn:"plants, timber, flora" },
+  "lot":          { tr:"çok / bir sürü / parsel", syn:"plenty, many, great deal" },
+  "cities":       { tr:"şehirler", syn:"towns, urban centers, metropolises" },
+  "live":         { tr:"yaşamak / canlı", syn:"exist, reside, dwell" },
+  "golf":         { tr:"golf (spor)", syn:"golf course game" },
+  "courses":      { tr:"sahalar / dersler / rotalar", syn:"fields, classes, paths" },
+  "swimming":     { tr:"yüzme / havuz yüzmek", syn:"diving, water sport, bathing" },
+  "pools":        { tr:"havuzlar", syn:"swimming areas, reservoirs" },
+  "wealthy":      { tr:"varlıklı / zengin", syn:"rich, affluent, prosperous" },
+
+  // 🚬 Beijing Smoking Ban
+  "tough":        { tr:"sert / zorlu / kararlı", syn:"strict, harsh, firm" },
+  "ban":          { tr:"yasak / yasaklamak", syn:"prohibition, restriction, bar" },
+  "introduced":   { tr:"tanıtıldı / hayata geçirildi", syn:"launched, established, implemented" },
+  "china's":      { tr:"Çin'in", syn:"of China" },
+  "capital":      { tr:"başkent / sermaye", syn:"main city, financial, primary" },
+  "city":         { tr:"şehir / kent", syn:"town, metropolis, urban center" },
+  "beijing":      { tr:"Pekin (Çin'in başkenti)", syn:"Chinese capital, Peking" },
+  "coincides":    { tr:"çakışmak / aynı zamana denk gelmek", syn:"aligns with, falls on, corresponds" },
+  "tobacco":      { tr:"tütün", syn:"nicotine product, cigarette material" },
+  "welcomed":     { tr:"memnuniyetle karşılandı", syn:"embraced, appreciated, supported" },
+  "organization": { tr:"organizasyon / kuruluş", syn:"institution, body, agency" },
+  "effect":       { tr:"etki / yürürlüğe girmek", syn:"impact, result, force" },
+  "june":         { tr:"Haziran (ay)", syn:"sixth month, early summer" },
+  "toughest":     { tr:"en sert / en katı", syn:"strictest, harshest, most severe" },
+  "anti-smoking": { tr:"sigara karşıtı / sigara yasağı", syn:"no-smoking, anti-tobacco" },
+  "implemented":  { tr:"uygulandı / hayata geçirildi", syn:"enforced, executed, put in place" },
+  "anywhere":     { tr:"her yerde / herhangi bir yerde", syn:"in any place, wherever" },
+  "prohibits":    { tr:"yasaklar", syn:"bans, forbids, prevents" },
+  "indoor":       { tr:"kapalı alan / iç mekan", syn:"inside, interior, enclosed space" },
+  "places":       { tr:"yerler / mekânlar", syn:"locations, venues, spaces" },
+  "transport":    { tr:"ulaşım / taşıma", syn:"transit, travel, conveyance" },
+  "workplaces":   { tr:"işyerleri", syn:"offices, job sites, work environments" },
+  "bans":         { tr:"yasaklar", syn:"prohibits, forbids" },
+  "backed":       { tr:"desteklendi / arkasında", syn:"supported, reinforced, endorsed" },
+  "hefty":        { tr:"ağır / yüksek / büyük", syn:"large, substantial, significant" },
+  "fines":        { tr:"para cezaları", syn:"penalties, charges, sanctions" },
+  "anyone":       { tr:"herhangi biri / kimse", syn:"anybody, whoever" },
+  "lighting":     { tr:"ateşlemek / sigara yakmak", syn:"igniting, starting, setting on fire" },
+  "indoors":      { tr:"iç mekanda / kapalı alanda", syn:"inside, within, in the building" },
+  "owners":       { tr:"sahipler", syn:"proprietors, managers, operators" },
+  "face":         { tr:"yüzleşmek / yüz / karşı karşıya gelmek", syn:"confront, encounter, deal with" },
+  "heavy":        { tr:"ağır / yüksek / ciddi", syn:"severe, substantial, considerable" },
+  "fine":         { tr:"para cezası / iyi / ince", syn:"penalty, good, thin" },
+
+  // 🗻 Mount Fuji Wi-Fi
+  "japan's":      { tr:"Japonya'nın", syn:"of Japan" },
+  "snow-covered": { tr:"karla kaplı", syn:"snow-capped, snowy, white-topped" },
+  "mount":        { tr:"dağ / volkan (önek)", syn:"mountain, peak" },
+  "fuji":         { tr:"Fuji Dağı", syn:"Japan's highest peak" },
+  "famous":       { tr:"ünlü / meşhur", syn:"renowned, well-known, notable" },
+  "mountains":    { tr:"dağlar", syn:"peaks, highlands, ranges" },
+  "highest":      { tr:"en yüksek", syn:"tallest, topmost, supreme" },
+  "place":        { tr:"yer / konum / mekân", syn:"location, spot, position" },
+  "hotspots":     { tr:"wi-fi noktaları / sıcak noktalar", syn:"access points, wireless zones" },
+  "everest":      { tr:"Everest Dağı", syn:"world's highest mountain" },
+  "himalayas":    { tr:"Himalayalar", syn:"mountain range in South Asia" },
+  "hotspot":      { tr:"wi-fi noktası / sıcak nokta", syn:"access point, wireless hub" },
+  "base":         { tr:"taban / üs / kamp", syn:"foundation, camp, bottom" },
+  "camp":         { tr:"kamp", syn:"base station, outpost, stop" },
+  "hundred":      { tr:"yüz", syn:"100, one hundred" },
+  "thousand":     { tr:"bin", syn:"1000, one thousand" },
+  "climb":        { tr:"tırmanmak / çıkmak", syn:"ascend, scale, go up" },
+  "top":          { tr:"tepe / zirve / üst", syn:"summit, peak, apex" },
+  "metre":        { tr:"metre (uzunluk birimi)", syn:"meter, unit of length" },
+  "high":         { tr:"yüksek / yüksekte", syn:"elevated, tall, great altitude" },
+  "tweet":        { tr:"tweet atmak / cıvıldamak", syn:"post, share on Twitter, message" },
+  "experience":   { tr:"deneyim / tecrübe", syn:"encounter, event, knowledge" },
+  "post":         { tr:"paylaşmak / gönderi / posta", syn:"share, publish, upload" },
+  "pictures":     { tr:"fotoğraflar / resimler", syn:"photos, images, shots" },
+  "facebook":     { tr:"Facebook (sosyal medya)", syn:"social network, social media" },
+  "telecommunications": { tr:"telekomünikasyon / iletişim teknolojisi", syn:"communications technology, telecoms" },
+  "company":      { tr:"şirket / firma", syn:"corporation, business, firm" },
+  "ntt":          { tr:"NTT (Japonya Telekom şirketi)", syn:"Japanese telecoms company" },
+  "docomo":       { tr:"DoCoMo (Japon mobil şirketi)", syn:"Japanese mobile operator" },
+  "launched":     { tr:"başlattı / piyasaya sürdü", syn:"introduced, released, initiated" },
+  "free":         { tr:"ücretsiz / özgür", syn:"complimentary, no-cost, unrestricted" },
+  "service":      { tr:"hizmet", syn:"offering, provision, support" },
+  "slopes":       { tr:"yamaçlar", syn:"hillsides, inclines, sides" },
+
+  // ✈️ Cockpit Safety
+  "airlines":     { tr:"havayolları", syn:"carriers, air companies, aviation firms" },
+  "across":       { tr:"boyunca / karşısında", syn:"throughout, spanning, on the other side" },
+  "requirements": { tr:"gereksinimler / şartlar", syn:"conditions, prerequisites, demands" },
+  "crew":         { tr:"ekip / mürettebat", syn:"team, staff, personnel" },
+  "members":      { tr:"üyeler", syn:"participants, people, individuals" },
+  "present":      { tr:"mevcut / sunmak / hediye", syn:"attending, here, available" },
+  "cockpit":      { tr:"kokpit / uçuş kabini", syn:"flight deck, pilot's compartment" },
+  "pilot":        { tr:"pilot / kaptan", syn:"aviator, captain, flyer" },
+  "sensed":       { tr:"hissetti / sezdi", syn:"noticed, felt, perceived" },
+  "something":    { tr:"bir şey / bir şeyler", syn:"a thing, some matter" },
+  "wrong":        { tr:"yanlış / hatalı", syn:"incorrect, mistaken, faulty" },
+  "toilet":       { tr:"tuvalet", syn:"bathroom, lavatory, restroom" },
+  "realized":     { tr:"fark etti / anladı", syn:"understood, noticed, discovered" },
+  "locked":       { tr:"kilitli / kilitlendi", syn:"secured, closed, shut out" },
+  "measure":      { tr:"ölçüm / tedbir / önlem", syn:"step, action, precaution" },
+  "germanwings":  { tr:"Germanwings (Alman havayolu)", syn:"German airline, Lufthansa subsidiary" },
+  "crash":        { tr:"kaza / çarpışma", syn:"collision, impact, disaster" },
+  "french":       { tr:"Fransız / Fransızca", syn:"of France, Gallic" },
+  "alps":         { tr:"Alpler (dağ sırası)", syn:"Alpine mountains, European mountain range" },
+  "died":         { tr:"öldü", syn:"passed away, perished, was killed" },
+  "swift":        { tr:"hızlı / çabuk", syn:"fast, rapid, prompt" },
+  "response":     { tr:"tepki / yanıt", syn:"reaction, reply, answer" },
+  "news":         { tr:"haber / haberler", syn:"information, report, update" },
+  "co-pilot":     { tr:"yardımcı pilot / kopilot", syn:"first officer, second pilot" },
+  "flight":       { tr:"uçuş", syn:"journey, trip, voyage (air)" },
+  "deliberately": { tr:"kasıtlı olarak", syn:"intentionally, on purpose" },
+  "crashed":      { tr:"çöktü / kaza yaptı", syn:"collided, went down, wrecked" },
+  "plane":        { tr:"uçak", syn:"aircraft, jet, airliner" },
+  "locked":       { tr:"kilitledi / kilitlendi", syn:"shut out, secured, blocked" },
+  "aircraft":     { tr:"uçak / hava aracı", syn:"plane, jet, flying vehicle" },
+  "collision":    { tr:"çarpışma / çakışma", syn:"crash, impact, clash" },
+  "course":       { tr:"kurs / rota / yol", syn:"route, path, direction" },
+  "mountain":     { tr:"dağ", syn:"peak, highland, mount" },
+
+  // 👴 Middle Age
+  "past":         { tr:"geçmiş / geçen / sona erdi", syn:"previous, former, ended" },
+  "believed":     { tr:"inandı / inanıldı", syn:"thought, considered, held" },
+  "middle":       { tr:"orta / ortadaki", syn:"central, mid-, halfway" },
+  "end":          { tr:"son / bitmek / son vermek", syn:"finish, conclude, terminate" },
+  "fifty":        { tr:"elli", syn:"50" },
+  "grow":         { tr:"büyümek / gelişmek", syn:"age, develop, expand" },
+  "research":     { tr:"araştırma / çalışma", syn:"study, investigation, inquiry" },
+  "ends":         { tr:"biter / son bulur", syn:"concludes, finishes, terminates" },
+  "sixty":        { tr:"altmış", syn:"60" },
+  "sixty-five":   { tr:"altmış beş", syn:"65" },
+  "reason":       { tr:"sebep / neden / gerekçe", syn:"cause, justification, explanation" },
+  "longer":       { tr:"daha uzun / daha fazla", syn:"for more time, extended" },
+  "factored":     { tr:"hesaba katıldı / göz önüne alındı", syn:"considered, included, accounted for" },
+  "possible":     { tr:"olası / mümkün", syn:"potential, likely, feasible" },
+  "impact":       { tr:"etki / çarpma", syn:"effect, influence, result" },
+  "unable":       { tr:"yapamayan / yetersiz", syn:"incapable, powerless, not able" },
+  "treat":        { tr:"tedavi etmek / ağırlamak", syn:"cure, handle, address" },
+  "infections":   { tr:"enfeksiyonlar / bulaşıcı hastalıklar", syn:"diseases, illnesses, microbe attacks" },
+  "rising":       { tr:"yükselen / artan", syn:"increasing, growing, climbing" },
+  "antibiotic":   { tr:"antibiyotik", syn:"antimicrobial drug, bacteria-fighter" },
+  "resistance":   { tr:"direnç / direniş", syn:"opposition, immunity, defiance" },
+  "increased":    { tr:"arttı / artmış", syn:"grew, rose, expanded" },
+  "numbers":      { tr:"sayılar / adet", syn:"figures, amounts, quantities" },
+  "diabetes":     { tr:"diyabet / şeker hastalığı", syn:"blood sugar disease, Type 2 condition" },
+  "obesity":      { tr:"obezite / şişmanlık", syn:"overweight, excess body fat, heaviness" },
+  "healthier":    { tr:"daha sağlıklı", syn:"fitter, in better health, more well" },
+  "better":       { tr:"daha iyi", syn:"superior, improved, enhanced" },
+  "diets":        { tr:"diyetler / beslenme biçimleri", syn:"nutrition, eating habits, food plans" },
+  "exercise":     { tr:"egzersiz / spor", syn:"physical activity, workout, training" },
+  "money":        { tr:"para / bütçe", syn:"funds, currency, finances" },
+  "nicer":        { tr:"daha güzel / daha iyi", syn:"more pleasant, better, more enjoyable" },
+  "lifestyle":    { tr:"yaşam tarzı", syn:"way of life, habits, daily routine" },
+
+  // 🌿 Dutch Emissions
+  "court":        { tr:"mahkeme / saray", syn:"tribunal, judiciary, legal body" },
+  "holland":      { tr:"Hollanda", syn:"Netherlands, Dutch state" },
+  "ordered":      { tr:"emretti / sipariş verdi", syn:"commanded, directed, instructed" },
+  "cut":          { tr:"azaltmak / kesmek", syn:"reduce, decrease, lower" },
+  "greenhouse":   { tr:"sera / sera gazı", syn:"glass house, climate-related" },
+  "gas":          { tr:"gaz / yakıt", syn:"vapor, emission, fuel" },
+  "emissions":    { tr:"emisyonlar / salımlar", syn:"releases, discharges, pollution" },
+  "quarter":      { tr:"çeyrek / dörtte bir", syn:"25%, one-fourth, fraction" },
+  "result":       { tr:"sonuç / netice", syn:"outcome, effect, consequence" },
+  "continue":     { tr:"devam etmek", syn:"proceed, go on, keep going" },
+  "behind":       { tr:"gerisinde / arkasında", syn:"lagging, below, trailing" },
+  "countries":    { tr:"ülkeler", syn:"nations, states, territories" },
+  "reducing":     { tr:"azaltmak / düşürmek", syn:"decreasing, cutting, lowering" },
+  "judges":       { tr:"yargıçlar / hakimler", syn:"magistrates, justices, arbiters" },
+  "decision":     { tr:"karar", syn:"ruling, verdict, judgment" },
+  "ensure":       { tr:"sağlamak / temin etmek", syn:"guarantee, make certain, secure" },
+  "dutch":        { tr:"Hollandalı / Hollandaca", syn:"of the Netherlands" },
+  "lower":        { tr:"daha düşük / daha az", syn:"reduced, decreased, inferior" },
+  "environmentalists": { tr:"çevreciler", syn:"green activists, conservationists, ecologists" },
+  "hope":         { tr:"umut / ummak", syn:"expectation, aspiration, wish" },
+  "others":       { tr:"diğerleri / başkaları", syn:"different people, alternative groups" },
+  "follow":       { tr:"takip etmek / uymak", syn:"pursue, comply, adhere" },
+  "lead":         { tr:"öncülük etmek / rehberlik / kurşun", syn:"guide, pioneer, direction" },
+  "drive":        { tr:"girişim / sürüş / itki", syn:"initiative, campaign, effort" },
+  "reduce":       { tr:"azaltmak / düşürmek", syn:"decrease, cut, lower" },
+  "member":       { tr:"üye / aza", syn:"participant, affiliate, associate" },
+  "parliament":   { tr:"parlamento / meclis", syn:"legislature, assembly, congress" },
+  "echoed":       { tr:"yankıladı / destekledi / yansıttı", syn:"reflected, reinforced, supported" },
+  "sentiment":    { tr:"duygu / görüş", syn:"feeling, opinion, view" },
+  "historic":     { tr:"tarihi / tarih boyutunda önemli", syn:"landmark, groundbreaking, significant" },
+  "ruling":       { tr:"karar / hüküm", syn:"judgment, verdict, decision" },
+  "reaching":     { tr:"ulaşan / varan", syn:"extending, arriving, getting to" },
+  "consequences": { tr:"sonuçlar / yansımalar", syn:"effects, outcomes, implications" },
+  "whole":        { tr:"bütün / tüm", syn:"entire, complete, all of" },
+
+  // 📡 Electromagnetic Waves
+  "british":      { tr:"İngiliz / Britanyalı", syn:"of Britain, UK-based" },
+  "scientist":    { tr:"bilim insanı", syn:"researcher, expert, scholar" },
+  "named":        { tr:"adlı / adlandırılmış", syn:"called, known as, titled" },
+  "james":        { tr:"James (özel isim)", syn:"—" },
+  "maxwell":      { tr:"Maxwell (özel isim)", syn:"—" },
+  "wrote":        { tr:"yazdı", syn:"authored, composed, penned" },
+  "mathematical": { tr:"matematiksel", syn:"numerical, quantitative, algebraic" },
+  "theory":       { tr:"teori / kuram", syn:"hypothesis, model, principle" },
+  "kind":         { tr:"tür / çeşit / nazik", syn:"type, sort, variety" },
+  "demonstrated": { tr:"gösterdi / ispat etti", syn:"showed, proved, exhibited" },
+  "experiment":   { tr:"deney / deneme", syn:"test, trial, study" },
+  "students":     { tr:"öğrenciler", syn:"pupils, learners, scholars" },
+  "classroom":    { tr:"sınıf / derslik", syn:"room, lecture hall, teaching space" },
+  "asked":        { tr:"sordu", syn:"inquired, questioned, requested" },
+  "electromagnetic": { tr:"elektromanyetik", syn:"magnetic-electric, EM" },
+  "waves":        { tr:"dalgalar", syn:"signals, frequencies, vibrations" },
+  "pass":         { tr:"geçmek / geçiş yapmak", syn:"move through, cross, proceed" },
+  "unseen":       { tr:"görünmez / fark edilmez", syn:"invisible, undetected, imperceptible" },
+  "air":          { tr:"hava / atmosfer", syn:"atmosphere, sky, airspace" },
+  "prove":        { tr:"ispat etmek / kanıtlamak", syn:"demonstrate, verify, confirm" },
+  "idea":         { tr:"fikir / düşünce", syn:"concept, notion, thought" },
+  "german":       { tr:"Alman / Almanca", syn:"of Germany, Germanic" },
+  "heinrich":     { tr:"Heinrich (özel isim)", syn:"—" },
+  "hertz":        { tr:"Hertz (bilim insanı / frekans birimi)", syn:"Hz, frequency unit, scientist" },
+  "tried":        { tr:"denedi / çabaladı", syn:"attempted, endeavored, tested" },
+};
+
+const READINGS = [
+  {
+    tab: "🏪 Convenience",
+    title: "🏪 Convenience Stores & Workers",
+    text: `Convenience stores provide many of us with a handy place to pop into 24 hours a day to buy things we have forgotten or didn't have time to get from other stores. They also provide part-time jobs for thousands of people. However, some convenience stores are not so convenient for their workers. Overbearing and unrealistic sales quotas are being imposed on many part-time workers. Labour rights experts are calling on store bosses to stop what they deem to be an exploitative practice. There are reports of workers having hundreds of dollars deducted from their salaries and having to buy unsold stock for failing to meet the quotas. An expert on Japanese labour law says deducting a quota's worth of unsold products from salaries violates labour laws. He urges the headquarters of convenience store chains to tackle this problem so that part-timers are not exploited. Part-time workers say they are drowning in quotas because they can lose up to 20-30% of their monthly salary. The biggest losses come with quotas for unsold seasonal items like Valentines and Christmas goods and special sushi rolls.`
+  },
+  {
+    tab: "🇳🇱 Old Holland",
+    title: "🇳🇱 Old Holland Tourism",
+    text: `It's great to be a tourist and leisurely wander around old towns and villages seeing the sites, but is it such a thrill for the local residents? Villagers living in the area known as 'Old Holland' outside of Amsterdam have had enough of visitors traipsing around and of tour guides with megaphones disturbing their peace. They have got together with local tour companies to create rules of conduct for tourists. The rules include not photographing residents without permission, not strolling into their gardens and not dropping litter. The new code of conduct is an attempt to deal with the growing popularity of the region. Tourism is booming and the number of tourists is expected to rise by 50 per cent in the next decade. Old Holland is an idyllic area that matches people's image of Dutch life from a slower, bygone age. With its windmills everywhere and locals living in beautifully preserved, traditional wooden houses, it is like an open-air museum.`
+  },
+  {
+    tab: "🇮🇩 Indonesia",
+    title: "🇮🇩 Indonesia's Island Count",
+    text: `Indonesia has embarked on the task of counting its islands in order to better protect its territory and marine resources. It hopes to locate and name an additional 1,700 islands. Indonesia wants to claim sovereignty and fishing rights in the waters surrounding the islands, many of which its neighbours also claim. The Indonesian government says illegal fishing in its waters is costing billions of dollars in lost revenue each year. Indonesia is the world's largest archipelago. At the last UN conference on geographical names in 2012, Indonesia registered 13,466 islands. A law in 1996 estimated that the number of islands was 17,508. The UN Convention on the Law of the Sea defines an island as a naturally formed area of land, surrounded by water, which is still exposed at high tide. An Indonesian spokeswoman has explained the scale of the task the counting team has: We have to visit every one of these islands, and then we note the coordinates, the name, the meaning of the name, and the history of the land and describe the landscape and its geographical history.`
+  },
+  {
+    tab: "⚔️ Julius Caesar",
+    title: "⚔️ Julius Caesar",
+    text: `A Roman general and dictator who lived from 100 BC to 44 BC, Julius Caesar made Rome a great empire. He began his political career in 69 BC and soon moved up the Roman political ladder. In 59 BC he was elected by the consul, the highest public office in old Rome. One year later, he left Rome and fought against many tribes of Western Europe and became a great soldier. Meanwhile, Caesar and his old friend Pompey became rivals. Caesar marched back to Italy with his army. The Romans sided with Caesar and Pompey fled to Greece. Caesar became the permanent head of the government and became even more honoured and powerful. Romans created statues of him and compared him to god. Caesar also had many enemies. In 44 BC, 60 senators organized the murder of Caesar at a meeting of the Senate. Caesar left the world many things. He founded the Julian calendar, which is now used in most parts of the world. The Roman month Quintilis, in which Caesar was born, was renamed July in his honour.`
+  },
+  {
+    tab: "☕ Happiness Café",
+    title: "☕ The Happiness Café",
+    text: `The Abu Dhabi government has opened a special café for its employees that is dedicated to their happiness. The new 'Happiness Café' is located in the headquarters of the Ministry of Culture and Knowledge Development. Staff are being encouraged to take time out from their busy days to unwind so they can revitalize and rejuvenate themselves. The café is full of plush sofas and couches and has a specially designed decor to provide the perfect ambience for feeling happy and create an atmosphere of positivity. It even has its own garden and fountain to add a touch of nature to the surroundings. The café was opened by Sheikh Mubarak, Minister of Culture and Knowledge Development. He hopes it will create a positive environment in the workplace, allow employees to better release their productive energy, and improve the work environment in the ministry. The Happiness Café is part of a programme initiated by Sheikh Mohammed bin Rashid, Vice President and Ruler of Dubai.`
+  },
+  {
+    tab: "🦷 DIY Dentistry",
+    title: "🦷 DIY Dentistry in Britain",
+    text: `People in Britain can now repair their own teeth. The kits can cost as little as five pounds. Many people are buying these kits because they cannot afford to go to the dentist. The cost of having a tooth filled at a dentist in England can cost up to fifty pounds, which is ten times higher than the price of the dental kit. One of the biggest selling products is a kit called DenTek. Britons bought around 250,000 of these last year. According to Britain's Dental Health Foundation, one in five people in the UK would do Do It yourself DIY dentistry on their own teeth or the teeth of family and friends.`
+  },
+  {
+    tab: "🎒 Bullying",
+    title: "🎒 Bullying at School",
+    text: `Bullying is a big problem around the world. In Britain, about 16,000 children stay at home and do not go to school because they are often bullied. They suffer from their exam results and their chances of going to university or getting good jobs. Bullied children may also suffer from other problems. They can have serious illnesses, an inability to focus on one thing for a long time, poor social skills, and have trouble holding down a job or staying in a relationship. They also should make an effort to teach their children how to communicate well with other children.`
+  },
+  {
+    tab: "🚗 Airbag Recall",
+    title: "🚗 USA Airbag Recall",
+    text: `Authorities in the USA are recalling a record 34 million cars because of safety concerns over the airbags fitted in them. Mechanisms inside the bags are defective and thus need to be repaired or replaced. He added that this can cause broken glass or shards of metal to be propelled into the face of the driver or passenger. The bags are fitted into eleven different models of car and the recall constitutes the biggest in the US history. It follows a string of other recalls, from Japanese manufacturers Toyota and Honda.`
+  },
+  {
+    tab: "💧 California Water",
+    title: "💧 California's Water Crisis",
+    text: `California's water system serves over thirty million people and irrigates nearly six million acres of farmland. It is the world's largest and most productive water system. It is also one of the most difficult systems because too many people want their share from the relatively little water the state currently has. There is a great demand for water in the state. Also, some crops, like almond trees, need a lot of water. However, people in the cities say they need water the most to be able to live. There is also demand from California's many golf courses and for the swimming pools of the wealthy people in the state.`
+  },
+  {
+    tab: "🚬 Smoking Ban",
+    title: "🚬 Beijing's Smoking Ban",
+    text: `A tough new smoking ban has been introduced in China's capital city Beijing. It coincides with World No Tobacco Day and was welcomed by the World Health Organization. The ban came into effect on June the 1st and is the toughest anti-smoking law to be implemented anywhere in China. It prohibits smoking in all indoor public places, on public transport and in workplaces. Unlike other bans in China, this one is backed up by hefty fines for anyone lighting up indoors in public. Their owners will face a heavy fine if they do not stop people smoking.`
+  },
+  {
+    tab: "🗻 Mount Fuji",
+    title: "🗻 Mount Fuji Wi-Fi",
+    text: `Japan's snow-covered Mount Fuji is one of the most famous mountains in the world. But Fuji is not the highest place in the world to have Wi-Fi hotspots, because Mount Everest in the Himalayas also has a hotspot at the last base camp, which is 5,148 meters high. Nearly three hundred thousand people climb to the top of the 3,776-metre high Fuji every year. Now they can tweet about their experience or post pictures on Facebook from the top. Japan's biggest telecommunications company, NTT DoCoMo, has launched a free Wi-Fi service along its slopes.`
+  },
+  {
+    tab: "✈️ Cockpit Safety",
+    title: "✈️ Cockpit Safety Rules",
+    text: `Last year, airlines across the world put in place requirements for two crew members to always be present in the cockpit. The pilot sensed something was wrong after he had gone to the toilet and realized he was locked out of the cockpit. The new measure came after the Germanwings crash in the French Alps in which 150 people died. The swift response from airlines was because of the news that the co-pilot of the Germanwings flight had deliberately crashed the plane. Reports say that he locked the pilot out of the cockpit and set the aircraft on a collision course with a mountain.`
+  },
+  {
+    tab: "👴 Middle Age",
+    title: "👴 Redefining Middle Age",
+    text: `For the past 100 years, people have believed middle age to end around fifty years old, which is when we start to grow old. However, new research says middle age now ends at sixty or even sixty-five. The biggest reason for this is that we are living longer. We don't know whether, for example, they factored in the possible impact of being unable to treat infections because of rising antibiotic resistance, or the increased numbers of people with diabetes due to obesity. We are also healthier, we have better diets, we exercise more and we have more money to live a nicer lifestyle.`
+  },
+  {
+    tab: "🌿 Dutch Emissions",
+    title: "🌿 Holland's Emissions Ruling",
+    text: `A court in Holland has ordered the Dutch government to cut greenhouse gas emissions by at least a quarter by 2020. As a result, Holland will continue to be far behind many other countries in reducing greenhouse gas emissions. The judges said the decision was to ensure that the Dutch emissions in 2020 will be at least twenty-five per cent lower than those in 1990. Environmentalists hope others around the world will follow Holland's lead in a global drive to reduce emissions. A Dutch member of the European Parliament echoed this sentiment saying, This historic ruling will have far reaching consequences in the whole world.`
+  },
+  {
+    tab: "📡 EM Waves",
+    title: "📡 Electromagnetic Waves",
+    text: `A British scientist named James Maxwell wrote a mathematical theory about a kind of energy in 1873. When he demonstrated the experiment to his students in a classroom, one of the students asked what use might be made of this discovery. He called this energy electromagnetic waves. His theory said electromagnetic waves could pass unseen through the air. James Maxwell was not able to prove his idea, nor could other scientists prove it until German scientist Heinrich Hertz tried an experiment around 1887.`
+  }
+];
+
+let currentTabIndex = 0;
+
+const tooltip  = document.getElementById('tooltip');
+let activeSpan = null;
+let currentKey = null;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem('ae_saved') || '{}'); } catch(e) {}
+
+function buildHTML(text) {
+  return text.replace(/([a-zA-Z']+(?:-[a-zA-Z]+)*)/g, (match) => {
+    const key = match.toLowerCase();
+    const data = WORDS[key];
+    if (!data) return match;
+    const cls = data.func ? 'word func' : 'word content';
+    return `<span class="${cls}" data-key="${key}">${match}</span>`;
+  });
+}
+
+function switchTab(index) {
+  currentTabIndex = index;
+  // close tooltip & deselect
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+  currentKey = null;
+
+  // update tab buttons
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+
+  const r = READINGS[index];
+  document.getElementById('cardTitle').textContent = r.title;
+  document.getElementById('readingText').innerHTML = buildHTML(r.text);
+
+  // re-bind word clicks
+  bindWordClicks();
+
+  // re-highlight saved words
+  document.querySelectorAll('.word').forEach(sp => {
+    sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : '';
+  });
+}
+
+// Build tab buttons
+const tabsBar = document.getElementById('tabsBar');
+READINGS.forEach((r, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = r.tab;
+  btn.addEventListener('click', () => switchTab(i));
+  tabsBar.appendChild(btn);
+});
+
+// Initial render
+switchTab(0);
+
+// ── SAVED WORDS (localStorage) ────────────────────────────────────
+
+function persistSaved() {
+  try { localStorage.setItem('ae_saved', JSON.stringify(saved)); } catch(e) {}
+}
+
+function renderSaved() {
+  const section = document.getElementById('savedSection');
+  const list    = document.getElementById('savedList');
+  const count   = document.getElementById('wordCount');
+  const keys    = Object.keys(saved);
+  count.textContent = keys.length;
+  section.classList.toggle('has-words', keys.length > 0);
+  // enable exercise button only if 2+ words saved
+  const exBtn = document.getElementById('startExBtn');
+  if (exBtn) {
+    exBtn.disabled = keys.length < 2;
+    exBtn.title = keys.length < 2 ? 'En az 2 kelime kaydetmelisin' : '';
+  }
+  list.innerHTML = '';
+  keys.forEach(key => {
+    const d = saved[key];
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    item.id = 'si-' + key;
+    item.innerHTML = `
+      <div class="saved-item-body">
+        <div class="saved-word">${d.word}</div>
+        <div class="saved-tr">🇹🇷 ${d.tr}</div>
+        <div class="saved-syn">🔤 ${d.syn}</div>
+        ${d.note ? `<div class="saved-note">${d.note}</div>` : ''}
+      </div>
+      <button class="remove-btn" onclick="removeWord('${key}')" title="Sil">✕</button>`;
+    list.appendChild(item);
+  });
+  // update all saved-word highlights in text
+  document.querySelectorAll('.word').forEach(sp => {
+    sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : '';
+  });
+}
+
+function toggleSave() {
+  if (!currentKey) return;
+  const btn = document.getElementById('tSaveBtn');
+  if (saved[currentKey]) {
+    delete saved[currentKey];
+    btn.textContent = '⭐ Kaydet';
+    btn.classList.remove('saved');
+  } else {
+    const d = WORDS[currentKey] || {};
+    saved[currentKey] = {
+      word: document.getElementById('tWord').textContent,
+      tr:   d.tr  || '—',
+      syn:  d.syn || '—',
+      note: d.note || ''
+    };
+    btn.textContent = '✅ Kaydedildi';
+    btn.classList.add('saved');
+    recordSave();
+  }
+  persistSaved();
+  renderSaved();
+}
+
+function removeWord(key) {
+  delete saved[key];
+  persistSaved();
+  renderSaved();
+  if (currentKey === key) {
+    const btn = document.getElementById('tSaveBtn');
+    btn.textContent = '⭐ Kaydet';
+    btn.classList.remove('saved');
+  }
+}
+
+function clearAll() {
+  if (!Object.keys(saved).length) return;
+  if (confirm('Tüm kayıtlı kelimeler silinsin mi?')) {
+    saved = {};
+    persistSaved();
+    renderSaved();
+    document.getElementById('tSaveBtn').textContent = '⭐ Kaydet';
+    document.getElementById('tSaveBtn').classList.remove('saved');
+  }
+}
+
+// ── TOOLTIP ───────────────────────────────────────────────────────
+
+function bindWordClicks() {
+  document.querySelectorAll('.word').forEach(span => {
+    span.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeSpan && activeSpan !== span) activeSpan.classList.remove('active');
+      span.classList.add('active');
+      activeSpan = span;
+
+      currentKey = span.dataset.key;
+      const d = WORDS[currentKey] || {};
+      document.getElementById('tWord').textContent = span.textContent;
+      document.getElementById('tTr').textContent   = d.tr  || '—';
+      document.getElementById('tSyn').textContent  = d.syn || '—';
+      document.getElementById('tNote').textContent = d.note || '';
+      const btn = document.getElementById('tSaveBtn');
+      if (saved[currentKey]) {
+        btn.textContent = '✅ Kaydedildi';
+        btn.classList.add('saved');
+      } else {
+        btn.textContent = '⭐ Kaydet';
+        btn.classList.remove('saved');
+      }
+
+      const rect = span.getBoundingClientRect();
+      const ttW = 260;
+      tooltip.style.position = 'fixed';
+      let left = rect.left + rect.width/2 - ttW/2;
+      if (left < 8) left = 8;
+      if (left + ttW > window.innerWidth - 8) left = window.innerWidth - ttW - 8;
+      tooltip.style.visibility = 'hidden';
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = '0px';
+      tooltip.classList.add('show');
+      const ttH = tooltip.offsetHeight || 130;
+      tooltip.classList.remove('show');
+      tooltip.style.visibility = '';
+      let top = (rect.top - ttH - 12 >= 8) ? rect.top - ttH - 12 : rect.bottom + 10;
+      if (top + ttH > window.innerHeight - 8) top = window.innerHeight - ttH - 8;
+      if (top < 8) top = 8;
+      tooltip.style.left = left + 'px';
+      tooltip.style.top  = top  + 'px';
+      tooltip.classList.add('show');
+    });
+  });
+}
+
+document.addEventListener('click', e => {
+  if (tooltip.contains(e.target)) return;
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+});
+
+// ── STATS ─────────────────────────────────────────────────────────
+let stats = {};
+try { stats = JSON.parse(localStorage.getItem('ae_stats') || '{}'); } catch(e) {}
+// defaults
+stats = Object.assign({ totalSaved:0, attempts:0, totalCorrect:0, totalAnswered:0, mistakes:{}, lastSaveDate:'', streak:0, lastStreakDate:'' }, stats);
+
+function persistStats() {
+  try { localStorage.setItem('ae_stats', JSON.stringify(stats)); } catch(e) {}
+}
+
+function getWeekKey() {
+  const now = new Date();
+  const jan1 = new Date(now.getFullYear(), 0, 1);
+  const week = Math.ceil(((now - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return now.getFullYear() + '-W' + week;
+}
+
+function getTodayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function recordSave() {
+  // count weekly saves
+  const wk = getWeekKey();
+  if (!stats.weekSaves) stats.weekSaves = {};
+  if (!stats.weekSaves[wk]) stats.weekSaves[wk] = 0;
+  stats.weekSaves[wk]++;
+  // streak
+  const today = getTodayKey();
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  if (stats.lastStreakDate === today) {
+    // already counted today
+  } else if (stats.lastStreakDate === yesterday) {
+    stats.streak++;
+    stats.lastStreakDate = today;
+  } else {
+    stats.streak = 1;
+    stats.lastStreakDate = today;
+  }
+  persistStats();
+  renderStats();
+}
+
+function recordAttempt(correct, total, wrongKeys) {
+  stats.attempts++;
+  stats.totalCorrect  += correct;
+  stats.totalAnswered += total;
+  wrongKeys.forEach(k => {
+    stats.mistakes[k] = (stats.mistakes[k] || 0) + 1;
+  });
+  persistStats();
+  renderStats();
+}
+
+function renderStats() {
+  const wk = getWeekKey();
+  const weekCount = (stats.weekSaves && stats.weekSaves[wk]) || Object.keys(saved).length;
+  document.getElementById('statLearned').textContent  = weekCount;
+  document.getElementById('statAttempts').textContent = stats.attempts || 0;
+  document.getElementById('statMistakes').textContent = Object.values(stats.mistakes || {}).reduce((a,b) => a+b, 0);
+  const acc = stats.totalAnswered > 0
+    ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) + '%'
+    : '—';
+  document.getElementById('statAccuracy').textContent = acc;
+  document.getElementById('statStreak').textContent   = (stats.streak || 0) + ' gün';
+
+  // hard words — top 5 most missed that are still in saved
+  const missEntries = Object.entries(stats.mistakes || {})
+    .filter(([k]) => saved[k])
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const hardBox  = document.getElementById('hardWordsBox');
+  const hardList = document.getElementById('hardWordsList');
+  if (missEntries.length) {
+    hardBox.style.display = 'block';
+    hardList.innerHTML = missEntries.map(([k, cnt]) =>
+      `<div class="hard-chip">${saved[k]?.word || k}<span class="miss-count">✕${cnt}</span></div>`
+    ).join('');
+  } else {
+    hardBox.style.display = 'none';
+  }
+
+  document.getElementById('statsSection').classList.toggle('visible', Object.keys(saved).length > 0 || stats.attempts > 0);
+}
+
+function resetStats() {
+  if (!confirm('İstatistikler sıfırlansın mı?')) return;
+  stats = { totalSaved:0, attempts:0, totalCorrect:0, totalAnswered:0, mistakes:{}, streak:0, lastStreakDate:'', weekSaves:{} };
+  persistStats();
+  renderStats();
+}
+
+// ── EXERCISE ──────────────────────────────────────────────────────
+let exSelectedEng = null;
+let exSelectedTr  = null;
+let exCorrect = 0;
+let exTotal   = 0;
+let exWrongKeys = [];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startExercise() {
+  const keys = Object.keys(saved);
+  if (keys.length < 2) return;
+
+  // pick up to 8 random words per round
+  const pick = shuffle([...keys]).slice(0, 8);
+  exCorrect = 0;
+  exTotal   = pick.length;
+  exSelectedEng = null;
+  exSelectedTr  = null;
+  exWrongKeys   = [];
+
+  document.getElementById('scoreNum').textContent   = '0';
+  document.getElementById('scoreTotal').textContent = exTotal;
+  document.getElementById('exResult').classList.remove('show');
+
+  const engWords = shuffle([...pick]);
+  const trWords  = shuffle([...pick]);
+
+  const colEng = document.getElementById('colEng');
+  const colTr  = document.getElementById('colTr');
+  colEng.innerHTML = '';
+  colTr.innerHTML  = '';
+
+  engWords.forEach(key => {
+    const d = saved[key];
+    const card = document.createElement('div');
+    card.className = 'match-card eng';
+    card.dataset.key = key;
+    card.textContent = d.word;
+    card.addEventListener('click', () => selectCard(card, 'eng'));
+    colEng.appendChild(card);
+  });
+
+  trWords.forEach(key => {
+    const d = saved[key];
+    // show only first part of tr (before /)
+    const shortTr = d.tr.split('/')[0].trim();
+    const card = document.createElement('div');
+    card.className = 'match-card tr';
+    card.dataset.key = key;
+    card.textContent = shortTr;
+    card.addEventListener('click', () => selectCard(card, 'tr'));
+    colTr.appendChild(card);
+  });
+
+  document.getElementById('exerciseSection').classList.add('visible');
+  document.getElementById('exerciseSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function selectCard(card, side) {
+  if (card.classList.contains('correct') || card.classList.contains('dimmed')) return;
+
+  if (side === 'eng') {
+    // deselect previous eng selection
+    document.querySelectorAll('.match-card.eng.selected').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    exSelectedEng = card;
+  } else {
+    document.querySelectorAll('.match-card.tr.selected').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    exSelectedTr = card;
+  }
+
+  // if both selected, check match
+  if (exSelectedEng && exSelectedTr) {
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const engKey = exSelectedEng.dataset.key;
+  const trKey  = exSelectedTr.dataset.key;
+
+  if (engKey === trKey) {
+    exSelectedEng.classList.remove('selected');
+    exSelectedTr.classList.remove('selected');
+    exSelectedEng.classList.add('correct', 'dimmed');
+    exSelectedTr.classList.add('correct', 'dimmed');
+    exSelectedEng.innerHTML = '✅ ' + exSelectedEng.textContent;
+    exCorrect++;
+    document.getElementById('scoreNum').textContent = exCorrect;
+    if (exCorrect === exTotal) {
+      recordAttempt(exCorrect, exTotal, exWrongKeys);
+      setTimeout(() => document.getElementById('exResult').classList.add('show'), 400);
+    }
+  } else {
+    exWrongKeys.push(engKey);
+    exSelectedEng.classList.add('wrong');
+    exSelectedTr.classList.add('wrong');
+    const eng = exSelectedEng, tr = exSelectedTr;
+    setTimeout(() => {
+      eng.classList.remove('wrong', 'selected');
+      tr.classList.remove('wrong', 'selected');
+    }, 600);
+  }
+  exSelectedEng = null;
+  exSelectedTr  = null;
+}
+
+function closeExercise() {
+  document.getElementById('exerciseSection').classList.remove('visible');
+}
+
+// init
+renderSaved();
+renderStats();
+</script>
+</body>
+</html>
