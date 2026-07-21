@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active English – Reading Book (1-10)</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#D0241C; --navy:#1B3A5C; --cream:#F5F0E8; --gold:#FFD166; --green:#06D6A0; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:'Nunito',sans-serif; background:var(--cream); min-height:100vh; display:flex; flex-direction:column; }
+  header{ background:var(--navy); padding:13px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 12px rgba(0,0,0,0.28); }
+  .brand{ font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; }
+  .brand span:first-child{ color:var(--red); }
+  .brand span:last-child{ color:white; margin-left:6px; }
+  .social-links{ display:flex; gap:9px; }
+  .social-btn{ display:flex; align-items:center; gap:6px; padding:7px 15px; border-radius:50px; text-decoration:none; font-size:13px; font-weight:800; color:white; transition:transform .18s,opacity .18s; white-space:nowrap; }
+  .social-btn:hover{ transform:translateY(-2px); opacity:.85; }
+  .btn-insta{ background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .btn-yt{ background:#FF0000; }
+  .band{ background:var(--red); color:white; text-align:center; padding:9px 16px; font-size:13px; font-weight:700; letter-spacing:.03em; }
+  main{ flex:1; max-width:820px; width:100%; margin:0 auto; padding:30px 18px 60px; }
+  .card{ background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.12); padding:30px 28px 24px; animation:fadeUp .4s ease; }
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+  .card-label{ font-size:11px; font-weight:800; letter-spacing:.13em; color:var(--red); text-transform:uppercase; margin-bottom:5px; }
+  .card-title{ font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--navy); margin-bottom:20px; letter-spacing:.03em; }
+  .reading-text{ font-size:18px; line-height:1.95; color:#1a1a2e; }
+  .word{ cursor:pointer; border-radius:5px; padding:1px 3px; transition:background .15s,color .15s; display:inline; }
+  .word.content:hover{ background:#e8eef7; color:var(--navy); }
+  .word.func:hover{ background:#f0f0f0; }
+  .word.active{ background:var(--navy)!important; color:white!important; border-radius:5px; }
+  .hint{ margin-top:18px; text-align:center; font-size:13px; color:#999; }
+  .hint b{ color:var(--navy); }
+  .tooltip-box{ position:fixed; will-change:left,top; background:var(--navy); color:white; border-radius:14px; padding:14px 18px; max-width:260px; z-index:9999; pointer-events:none; opacity:0; transform:translateY(8px); transition:opacity .18s,transform .18s; box-shadow:0 10px 32px rgba(0,0,0,0.25); font-size:14px; }
+  .tooltip-box.show{ opacity:1; transform:translateY(0); pointer-events:all; }
+  .t-word{ font-size:17px; color:var(--gold); font-weight:800; display:block; margin-bottom:6px; }
+  .t-tr{ display:flex; align-items:flex-start; gap:6px; margin-bottom:4px; }
+  .t-tr .flag{ font-size:15px; flex-shrink:0; }
+  .t-tr .val{ font-size:14px; font-weight:700; color:white; }
+  .t-syn{ display:flex; align-items:flex-start; gap:6px; }
+  .t-syn .flag{ font-size:15px; flex-shrink:0; }
+  .t-syn .val{ font-size:13px; font-weight:600; color:var(--green); }
+  .t-note{ font-size:11.5px; color:#9ab3cc; margin-top:5px; display:block; font-style:italic; }
+  .t-save-btn{ display:flex; align-items:center; justify-content:center; gap:5px; margin-top:10px; width:100%; padding:7px 10px; border-radius:8px; border:none; background:var(--gold); color:#1a1a2e; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; pointer-events:all; }
+  .t-save-btn:hover{ background:#ffc933; transform:scale(1.03); }
+  .t-save-btn.saved{ background:var(--green); color:#0a2a20; }
+  .saved-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .saved-section.has-words{ display:block; animation:fadeUp .35s ease; }
+  .saved-header{ background:var(--navy); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .saved-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .saved-header-right{ display:flex; gap:8px; align-items:center; }
+  .clear-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .clear-btn:hover{ background:rgba(255,255,255,0.25); }
+  .word-count{ background:var(--gold); color:var(--navy); border-radius:50px; padding:3px 11px; font-size:12px; font-weight:800; }
+  .saved-list{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .saved-item{ background:#f7f9fc; border-radius:12px; padding:12px 16px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; border-left:4px solid var(--navy); animation:fadeUp .25s ease; }
+  .saved-item-body{ flex:1; min-width:0; }
+  .saved-word{ font-size:16px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+  .saved-tr{ font-size:13px; color:#333; margin-bottom:2px; }
+  .saved-syn{ font-size:12px; color:#06a07a; font-weight:600; }
+  .saved-note{ font-size:11px; color:#888; font-style:italic; margin-top:2px; }
+  .remove-btn{ background:none; border:none; cursor:pointer; color:#ccc; font-size:18px; line-height:1; padding:2px 4px; border-radius:6px; transition:color .15s,background .15s; flex-shrink:0; }
+  .remove-btn:hover{ color:var(--red); background:#ffeaea; }
+  .stats-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .stats-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .stats-header{ background:linear-gradient(135deg,var(--navy),#2a5298); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; }
+  .stats-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .stats-reset-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .stats-reset-btn:hover{ background:rgba(255,255,255,0.25); }
+  .stats-body{ padding:18px 18px 22px; display:flex; flex-direction:column; gap:14px; }
+  .stats-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat-box{ background:#f4f7fc; border-radius:14px; padding:14px 16px; text-align:center; border-top:4px solid var(--navy); }
+  .stat-box.accent{ border-top-color:var(--green); }
+  .stat-box.warn{ border-top-color:var(--gold); }
+  .stat-box.danger{ border-top-color:var(--red); }
+  .stat-value{ font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--navy); line-height:1; }
+  .stat-box.accent .stat-value{ color:#06a07a; }
+  .stat-box.warn .stat-value{ color:#c9960a; }
+  .stat-box.danger .stat-value{ color:var(--red); }
+  .stat-label{ font-size:12px; font-weight:700; color:#888; margin-top:4px; }
+  .hard-words-box{ background:#fff8e1; border-radius:14px; padding:14px 16px; border-left:4px solid var(--gold); }
+  .hard-words-title{ font-size:13px; font-weight:800; color:#c9960a; margin-bottom:10px; }
+  .hard-words-list{ display:flex; flex-wrap:wrap; gap:7px; }
+  .hard-chip{ background:white; border:1.5px solid #f0d070; border-radius:50px; padding:4px 12px; font-size:13px; font-weight:700; color:var(--navy); display:flex; align-items:center; gap:5px; }
+  .hard-chip .miss-count{ font-size:11px; color:var(--red); font-weight:800; }
+  .streak-box{ background:linear-gradient(135deg,#fff3f3,#fff8e1); border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px; border:1.5px solid #fde8c0; }
+  .streak-icon{ font-size:32px; line-height:1; }
+  .streak-text{ font-size:13px; font-weight:700; color:#555; }
+  .streak-num{ font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--red); }
+  .exercise-section{ margin-top:16px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .exercise-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .exercise-header{ background:var(--red); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .exercise-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .exercise-body{ padding:20px 18px 24px; }
+  .ex-instruction{ font-size:13.5px; color:#555; font-weight:600; margin-bottom:18px; text-align:center; }
+  .match-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .match-col{ display:flex; flex-direction:column; gap:8px; }
+  .match-card{ padding:11px 14px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; border:2.5px solid transparent; transition:all .18s; user-select:none; min-height:52px; display:flex; align-items:center; justify-content:center; line-height:1.3; }
+  .match-card.eng{ background:#eef2fb; color:var(--navy); border-color:#c5d2ee; }
+  .match-card.tr{ background:#f0faf6; color:#0a5c40; border-color:#a8e6d0; }
+  .match-card.selected{ border-color:var(--gold); background:#fff8e1; transform:scale(1.03); box-shadow:0 4px 14px rgba(255,209,102,.35); }
+  .match-card.correct{ border-color:var(--green); background:#d4fdf0; color:#056b44; cursor:default; animation:pop .25s ease; }
+  .match-card.wrong{ border-color:var(--red); background:#fde8e7; animation:shake .3s ease; }
+  .match-card.dimmed{ opacity:.3; cursor:default; pointer-events:none; }
+  @keyframes pop{ 0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)} }
+  @keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)} }
+  .score-bar{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; font-size:14px; font-weight:700; color:var(--navy); }
+  .score-num{ font-size:24px; font-weight:800; color:var(--red); }
+  .ex-result{ display:none; text-align:center; margin-top:18px; padding:18px; background:#d4fdf0; border-radius:14px; font-size:16px; font-weight:800; color:#056b44; }
+  .ex-result.show{ display:block; animation:fadeUp .3s ease; }
+  .ex-btn{ display:inline-block; margin-top:12px; padding:10px 28px; background:var(--navy); color:white; border:none; border-radius:50px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .ex-btn:hover{ background:#152d48; transform:scale(1.03); }
+  .start-ex-btn{ display:flex; align-items:center; justify-content:center; gap:7px; width:calc(100% - 36px); margin:0 18px 18px; padding:12px; background:var(--red); color:white; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .start-ex-btn:hover{ background:#b01e17; transform:scale(1.02); }
+  .start-ex-btn:disabled{ background:#ccc; cursor:default; transform:none; }
+  footer{ background:#0f1923; color:#5a7a99; text-align:center; padding:14px; font-size:12px; }
+  footer strong{ color:white; }
+  @media(max-width:520px){ .reading-text{font-size:16px} .card{padding:20px 15px 18px} }
+  .tabs-wrapper{ margin-bottom:18px; }
+  .tabs{ display:grid; grid-template-columns:repeat(5,1fr); gap:7px; }
+  .tab-btn{ padding:9px 6px; border-radius:12px; border:2px solid var(--navy); background:white; color:var(--navy); font-family:'Nunito',sans-serif; font-size:12px; font-weight:800; cursor:pointer; transition:background .18s,color .18s,transform .12s,box-shadow .18s; text-align:center; line-height:1.25; }
+  .tab-btn:hover{ background:#e8eef7; transform:translateY(-1px); }
+  .tab-btn.active{ background:var(--navy); color:white; box-shadow:0 4px 14px rgba(27,58,92,0.28); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="data:image/png;base64,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" alt="logo" style="height:40px;width:40px;border-radius:50%;vertical-align:middle;"></div>
+  <div class="social-links">
+    <a class="social-btn btn-insta" href="https://www.instagram.com/aktifingilizceonline" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+      Instagram
+    </a>
+    <a class="social-btn btn-yt" href="https://www.youtube.com/@aktifingilizce" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2.1.3 4.2.3 4.2s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.3 21.6 12 21.6 12 21.6s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.2v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+      YouTube
+    </a>
+  </div>
+</header>
+<div class="band">📖 Kelimeye tıkla → 🇹🇷 Türkçesi + 🔤 İngilizce eş anlamlısını gör!</div>
+<main>
+  <div class="tabs-wrapper"><div class="tabs" id="tabsBar"></div></div>
+  <div class="card">
+    <div class="card-label">Aktif İngilizce – İnteraktif Okuma (Reading 1-10)</div>
+    <div class="card-title" id="cardTitle"></div>
+    <div class="reading-text" id="readingText"></div>
+    <p class="hint">👆 Herhangi bir kelimeye tıkla — <b>Türkçe anlamı</b> ve <b>İngilizce eş anlamlısı</b> çıksın!</p>
+  </div>
+  <div class="saved-section" id="savedSection">
+    <div class="saved-header">
+      <h2>⭐ Kaydettiğin Kelimeler</h2>
+      <div class="saved-header-right">
+        <span class="word-count" id="wordCount">0</span>
+        <button class="clear-btn" onclick="clearAll()">🗑 Hepsini Sil</button>
+      </div>
+    </div>
+    <button class="start-ex-btn" id="startExBtn" onclick="startExercise()" disabled>🎯 Eşleştirme Egzersizi Başlat</button>
+    <div class="saved-list" id="savedList"></div>
+  </div>
+  <div class="stats-section" id="statsSection">
+    <div class="stats-header">
+      <h2>📊 Kelime Skorum</h2>
+      <button class="stats-reset-btn" onclick="resetStats()">Sıfırla</button>
+    </div>
+    <div class="stats-body">
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-value" id="statLearned">0</div><div class="stat-label">Bu hafta kaydedilen kelime</div></div>
+        <div class="stat-box accent"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Doğru eşleştirme oranı</div></div>
+        <div class="stat-box warn"><div class="stat-value" id="statAttempts">0</div><div class="stat-label">Toplam egzersiz turu</div></div>
+        <div class="stat-box danger"><div class="stat-value" id="statMistakes">0</div><div class="stat-label">Toplam hatalı deneme</div></div>
+      </div>
+      <div class="streak-box"><div class="streak-icon">🔥</div><div><div class="streak-text">Günlük seri</div><div class="streak-num" id="statStreak">0 gün</div></div></div>
+      <div class="hard-words-box" id="hardWordsBox" style="display:none">
+        <div class="hard-words-title">😅 En zorlandığın kelimeler</div>
+        <div class="hard-words-list" id="hardWordsList"></div>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-section" id="exerciseSection">
+    <div class="exercise-header">
+      <h2>🎯 Eşleştirme Egzersizi</h2>
+      <button class="ex-btn" style="margin-top:0;padding:6px 16px;font-size:13px;" onclick="closeExercise()">✕ Kapat</button>
+    </div>
+    <div class="exercise-body">
+      <p class="ex-instruction">Sol sütundan bir İngilizce kelime, sağ sütundan Türkçesi'ni seç!</p>
+      <div class="match-grid">
+        <div class="match-col" id="colEng"></div>
+        <div class="match-col" id="colTr"></div>
+      </div>
+      <div class="score-bar">Doğru: <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span></div>
+      <div class="ex-result" id="exResult">🎉 Tebrikler! Hepsini doğru eşleştirdin!<br><button class="ex-btn" onclick="startExercise()">🔄 Tekrar Oyna</button></div>
+    </div>
+  </div>
+</main>
+<footer><strong>Active English</strong> &copy; 2026 · aktifingilizceonline</footer>
+<div class="tooltip-box" id="tooltip">
+  <span class="t-word" id="tWord"></span>
+  <div class="t-tr"><span class="flag">🇹🇷</span><span class="val" id="tTr"></span></div>
+  <div class="t-syn"><span class="flag">🔤</span><span class="val" id="tSyn"></span></div>
+  <span class="t-note" id="tNote"></span>
+  <button class="t-save-btn" id="tSaveBtn" onclick="toggleSave()">⭐ Kaydet</button>
+</div>
+<script>
+const WORDS = {
+  "a":{tr:"bir",syn:"one",func:true},
+  "abandoned":{tr:"terk edilmiş",syn:"given up"},
+  "ability":{tr:"yetenek",syn:"capacity"},
+  "able":{tr:"yapabilen",syn:"capable"},
+  "about":{tr:"hakkında",syn:"concerning",func:true},
+  "above":{tr:"üstünde",syn:"over",func:true},
+  "according":{tr:"göre",syn:"based on",func:true},
+  "accuracy":{tr:"doğruluk",syn:"precision"},
+  "achievements":{tr:"başarılar",syn:"accomplishments"},
+  "across":{tr:"boyunca",syn:"throughout",func:true},
+  "action":{tr:"eylem",syn:"act"},
+  "active":{tr:"aktif",syn:"functioning"},
+  "activity":{tr:"faaliyet",syn:"activeness"},
+  "ad":{tr:"MS (milattan sonra)",syn:"AD",func:true},
+  "adaptations":{tr:"uyarlamalar",syn:"adjustments"},
+  "adapted":{tr:"uyarlanmış",syn:"adjusted"},
+  "added":{tr:"ekledi",syn:"added on"},
+  "additional":{tr:"ek",syn:"extra"},
+  "additionally":{tr:"ayrıca",syn:"furthermore",func:true},
+  "addresses":{tr:"ele alır",syn:"deals with"},
+  "advanced":{tr:"gelişmiş",syn:"sophisticated"},
+  "advancements":{tr:"ilerlemeler",syn:"progress"},
+  "affect":{tr:"etkilemek",syn:"influence"},
+  "afford":{tr:"karşılayabilmek",syn:"bear"},
+  "after":{tr:"sonra",syn:"following",func:true},
+  "again":{tr:"tekrar",syn:"once more",func:true},
+  "aging-related":{tr:"yaşlanmayla ilgili",syn:"age-related"},
+  "ago":{tr:"önce",syn:"in the past",func:true},
+  "ai":{tr:"yapay zeka",syn:"AI"},
+  "ai-generated":{tr:"yapay zeka tarafından oluşturulan",syn:"AI-produced"},
+  "aiming":{tr:"amaçlayarak",syn:"intending"},
+  "aims":{tr:"amaçlıyor",syn:"intends"},
+  "air":{tr:"hava",syn:"atmosphere"},
+  "airplanes":{tr:"uçaklar",syn:"planes"},
+  "alarming":{tr:"endişe verici",syn:"worrying"},
+  "alcohol":{tr:"alkol",syn:"spirits"},
+  "alcor":{tr:"Alcor (kuruluş adı)",syn:"Alcor (organization)"},
+  "all":{tr:"tüm",syn:"every",func:true},
+  "allies":{tr:"müttefikler",syn:"partners"},
+  "allow":{tr:"izin vermek",syn:"permit"},
+  "allowed":{tr:"izin verildi",syn:"permitted"},
+  "allowing":{tr:"izin vererek",syn:"permitting"},
+  "allows":{tr:"izin verir",syn:"permits"},
+  "along":{tr:"boyunca",syn:"together with",func:true},
+  "also":{tr:"ayrıca",syn:"too",func:true},
+  "alter":{tr:"değiştirmek",syn:"modify"},
+  "although":{tr:"-e rağmen",syn:"though",func:true},
+  "always":{tr:"her zaman",syn:"constantly",func:true},
+  "america":{tr:"Amerika",syn:"the US"},
+  "amount":{tr:"miktar",syn:"quantity"},
+  "amounts":{tr:"miktarlar",syn:"quantities"},
+  "an":{tr:"bir",syn:"a",func:true},
+  "ancient":{tr:"antik",syn:"old"},
+  "and":{tr:"ve",syn:"as well as",func:true},
+  "angle":{tr:"açı",syn:"viewpoint"},
+  "anglerfish":{tr:"fener balığı",syn:"deep-sea fish"},
+  "animals":{tr:"hayvanlar",syn:"creatures"},
+  "announced":{tr:"duyurdu",syn:"declared"},
+  "announcing":{tr:"duyurarak",syn:"declaring"},
+  "answer":{tr:"cevap",syn:"reply"},
+  "anti-aging":{tr:"yaşlanma karşıtı",syn:"anti-ageing"},
+  "any":{tr:"herhangi",syn:"some",func:true},
+  "anything":{tr:"herhangi bir şey",syn:"something",func:true},
+  "appear":{tr:"görünmek",syn:"show up"},
+  "appearance":{tr:"görünüm",syn:"look"},
+  "apple":{tr:"Apple",syn:"Apple Inc."},
+  "apple's":{tr:"Apple'ın",syn:"Apple's"},
+  "applications":{tr:"uygulamalar",syn:"uses"},
+  "approaches":{tr:"yaklaşımlar",syn:"methods"},
+  "approval":{tr:"onay",syn:"permission"},
+  "apps":{tr:"uygulamalar",syn:"applications"},
+  "arabian":{tr:"Arap (bölgesine ait)",syn:"of Arabia"},
+  "archaeologists":{tr:"arkeologlar",syn:"archeologists"},
+  "architectural":{tr:"mimari",syn:"architectural"},
+  "arctic":{tr:"Kuzey Kutbu",syn:"the Arctic"},
+  "are":{tr:"-dir(ler)",syn:"to be",func:true},
+  "area":{tr:"bölge",syn:"region"},
+  "areas":{tr:"bölgeler",syn:"regions"},
+  "argue":{tr:"iddia etmek",syn:"claim"},
+  "around":{tr:"etrafında/yaklaşık",syn:"approximately",func:true},
+  "art":{tr:"sanat",syn:"artwork"},
+  "artery":{tr:"ana damar (mecazi)",syn:"lifeline"},
+  "artifacts":{tr:"eserler",syn:"relics"},
+  "artistic":{tr:"sanatsal",syn:"creative"},
+  "as":{tr:"olarak/gibi",syn:"like",func:true},
+  "ash":{tr:"kül",syn:"volcanic ash"},
+  "asset":{tr:"varlık",syn:"holding"},
+  "astonishing":{tr:"şaşırtıcı",syn:"amazing"},
+  "astronauts":{tr:"astronotlar",syn:"space travelers"},
+  "astronomers":{tr:"gökbilimciler",syn:"space scientists"},
+  "at":{tr:"-de/-da",syn:"in",func:true},
+  "atlantic":{tr:"Atlantik",syn:"the Atlantic Ocean"},
+  "atmosphere":{tr:"atmosfer",syn:"air layer"},
+  "attract":{tr:"çekmek",syn:"draw"},
+  "available":{tr:"mevcut",syn:"accessible"},
+  "avoid":{tr:"kaçınmak",syn:"evade"},
+  "aware":{tr:"farkında",syn:"conscious"},
+  "babies":{tr:"bebekler",syn:"infants"},
+  "back":{tr:"geri",syn:"return",func:true},
+  "bacteria":{tr:"bakteri",syn:"microbes"},
+  "balancing":{tr:"dengelemek",syn:"weighing"},
+  "bank":{tr:"banka",syn:"financial institution"},
+  "bans":{tr:"yasaklıyor",syn:"prohibits"},
+  "barrier":{tr:"engel",syn:"obstacle"},
+  "bath":{tr:"banyo",syn:"bathing"},
+  "bathwater":{tr:"banyo suyu",syn:"bath water"},
+  "bc":{tr:"MÖ",syn:"BC",func:true},
+  "bce":{tr:"MÖ",syn:"BCE",func:true},
+  "be":{tr:"olmak",syn:"exist",func:true},
+  "beautiful":{tr:"güzel",syn:"lovely"},
+  "became":{tr:"oldu",syn:"turned into",func:true},
+  "because":{tr:"çünkü",syn:"since",func:true},
+  "become":{tr:"olmak",syn:"turn into",func:true},
+  "been":{tr:"olmuş",syn:"(past participle of be)",func:true},
+  "before":{tr:"önce",syn:"prior to",func:true},
+  "begin":{tr:"başlamak",syn:"start"},
+  "beginning":{tr:"başlangıç",syn:"start"},
+  "being":{tr:"olma",syn:"existing",func:true},
+  "beliefs":{tr:"inançlar",syn:"convictions"},
+  "believe":{tr:"inanmak",syn:"think"},
+  "below":{tr:"altında",syn:"beneath",func:true},
+  "bends":{tr:"bükülür",syn:"curves"},
+  "berlin":{tr:"Berlin",syn:"Berlin"},
+  "berliners":{tr:"Berlinliler",syn:"people of Berlin"},
+  "best":{tr:"en iyi",syn:"finest"},
+  "beta":{tr:"beta (test sürümü)",syn:"trial version"},
+  "between":{tr:"arasında",syn:"among",func:true},
+  "bible":{tr:"İncil",syn:"the Bible"},
+  "biblical":{tr:"İncil'e ait",syn:"scriptural"},
+  "biggest":{tr:"en büyük",syn:"largest"},
+  "biofilms":{tr:"biyofilmler",syn:"bacterial layers"},
+  "biologists":{tr:"biyologlar",syn:"biological scientists"},
+  "bioluminescence":{tr:"biyoluminesans (canlı ışıması)",syn:"bio-light production"},
+  "bioluminescent":{tr:"biyoluminesan (ışık üreten)",syn:"light-producing"},
+  "bioviva":{tr:"BioViva (şirket adı)",syn:"BioViva (company)"},
+  "blue":{tr:"mavi",syn:"azure"},
+  "bodies":{tr:"bedenler",syn:"physical forms"},
+  "bodily":{tr:"bedensel",syn:"physical"},
+  "bond":{tr:"tahvil",syn:"bond (finance)"},
+  "bonds":{tr:"tahviller",syn:"bonds (finance)"},
+  "books":{tr:"kitaplar",syn:"volumes"},
+  "borders":{tr:"sınırlar",syn:"boundaries"},
+  "born":{tr:"doğmuş",syn:"brought into being"},
+  "borrowing":{tr:"borçlanma",syn:"lending"},
+  "boss":{tr:"patron",syn:"chief"},
+  "both":{tr:"her ikisi de",syn:"the two",func:true},
+  "bought":{tr:"satın aldı",syn:"purchased"},
+  "brain":{tr:"beyin",syn:"mind organ"},
+  "bravery":{tr:"cesaret",syn:"courage"},
+  "breathtaking":{tr:"nefes kesici",syn:"stunning"},
+  "brings":{tr:"getirir",syn:"brings about"},
+  "broader":{tr:"daha geniş",syn:"wider"},
+  "buildings":{tr:"binalar",syn:"structures"},
+  "built":{tr:"inşa edildi",syn:"constructed"},
+  "burial":{tr:"gömme/defin",syn:"interment"},
+  "buried":{tr:"gömüldü",syn:"covered"},
+  "but":{tr:"ama",syn:"however",func:true},
+  "by":{tr:"tarafından",syn:"via",func:true},
+  "cafes":{tr:"kafeler",syn:"coffee shops"},
+  "called":{tr:"adlandırıldı",syn:"named"},
+  "camels":{tr:"develer",syn:"dromedaries"},
+  "camels'":{tr:"develerin",syn:"camels'"},
+  "cameras":{tr:"kameralar",syn:"cams"},
+  "can":{tr:"-ebilmek",syn:"be able to",func:true},
+  "canal":{tr:"kanal",syn:"waterway"},
+  "cancer":{tr:"kanser",syn:"cancer (disease)"},
+  "cannot":{tr:"yapamaz",syn:"can not",func:true},
+  "canon":{tr:"kanon (kabul edilen metinler)",syn:"canon"},
+  "capitalist":{tr:"kapitalist",syn:"market-based"},
+  "capture":{tr:"yakalamak",syn:"capture (image)"},
+  "captured":{tr:"yakaladı",syn:"recorded"},
+  "carbon":{tr:"karbon",syn:"carbon (element)"},
+  "carrying":{tr:"taşıyarak",syn:"transporting"},
+  "cases":{tr:"durumlar",syn:"instances"},
+  "catastrophic":{tr:"yıkıcı",syn:"disastrous"},
+  "caused":{tr:"neden oldu",syn:"brought about"},
+  "causing":{tr:"neden olarak",syn:"bringing about"},
+  "caves":{tr:"mağaralar",syn:"caverns"},
+  "center":{tr:"merkez",syn:"centre"},
+  "central":{tr:"merkezi",syn:"main"},
+  "centuries":{tr:"yüzyıllar",syn:"hundreds of years"},
+  "century":{tr:"yüzyıl",syn:"hundred years"},
+  "chain":{tr:"zincir",syn:"chain (business)"},
+  "challenge":{tr:"meydan okuma/zorluk",syn:"difficulty"},
+  "challenges":{tr:"zorluklar",syn:"difficulties"},
+  "change":{tr:"değişim",syn:"alteration"},
+  "changes":{tr:"değişiklikler",syn:"alterations"},
+  "changing":{tr:"değişen",syn:"altering"},
+  "chief":{tr:"baş/şef",syn:"head"},
+  "children":{tr:"çocuklar",syn:"kids"},
+  "china":{tr:"Çin",syn:"China"},
+  "china's":{tr:"Çin'in",syn:"China's"},
+  "chinese":{tr:"Çinli/Çince",syn:"of China"},
+  "christian":{tr:"Hristiyan",syn:"Christian"},
+  "christianity":{tr:"Hristiyanlık",syn:"Christian faith"},
+  "circular":{tr:"dairesel",syn:"round"},
+  "cities":{tr:"şehirler",syn:"towns"},
+  "city":{tr:"şehir",syn:"town"},
+  "classes":{tr:"sınıflar",syn:"categories"},
+  "clear":{tr:"açık/net",syn:"evident"},
+  "clearer":{tr:"daha net",syn:"sharper"},
+  "climate":{tr:"iklim",syn:"weather patterns"},
+  "climatologist":{tr:"iklimbilimci",syn:"climate scientist"},
+  "closely":{tr:"yakından",syn:"carefully",func:true},
+  "cloth":{tr:"kumaş",syn:"fabric"},
+  "clothing":{tr:"giysiler",syn:"clothes"},
+  "clouds":{tr:"bulutlar",syn:"cloud formations"},
+  "coastal":{tr:"kıyısal",syn:"shoreline"},
+  "code":{tr:"kural/kod",syn:"rules"},
+  "coffee":{tr:"kahve",syn:"coffee (drink)"},
+  "cold":{tr:"soğuk",syn:"chilly"},
+  "collins":{tr:"Collins (özel isim)",syn:"Collins (name)"},
+  "colors":{tr:"renkler",syn:"colours"},
+  "combatants":{tr:"savaşçılar",syn:"fighters"},
+  "come":{tr:"gelmek",syn:"arrive",func:true},
+  "commentaries":{tr:"yorumlar",syn:"commentary texts"},
+  "commissioning":{tr:"sipariş ederek",syn:"ordering"},
+  "communicate":{tr:"iletişim kurmak",syn:"interact"},
+  "communist":{tr:"komünist",syn:"socialist bloc"},
+  "companies":{tr:"şirketler",syn:"firms"},
+  "company":{tr:"şirket",syn:"firm"},
+  "compared":{tr:"karşılaştırıldı",syn:"likened"},
+  "complete":{tr:"tamamlamak/eksiksiz",syn:"finish"},
+  "completed":{tr:"tamamlandı",syn:"finished"},
+  "concerns":{tr:"endişeler",syn:"worries"},
+  "conditions":{tr:"koşullar",syn:"circumstances"},
+  "conduct":{tr:"davranış kuralları",syn:"code of behaviour"},
+  "conducting":{tr:"yürüterek",syn:"carrying out"},
+  "confirming":{tr:"doğrulayan",syn:"validating"},
+  "connected":{tr:"bağlantılı",syn:"linked"},
+  "connects":{tr:"bağlar",syn:"links"},
+  "consensus":{tr:"fikir birliği",syn:"agreement"},
+  "considered":{tr:"kabul edilir",syn:"regarded"},
+  "constructed":{tr:"inşa edildi",syn:"built"},
+  "construction":{tr:"inşaat/yapım",syn:"building"},
+  "contain":{tr:"içermek",syn:"hold"},
+  "context":{tr:"bağlam",syn:"circumstances"},
+  "continue":{tr:"devam etmek",syn:"carry on"},
+  "continued":{tr:"devam etti",syn:"carried on"},
+  "continues":{tr:"devam ediyor",syn:"carries on"},
+  "contributing":{tr:"katkıda bulunarak",syn:"adding to"},
+  "control":{tr:"kontrol etmek",syn:"govern"},
+  "cost":{tr:"maliyet",syn:"expense"},
+  "costs":{tr:"maliyetler",syn:"expenses"},
+  "cotton":{tr:"pamuk",syn:"cotton fabric"},
+  "could":{tr:"-ebilirdi",syn:"would be able to",func:true},
+  "countries":{tr:"ülkeler",syn:"nations"},
+  "country's":{tr:"ülkenin",syn:"country's"},
+  "creating":{tr:"yaratarak",syn:"forming"},
+  "creation":{tr:"yaratılış/oluşum",syn:"formation"},
+  "creatures":{tr:"canlılar",syn:"organisms"},
+  "crispr":{tr:"CRISPR (gen düzenleme teknolojisi)",syn:"gene-editing technology"},
+  "critical":{tr:"kritik",syn:"crucial"},
+  "critics":{tr:"eleştirmenler",syn:"critics (people)"},
+  "cryonics":{tr:"kriyonik (dondurarak saklama)",syn:"cryogenic preservation"},
+  "cryopreservation":{tr:"kriyoprezervasyon (dondurarak koruma)",syn:"cryogenic preservation"},
+  "cultural":{tr:"kültürel",syn:"cultural (adj)"},
+  "culture":{tr:"kültür",syn:"customs"},
+  "current":{tr:"mevcut/güncel",syn:"present"},
+  "customers":{tr:"müşteriler",syn:"clients"},
+  "cystic":{tr:"kistik",syn:"cystic (medical)"},
+  "daily":{tr:"günlük",syn:"everyday"},
+  "danger":{tr:"tehlike",syn:"risk"},
+  "dangerous":{tr:"tehlikeli",syn:"risky"},
+  "dark":{tr:"karanlık",syn:"dim"},
+  "darkness":{tr:"karanlık",syn:"dark"},
+  "date":{tr:"tarihlenmek/tarih",syn:"time period"},
+  "day":{tr:"gün",syn:"daytime"},
+  "days":{tr:"günler",syn:"daytimes"},
+  "dead":{tr:"ölü",syn:"deceased"},
+  "debating":{tr:"tartışarak",syn:"discussing"},
+  "debt":{tr:"borç",syn:"debt (finance)"},
+  "decade":{tr:"on yıl",syn:"ten years"},
+  "decades":{tr:"on yıllar",syn:"tens of years"},
+  "decisive":{tr:"kararlı/belirleyici",syn:"crucial"},
+  "deep":{tr:"derin",syn:"profound"},
+  "deep-sea":{tr:"derin deniz",syn:"deep ocean"},
+  "defense":{tr:"savunma",syn:"defence"},
+  "define":{tr:"tanımlamak",syn:"mark out"},
+  "deforestation":{tr:"ormansızlaşma",syn:"forest clearing"},
+  "delivered":{tr:"teslim edildi",syn:"provided"},
+  "densely":{tr:"yoğun bir şekilde",syn:"thickly"},
+  "depend":{tr:"bağlı olmak",syn:"rely"},
+  "depends":{tr:"bağlıdır",syn:"relies"},
+  "depicting":{tr:"tasvir ederek",syn:"portraying"},
+  "deploying":{tr:"konuşlandırarak",syn:"rolling out"},
+  "depths":{tr:"derinlikler",syn:"deep parts"},
+  "desert":{tr:"çöl",syn:"arid land"},
+  "deserts":{tr:"çöller",syn:"arid lands"},
+  "designed":{tr:"tasarlandı",syn:"planned"},
+  "designer":{tr:"tasarımcı",syn:"designer (adj)"},
+  "despite":{tr:"rağmen",syn:"in spite of",func:true},
+  "destroyed":{tr:"yok edildi",syn:"ruined"},
+  "destruction":{tr:"yıkım",syn:"ruin"},
+  "detail":{tr:"ayrıntı",syn:"particular"},
+  "detailed":{tr:"ayrıntılı",syn:"thorough"},
+  "details":{tr:"ayrıntılar",syn:"particulars"},
+  "determining":{tr:"belirleyerek",syn:"establishing"},
+  "devastating":{tr:"yıkıcı",syn:"destructive"},
+  "developer":{tr:"geliştirici",syn:"development (adj)"},
+  "developing":{tr:"geliştirerek",syn:"forming"},
+  "development":{tr:"gelişim",syn:"progress"},
+  "did":{tr:"yaptı (yardımcı fiil)",syn:"(auxiliary verb)",func:true},
+  "differ":{tr:"farklılık göstermek",syn:"vary"},
+  "different":{tr:"farklı",syn:"various"},
+  "difficult":{tr:"zor",syn:"hard"},
+  "directly":{tr:"doğrudan",syn:"straight",func:true},
+  "disable":{tr:"devre dışı bırakmak",syn:"turn off"},
+  "discovered":{tr:"keşfetti",syn:"found"},
+  "discoveries":{tr:"keşifler",syn:"findings"},
+  "discovery":{tr:"keşif",syn:"finding"},
+  "disease":{tr:"hastalık",syn:"illness"},
+  "diseases":{tr:"hastalıklar",syn:"illnesses"},
+  "disgusting":{tr:"iğrenç",syn:"revolting"},
+  "disorders":{tr:"bozukluklar",syn:"conditions"},
+  "displace":{tr:"yerinden etmek",syn:"force to move"},
+  "display":{tr:"sergilemek",syn:"exhibit"},
+  "dissemination":{tr:"yayılma",syn:"spreading"},
+  "distortion":{tr:"bozulma",syn:"distortion (optics)"},
+  "divided":{tr:"bölünmüş",syn:"split"},
+  "division":{tr:"bölünme",syn:"split"},
+  "dna":{tr:"DNA",syn:"DNA"},
+  "do":{tr:"yapmak",syn:"perform",func:true},
+  "documents":{tr:"belgeler",syn:"documents (papers)"},
+  "does":{tr:"yapar (yardımcı fiil)",syn:"(auxiliary verb)",func:true},
+  "dollar":{tr:"dolar",syn:"US currency"},
+  "double":{tr:"çift",syn:"twofold"},
+  "down":{tr:"aşağı",syn:"downward",func:true},
+  "dr":{tr:"Dr. (doktor)",syn:"Doctor"},
+  "dream":{tr:"rüya görmek",syn:"dream (verb)"},
+  "dreaming":{tr:"rüya görme",syn:"dreaming (noun)"},
+  "dreams":{tr:"rüyalar",syn:"dreaming"},
+  "drink":{tr:"içmek",syn:"consume liquid"},
+  "drinking":{tr:"içme",syn:"drinking (noun)"},
+  "droplet":{tr:"damlacık",syn:"small drop"},
+  "dry":{tr:"kuru",syn:"arid"},
+  "due":{tr:"nedeniyle",syn:"owing",func:true},
+  "dull":{tr:"donuklaştırmak/donuk",syn:"fade"},
+  "during":{tr:"sırasında",syn:"throughout",func:true},
+  "dusting":{tr:"ince tabaka/serpinti",syn:"light coating"},
+  "duties":{tr:"görevler",syn:"tasks"},
+  "dynasties":{tr:"hanedanlar",syn:"ruling families"},
+  "dynasty":{tr:"hanedan",syn:"ruling family"},
+  "each":{tr:"her biri",syn:"every",func:true},
+  "eagle":{tr:"kartal",syn:"eagle (bird)"},
+  "earlier":{tr:"daha önce",syn:"previously",func:true},
+  "early":{tr:"erken",syn:"in the beginning",func:true},
+  "earth":{tr:"Dünya",syn:"the planet Earth"},
+  "earth's":{tr:"Dünya'nın",syn:"Earth's"},
+  "east":{tr:"doğu",syn:"eastern side"},
+  "eastern":{tr:"doğu (bölgesi)",syn:"of the east"},
+  "economic":{tr:"ekonomik",syn:"financial"},
+  "economy":{tr:"ekonomi",syn:"financial system"},
+  "ecosystems":{tr:"ekosistemler",syn:"ecological systems"},
+  "edit":{tr:"düzenlemek",syn:"modify"},
+  "editing":{tr:"düzenleme",syn:"modification"},
+  "eerie":{tr:"ürkütücü",syn:"spooky"},
+  "effects":{tr:"etkiler",syn:"impacts"},
+  "efficacy":{tr:"etkinlik",syn:"effectiveness"},
+  "efforts":{tr:"çabalar",syn:"attempts"},
+  "elaborate":{tr:"özenli/detaylı",syn:"intricate"},
+  "emergency":{tr:"acil durum",syn:"crisis"},
+  "emissions":{tr:"emisyonlar",syn:"gas releases"},
+  "emotions":{tr:"duygular",syn:"feelings"},
+  "energy":{tr:"enerji",syn:"power"},
+  "engineering":{tr:"mühendislik",syn:"engineering (field)"},
+  "ensure":{tr:"garanti etmek",syn:"guarantee"},
+  "ensuring":{tr:"sağlayarak",syn:"guaranteeing"},
+  "enters":{tr:"girer",syn:"goes into"},
+  "entertainment":{tr:"eğlence",syn:"amusement"},
+  "environment":{tr:"çevre",syn:"surroundings"},
+  "environmental":{tr:"çevresel",syn:"ecological"},
+  "environments":{tr:"ortamlar",syn:"surroundings"},
+  "errors":{tr:"hatalar",syn:"mistakes"},
+  "eruption":{tr:"patlama (volkanik)",syn:"volcanic outburst"},
+  "eruptions":{tr:"patlamalar",syn:"outbursts"},
+  "especially":{tr:"özellikle",syn:"particularly",func:true},
+  "ethical":{tr:"etik",syn:"moral"},
+  "eu":{tr:"AB (Avrupa Birliği)",syn:"European Union"},
+  "europe":{tr:"Avrupa",syn:"Europe (continent)"},
+  "even":{tr:"hatta/bile",syn:"still",func:true},
+  "ever":{tr:"hiç/şimdiye kadar",syn:"at any time",func:true},
+  "every":{tr:"her",syn:"each",func:true},
+  "evidence":{tr:"kanıt",syn:"proof"},
+  "evolving":{tr:"gelişerek/değişerek",syn:"developing"},
+  "exactly":{tr:"tam olarak",syn:"precisely",func:true},
+  "example":{tr:"örnek",syn:"instance"},
+  "excitement":{tr:"heyecan",syn:"thrill"},
+  "exist":{tr:"var olmak",syn:"be present"},
+  "exits":{tr:"çıkar",syn:"goes out"},
+  "expanding":{tr:"genişleyen",syn:"growing"},
+  "expansion":{tr:"genişleme",syn:"growth"},
+  "expectations":{tr:"beklentiler",syn:"anticipations"},
+  "expected":{tr:"beklenen",syn:"anticipated"},
+  "experiences":{tr:"deneyimler",syn:"experiences (events)"},
+  "experimental":{tr:"deneysel",syn:"trial"},
+  "experts":{tr:"uzmanlar",syn:"specialists"},
+  "explore":{tr:"keşfetmek",syn:"investigate"},
+  "explored":{tr:"keşfedilmiş",syn:"investigated"},
+  "extending":{tr:"uzatarak",syn:"prolonging"},
+  "extension":{tr:"uzatma",syn:"prolongation"},
+  "extreme":{tr:"aşırı",syn:"severe"},
+  "extremely":{tr:"aşırı derecede",syn:"severely",func:true},
+  "eye":{tr:"göz",syn:"eye (organ)"},
+  "eyebrows":{tr:"kaşlar",syn:"brows"},
+  "eyelashes":{tr:"kirpikler",syn:"lashes"},
+  "eyes":{tr:"gözler",syn:"eyes (plural)"},
+  "face":{tr:"yüzleşmek/yüz",syn:"confront"},
+  "faces":{tr:"yüzleşiyor",syn:"confronts"},
+  "facilities":{tr:"tesisler",syn:"amenities"},
+  "fact":{tr:"gerçek",syn:"truth"},
+  "fainter":{tr:"daha soluk",syn:"dimmer"},
+  "falsely":{tr:"yanlışlıkla",syn:"incorrectly",func:true},
+  "family's":{tr:"ailenin",syn:"family's"},
+  "famous":{tr:"ünlü",syn:"well-known"},
+  "fascinated":{tr:"büyüledi",syn:"captivated"},
+  "fast":{tr:"hızlı",syn:"rapid"},
+  "fat":{tr:"yağ",syn:"fat (substance)"},
+  "feats":{tr:"başarılar",syn:"achievements"},
+  "feature":{tr:"özellik",syn:"function"},
+  "features":{tr:"özellikler",syn:"functions"},
+  "feet":{tr:"ayaklar",syn:"feet (body part)"},
+  "fever":{tr:"ateş (hastalık)",syn:"high temperature illness"},
+  "fibres":{tr:"lifler",syn:"fibers"},
+  "fibrosis":{tr:"fibroz",syn:"tissue scarring"},
+  "fight":{tr:"kavga/dövüş",syn:"battle"},
+  "figures":{tr:"figürler/rakamlar",syn:"numbers, shapes"},
+  "finally":{tr:"nihayet",syn:"at last",func:true},
+  "finding":{tr:"bulgu",syn:"discovery"},
+  "fired":{tr:"kovuldu",syn:"dismissed"},
+  "firm's":{tr:"firmanın",syn:"firm's"},
+  "fish":{tr:"balık",syn:"fish (animal)"},
+  "fixed":{tr:"sabit",syn:"fixed (adj)"},
+  "flagging":{tr:"düşen (satışlar)",syn:"declining"},
+  "fleeing":{tr:"kaçarak",syn:"escaping"},
+  "flush":{tr:"sifonu çekmek",syn:"flush (toilet)"},
+  "following":{tr:"takip eden/-den sonra",syn:"after",func:true},
+  "food":{tr:"yiyecek",syn:"nourishment"},
+  "for":{tr:"için",syn:"for the purpose of",func:true},
+  "force":{tr:"güç/yürürlük",syn:"effect"},
+  "forefront":{tr:"ön saf",syn:"leading edge"},
+  "forget":{tr:"unutmak",syn:"fail to remember"},
+  "form":{tr:"oluşturmak/biçim",syn:"shape"},
+  "forms":{tr:"biçimler",syn:"shapes"},
+  "forum":{tr:"forum",syn:"discussion platform"},
+  "found":{tr:"buldu/bulundu",syn:"discovered"},
+  "foundation":{tr:"vakıf/kuruluş",syn:"organization"},
+  "french":{tr:"Fransız",syn:"of France"},
+  "fresco":{tr:"fresk (duvar resmi)",syn:"wall painting"},
+  "fresco's":{tr:"freskin",syn:"fresco's"},
+  "frescoes":{tr:"freskler",syn:"wall paintings"},
+  "from":{tr:"den/dan",syn:"out of",func:true},
+  "fully":{tr:"tamamen",syn:"completely",func:true},
+  "functionality":{tr:"işlevsellik",syn:"functioning"},
+  "further":{tr:"daha ileri",syn:"additional",func:true},
+  "future":{tr:"gelecek",syn:"upcoming"},
+  "games":{tr:"oyunlar",syn:"games (events)"},
+  "gas":{tr:"gaz",syn:"gas (substance)"},
+  "gather":{tr:"toplamak",syn:"collect"},
+  "gene":{tr:"gen",syn:"gene (biology)"},
+  "genes":{tr:"genler",syn:"genes (biology)"},
+  "genetic":{tr:"genetik",syn:"gene-related"},
+  "genetics":{tr:"genetik (bilim dalı)",syn:"genetics (field)"},
+  "geopolitical":{tr:"jeopolitik",syn:"geopolitical"},
+  "germany":{tr:"Almanya",syn:"Germany (country)"},
+  "giant":{tr:"dev",syn:"huge"},
+  "gilts":{tr:"İngiliz devlet tahvilleri",syn:"UK government bonds"},
+  "giving":{tr:"vererek",syn:"providing"},
+  "gladiatorial":{tr:"gladyatörlere ait",syn:"of gladiators"},
+  "global":{tr:"küresel",syn:"worldwide"},
+  "globally":{tr:"küresel olarak",syn:"worldwide",func:true},
+  "glows":{tr:"parlar",syn:"shines"},
+  "go":{tr:"gitmek",syn:"travel",func:true},
+  "good":{tr:"iyi",syn:"fine"},
+  "goods":{tr:"mallar",syn:"products"},
+  "government":{tr:"hükümet",syn:"state authority"},
+  "great":{tr:"büyük/muhteşem",syn:"grand"},
+  "green":{tr:"yeşil",syn:"green (color)"},
+  "ground-based":{tr:"yer tabanlı",syn:"earth-based"},
+  "groundbreaking":{tr:"çığır açan",syn:"pioneering"},
+  "habits":{tr:"alışkanlıklar",syn:"routines"},
+  "had":{tr:"sahipti (yardımcı fiil)",syn:"(auxiliary verb)",func:true},
+  "halted":{tr:"durdurdu",syn:"stopped"},
+  "harassment":{tr:"taciz",syn:"harassment (behaviour)"},
+  "has":{tr:"sahiptir (yardımcı fiil)",syn:"(auxiliary verb)",func:true},
+  "have":{tr:"sahip olmak",syn:"possess",func:true},
+  "he":{tr:"o (erkek)",syn:"he (pronoun)",func:true},
+  "health":{tr:"sağlık",syn:"wellbeing"},
+  "heat":{tr:"ısı/sıcaklık",syn:"warmth"},
+  "hegseth":{tr:"Hegseth (özel isim)",syn:"Hegseth (name)"},
+  "help":{tr:"yardım etmek",syn:"assist"},
+  "helped":{tr:"yardım etti",syn:"assisted"},
+  "helping":{tr:"yardım ederek",syn:"assisting"},
+  "helps":{tr:"yardım eder",syn:"assists"},
+  "her":{tr:"onun (kadın)",syn:"her (possessive)",func:true},
+  "herculaneum":{tr:"Herculaneum (antik kent)",syn:"Herculaneum (ancient city)"},
+  "hidden":{tr:"gizli/saklı",syn:"concealed"},
+  "high":{tr:"yüksek",syn:"elevated"},
+  "high-cost":{tr:"yüksek maliyetli",syn:"expensive"},
+  "higher":{tr:"daha yüksek",syn:"greater"},
+  "highest":{tr:"en yüksek",syn:"greatest"},
+  "highly":{tr:"oldukça/yüksek düzeyde",syn:"greatly",func:true},
+  "historians":{tr:"tarihçiler",syn:"historians (people)"},
+  "history":{tr:"tarih",syn:"the past"},
+  "hit":{tr:"ulaştı/vurdu",syn:"reached"},
+  "home":{tr:"ev/yurt",syn:"household"},
+  "homes":{tr:"evler",syn:"households"},
+  "hope":{tr:"umut",syn:"hope (noun)"},
+  "hot":{tr:"sıcak",syn:"warm"},
+  "household":{tr:"hane/ev halkı",syn:"home"},
+  "households":{tr:"hane halkları",syn:"homes"},
+  "housing":{tr:"konut",syn:"housing (accommodation)"},
+  "how":{tr:"nasıl",syn:"in what way",func:true},
+  "however":{tr:"ancak/fakat",syn:"nevertheless",func:true},
+  "hubble":{tr:"Hubble (teleskop adı)",syn:"Hubble (telescope)"},
+  "hubble's":{tr:"Hubble'ın",syn:"Hubble's"},
+  "human":{tr:"insan",syn:"human (adj)"},
+  "humans":{tr:"insanlar",syn:"people"},
+  "humps":{tr:"hörgüçler",syn:"humps (camel)"},
+  "huntington's":{tr:"Huntington hastalığına ait",syn:"Huntington's (disease)"},
+  "ice":{tr:"buz",syn:"frozen water"},
+  "ideas":{tr:"fikirler",syn:"ideas (concepts)"},
+  "ideological":{tr:"ideolojik",syn:"ideology-based"},
+  "ideologies":{tr:"ideolojiler",syn:"belief systems"},
+  "if":{tr:"eğer",syn:"in case",func:true},
+  "images":{tr:"görüntüler",syn:"pictures"},
+  "immediate":{tr:"acil/anında",syn:"urgent"},
+  "impacts":{tr:"etkiler",syn:"effects"},
+  "implementing":{tr:"uygulayarak",syn:"putting into practice"},
+  "implications":{tr:"çıkarımlar/sonuçlar",syn:"consequences"},
+  "importance":{tr:"önem",syn:"significance"},
+  "important":{tr:"önemli",syn:"significant"},
+  "impose":{tr:"dayatmak/getirmek",syn:"introduce"},
+  "impressive":{tr:"etkileyici",syn:"striking"},
+  "improvements":{tr:"iyileştirmeler",syn:"enhancements"},
+  "in":{tr:"içinde",syn:"within",func:true},
+  "inaccurate":{tr:"yanlış/hatalı",syn:"incorrect"},
+  "incidents":{tr:"olaylar",syn:"events"},
+  "include":{tr:"içermek",syn:"comprise"},
+  "including":{tr:"dahil olmak üzere",syn:"comprising",func:true},
+  "increased":{tr:"arttı",syn:"rose"},
+  "indicate":{tr:"belirtmek",syn:"show"},
+  "indicator":{tr:"gösterge",syn:"sign"},
+  "indigo":{tr:"çivit rengi",syn:"indigo (color)"},
+  "individuals":{tr:"bireyler",syn:"people"},
+  "industrial":{tr:"endüstriyel",syn:"industry-related"},
+  "influence":{tr:"etki",syn:"impact"},
+  "influenced":{tr:"etkiledi",syn:"affected"},
+  "information":{tr:"bilgi",syn:"data"},
+  "inhospitable":{tr:"yaşanmaz/elverişsiz",syn:"unwelcoming"},
+  "initially":{tr:"başlangıçta",syn:"at first",func:true},
+  "inside":{tr:"içinde",syn:"interior",func:true},
+  "insight":{tr:"iç görü/kavrayış",syn:"understanding"},
+  "insights":{tr:"içgörüler",syn:"understandings"},
+  "intelligence":{tr:"zeka",syn:"intelligence (cognitive)"},
+  "interest":{tr:"faiz/ilgi",syn:"concern"},
+  "interpretations":{tr:"yorumlar",syn:"readings"},
+  "interventions":{tr:"müdahaleler",syn:"interferences"},
+  "into":{tr:"içine",syn:"inside",func:true},
+  "introduced":{tr:"tanıtıldı",syn:"brought in"},
+  "invaluable":{tr:"paha biçilmez",syn:"priceless"},
+  "invasions":{tr:"istilalar",syn:"invasions (military)"},
+  "ios":{tr:"iOS (işletim sistemi)",syn:"iOS (operating system)"},
+  "is":{tr:"dir/dır",syn:"exists",func:true},
+  "israel":{tr:"İsrail",syn:"Israel (country)"},
+  "it":{tr:"o (nesne)",syn:"it (pronoun)",func:true},
+  "italy":{tr:"İtalya",syn:"Italy (country)"},
+  "its":{tr:"onun (nesne için)",syn:"its (possessive)",func:true},
+  "james":{tr:"James (özel isim)",syn:"James (name)"},
+  "january":{tr:"Ocak",syn:"January (month)"},
+  "japan":{tr:"Japonya",syn:"Japan (country)"},
+  "jewish":{tr:"Yahudi",syn:"Jewish (adj)"},
+  "jobs":{tr:"işler",syn:"employment figures"},
+  "journey":{tr:"yolculuk",syn:"trip"},
+  "kind":{tr:"tür/çeşit",syn:"type"},
+  "known":{tr:"bilinen",syn:"recognized"},
+  "landlords":{tr:"ev sahipleri",syn:"property owners"},
+  "large":{tr:"büyük",syn:"big"},
+  "late":{tr:"geç",syn:"towards the end"},
+  "later":{tr:"daha sonra",syn:"afterwards",func:true},
+  "latest":{tr:"en son",syn:"most recent"},
+  "launched":{tr:"fırlatıldı",syn:"sent into orbit"},
+  "laundered":{tr:"çamaşırı yıkanmış",syn:"washed"},
+  "laundering":{tr:"çamaşır yıkama",syn:"washing clothes"},
+  "laundry":{tr:"çamaşır",syn:"washing"},
+  "lavatory":{tr:"tuvalet",syn:"toilet"},
+  "layers":{tr:"katmanlar",syn:"levels"},
+  "leaders":{tr:"liderler",syn:"leading figures"},
+  "leading":{tr:"önde gelen",syn:"prominent"},
+  "least":{tr:"en az",syn:"fewest",func:true},
+  "leave":{tr:"bırakmak",syn:"leave behind"},
+  "led":{tr:"yol açtı",syn:"resulted in"},
+  "leftover":{tr:"artan/geri kalan",syn:"remaining"},
+  "legal":{tr:"yasal",syn:"law-related"},
+  "legislation":{tr:"mevzuat/yasa",syn:"law"},
+  "level":{tr:"seviye",syn:"degree"},
+  "levels":{tr:"seviyeler",syn:"degrees"},
+  "life":{tr:"yaşam",syn:"existence"},
+  "lifespan":{tr:"yaşam süresi",syn:"life expectancy"},
+  "light":{tr:"ışık/hafif",syn:"brightness"},
+  "like":{tr:"gibi",syn:"similar to",func:true},
+  "likely":{tr:"muhtemelen",syn:"probably",func:true},
+  "linger":{tr:"oyalanmak",syn:"stay around"},
+  "little":{tr:"az",syn:"small amount",func:true},
+  "live":{tr:"yaşamak",syn:"exist"},
+  "lives":{tr:"yaşamlar/yaşar",syn:"existences"},
+  "living":{tr:"yaşayan",syn:"residing"},
+  "loans":{tr:"krediler",syn:"loans (finance)"},
+  "located":{tr:"yer alan",syn:"situated"},
+  "location":{tr:"konum",syn:"place"},
+  "lock":{tr:"kilit",syn:"lock (mechanism)"},
+  "long":{tr:"uzun",syn:"lengthy"},
+  "longer":{tr:"daha uzun",syn:"for a greater time",func:true},
+  "look":{tr:"görünmek/bakmak",syn:"appear"},
+  "lose":{tr:"kaybetmek",syn:"lose (verb)"},
+  "low":{tr:"düşük",syn:"reduced"},
+  "lucid":{tr:"berrak (bilinçli rüya)",syn:"clear-minded"},
+  "made":{tr:"yaptı/yapıldı",syn:"created"},
+  "madrid":{tr:"Madrid (şehir)",syn:"Madrid (city)"},
+  "main":{tr:"ana/asıl",syn:"primary",func:true},
+  "maintain":{tr:"sürdürmek",syn:"keep up"},
+  "make":{tr:"yapmak",syn:"create"},
+  "makes":{tr:"yapar",syn:"creates"},
+  "making":{tr:"yaparak",syn:"creating"},
+  "malaria":{tr:"sıtma",syn:"malaria (disease)"},
+  "management":{tr:"yönetim",syn:"administration"},
+  "many":{tr:"birçok",syn:"a lot of",func:true},
+  "marine":{tr:"deniz (biyolojik)",syn:"of the sea"},
+  "markets":{tr:"piyasalar",syn:"markets (finance)"},
+  "marking":{tr:"işaretleyerek",syn:"signaling"},
+  "material":{tr:"malzeme",syn:"matter"},
+  "may":{tr:"-ebilir",syn:"might",func:true},
+  "meaning":{tr:"anlam",syn:"significance"},
+  "meant":{tr:"kastedildi/amaçlandı",syn:"intended"},
+  "measure":{tr:"önlem",syn:"step"},
+  "medical":{tr:"tıbbi",syn:"medicine-related"},
+  "medicine":{tr:"tıp",syn:"medicine (field)"},
+  "meet":{tr:"karşılamak",syn:"satisfy"},
+  "melting":{tr:"erime",syn:"thawing"},
+  "memories":{tr:"anılar",syn:"memories (recollections)"},
+  "meters":{tr:"metreler",syn:"metres"},
+  "microbes":{tr:"mikroplar",syn:"microorganisms"},
+  "mid-action":{tr:"hareket halindeyken",syn:"in the middle of action"},
+  "might":{tr:"-ebilir",syn:"may",func:true},
+  "miles":{tr:"mil",syn:"miles (distance)"},
+  "military":{tr:"askeri",syn:"army-related"},
+  "milk":{tr:"süt",syn:"milk (dairy)"},
+  "millions":{tr:"milyonlar",syn:"millions of people"},
+  "mind":{tr:"zihin",syn:"the brain/psyche"},
+  "minister":{tr:"bakan",syn:"minister (government)"},
+  "misleading":{tr:"yanıltıcı",syn:"deceptive"},
+  "misused":{tr:"kötüye kullanılmış",syn:"abused"},
+  "modern":{tr:"modern",syn:"contemporary"},
+  "money":{tr:"para",syn:"money (currency)"},
+  "monitor":{tr:"izlemek",syn:"observe"},
+  "months":{tr:"aylar",syn:"months (time)"},
+  "moral":{tr:"ahlaki",syn:"ethical"},
+  "more":{tr:"daha",syn:"additional",func:true},
+  "most":{tr:"en çok",syn:"the majority",func:true},
+  "mount":{tr:"Dağ (özel isim öneki)",syn:"Mount (before mountain name)"},
+  "move":{tr:"hamle/hareket",syn:"action"},
+  "movement":{tr:"hareket",syn:"motion"},
+  "much":{tr:"çok",syn:"a great deal",func:true},
+  "multiple":{tr:"çoklu",syn:"many"},
+  "mysterious":{tr:"gizemli",syn:"enigmatic"},
+  "mystery":{tr:"gizem",syn:"enigma"},
+  "name":{tr:"isim",syn:"designation"},
+  "naples":{tr:"Napoli (şehir)",syn:"Naples (city)"},
+  "natural":{tr:"doğal",syn:"organic"},
+  "nature's":{tr:"doğanın",syn:"nature's"},
+  "near":{tr:"yakın",syn:"close to",func:true},
+  "nearby":{tr:"yakında",syn:"close by",func:true},
+  "nearly":{tr:"neredeyse",syn:"almost",func:true},
+  "nebula":{tr:"nebula (bulutsu)",syn:"nebula (space cloud)"},
+  "necessary":{tr:"gerekli",syn:"required"},
+  "new":{tr:"yeni",syn:"fresh"},
+  "news":{tr:"haberler",syn:"news reports"},
+  "next":{tr:"sonraki",syn:"following",func:true},
+  "nights":{tr:"geceler",syn:"nights (time)"},
+  "no":{tr:"hayır/hiç",syn:"none",func:true},
+  "nomadic":{tr:"göçebe",syn:"wandering"},
+  "nominee":{tr:"aday",syn:"nominated person"},
+  "non-eu":{tr:"AB dışı",syn:"non-EU"},
+  "non-residents":{tr:"mukim olmayanlar",syn:"non-residents (people)"},
+  "nor":{tr:"ne de",syn:"neither",func:true},
+  "north":{tr:"kuzey",syn:"northern part"},
+  "not":{tr:"değil",syn:"no",func:true},
+  "notably":{tr:"özellikle",syn:"notably",func:true},
+  "notes":{tr:"belirtiyor",syn:"points out"},
+  "notification":{tr:"bildirim",syn:"notice"},
+  "notifications":{tr:"bildirimler",syn:"notices"},
+  "now":{tr:"şimdi",syn:"at present",func:true},
+  "numerous":{tr:"çok sayıda",syn:"many"},
+  "observations":{tr:"gözlemler",syn:"observations (findings)"},
+  "observer":{tr:"gözlemci",syn:"one who observes"},
+  "obviously":{tr:"açıkça",syn:"clearly",func:true},
+  "occur":{tr:"meydana gelmek",syn:"happen"},
+  "ocean":{tr:"okyanus",syn:"sea"},
+  "oceans":{tr:"okyanuslar",syn:"seas"},
+  "of":{tr:"nin/nın",syn:"belonging to",func:true},
+  "off":{tr:"kapalı/den",syn:"away from",func:true},
+  "offer":{tr:"sunmak",syn:"provide"},
+  "offering":{tr:"sunarak",syn:"providing"},
+  "often":{tr:"sık sık",syn:"frequently",func:true},
+  "on":{tr:"üzerinde",syn:"on top of",func:true},
+  "once":{tr:"bir kez",syn:"one time",func:true},
+  "one":{tr:"bir/biri",syn:"single one",func:true},
+  "only":{tr:"sadece",syn:"just",func:true},
+  "opposite":{tr:"karşısında",syn:"across from",func:true},
+  "or":{tr:"veya",syn:"alternatively",func:true},
+  "orange":{tr:"turuncu",syn:"orange (color)"},
+  "orbit":{tr:"yörünge",syn:"orbit (space)"},
+  "organizations":{tr:"kuruluşlar",syn:"institutions"},
+  "originally":{tr:"aslında/başlangıçta",syn:"initially",func:true},
+  "origins":{tr:"kökenler",syn:"beginnings"},
+  "other":{tr:"diğer",syn:"another",func:true},
+  "others":{tr:"diğerleri",syn:"other ones",func:true},
+  "our":{tr:"bizim",syn:"our (possessive)",func:true},
+  "out":{tr:"dışarı",syn:"outward",func:true},
+  "outbreak":{tr:"salgın",syn:"outburst"},
+  "outcomes":{tr:"sonuçlar",syn:"results"},
+  "outer":{tr:"dış",syn:"exterior"},
+  "outlets":{tr:"mağazalar/şubeler",syn:"stores"},
+  "outside":{tr:"dışında",syn:"external",func:true},
+  "over":{tr:"üzerinde/boyunca",syn:"above",func:true},
+  "own":{tr:"kendi",syn:"personal",func:true},
+  "pacific":{tr:"Pasifik",syn:"Pacific (ocean)"},
+  "panama":{tr:"Panama (ülke)",syn:"Panama (country)"},
+  "parents":{tr:"ebeveynler",syn:"parents (family)"},
+  "parliament":{tr:"parlamento",syn:"legislature"},
+  "part":{tr:"parça/bölüm",syn:"portion"},
+  "participation":{tr:"katılım",syn:"taking part"},
+  "particles":{tr:"parçacıklar",syn:"tiny particles"},
+  "particularly":{tr:"özellikle",syn:"especially",func:true},
+  "pass":{tr:"geçmek",syn:"move through"},
+  "passes":{tr:"geçer",syn:"moves through"},
+  "passing":{tr:"geçen",syn:"moving through"},
+  "past":{tr:"geçmiş",syn:"previous",func:true},
+  "patient":{tr:"hasta",syn:"medical patient"},
+  "patrons":{tr:"hamiler/destekçiler",syn:"sponsors"},
+  "pause":{tr:"duraklatma",syn:"suspension"},
+  "paved":{tr:"yol açtı (mecazi)",syn:"opened the way"},
+  "peak":{tr:"zirve",syn:"highest point"},
+  "pedro":{tr:"Pedro (özel isim)",syn:"Pedro (name)"},
+  "people":{tr:"insanlar",syn:"individuals"},
+  "per":{tr:"başına",syn:"for each",func:true},
+  "perfectly":{tr:"mükemmel şekilde",syn:"ideally",func:true},
+  "perhaps":{tr:"belki",syn:"maybe",func:true},
+  "period":{tr:"dönem",syn:"era"},
+  "person":{tr:"kişi",syn:"individual"},
+  "pete":{tr:"Pete (özel isim)",syn:"Pete (name)"},
+  "physical":{tr:"fiziksel",syn:"bodily"},
+  "pillars":{tr:"sütunlar",syn:"columns"},
+  "places":{tr:"yerler",syn:"locations"},
+  "plan":{tr:"plan",syn:"scheme"},
+  "planet":{tr:"gezegen",syn:"the Earth"},
+  "planning":{tr:"planlama/planlıyor",syn:"scheming"},
+  "plans":{tr:"planlar",syn:"schemes"},
+  "platforms":{tr:"platformlar",syn:"platforms (systems)"},
+  "policy":{tr:"politika",syn:"policy (rules)"},
+  "pompeii":{tr:"Pompeii (antik kent)",syn:"Pompeii (ancient city)"},
+  "poor":{tr:"fakir",syn:"impoverished"},
+  "populated":{tr:"nüfuslu",syn:"inhabited"},
+  "position":{tr:"konum/pozisyon",syn:"location"},
+  "positioned":{tr:"konumlandırılmış",syn:"placed"},
+  "possibility":{tr:"olasılık",syn:"chance"},
+  "post-mortem":{tr:"ölüm sonrası",syn:"after death"},
+  "potential":{tr:"potansiyel",syn:"possible"},
+  "potentially":{tr:"potansiyel olarak",syn:"possibly",func:true},
+  "powerful":{tr:"güçlü",syn:"strong"},
+  "practice":{tr:"uygulama/pratik yapmak",syn:"rehearse"},
+  "practices":{tr:"uygulamalar",syn:"customs"},
+  "precision":{tr:"hassasiyet",syn:"accuracy"},
+  "predict":{tr:"tahmin etmek",syn:"forecast"},
+  "prefer":{tr:"tercih etmek",syn:"favor"},
+  "presenting":{tr:"sunarak",syn:"introducing"},
+  "preservation":{tr:"koruma",syn:"conservation"},
+  "preserve":{tr:"korumak",syn:"conserve"},
+  "preserved":{tr:"korunmuş",syn:"conserved"},
+  "pressure":{tr:"baskı/basınç",syn:"strain"},
+  "prevent":{tr:"önlemek",syn:"stop"},
+  "prey":{tr:"av",syn:"hunted animal"},
+  "prime":{tr:"başbakan (sıfat: baş)",syn:"chief"},
+  "principal":{tr:"baş/ana",syn:"main"},
+  "prioritise":{tr:"öncelik vermek",syn:"give priority"},
+  "prized":{tr:"değer verilen",syn:"valued"},
+  "problem-solving":{tr:"problem çözme",syn:"finding solutions"},
+  "process":{tr:"süreç/işlemek",syn:"procedure"},
+  "produce":{tr:"üretmek",syn:"generate"},
+  "produced":{tr:"üretti/üretilmiş",syn:"generated"},
+  "production":{tr:"üretim",syn:"manufacturing"},
+  "progress":{tr:"ilerleme",syn:"advancement"},
+  "project":{tr:"proje",syn:"undertaking"},
+  "properties":{tr:"mülkler",syn:"real estate"},
+  "prosperous":{tr:"müreffeh/zengin",syn:"thriving"},
+  "protect":{tr:"korumak",syn:"defend"},
+  "protests":{tr:"protestolar",syn:"demonstrations"},
+  "provide":{tr:"sağlamak",syn:"supply"},
+  "provided":{tr:"sağladı",syn:"supplied"},
+  "provides":{tr:"sağlar",syn:"supplies"},
+  "providing":{tr:"sağlayarak",syn:"supplying"},
+  "public":{tr:"kamu/halka açık",syn:"open to all"},
+  "pumice":{tr:"ponza taşı",syn:"volcanic rock"},
+  "punishing":{tr:"cezalandırıcı",syn:"harsh"},
+  "purchase":{tr:"satın alma",syn:"buying"},
+  "purchasing":{tr:"satın alma",syn:"buying"},
+  "purpose":{tr:"amaç",syn:"aim"},
+  "pursuit":{tr:"arayış/peşinde koşma",syn:"quest"},
+  "putting":{tr:"koyarak",syn:"placing"},
+  "question":{tr:"soru",syn:"query"},
+  "quickly":{tr:"hızlıca",syn:"rapidly",func:true},
+  "rain":{tr:"yağmur",syn:"rainfall"},
+  "rainbow":{tr:"gökkuşağı",syn:"rainbow (phenomenon)"},
+  "rainbows":{tr:"gökkuşakları",syn:"rainbows (plural)"},
+  "raindrops":{tr:"yağmur damlaları",syn:"drops of rain"},
+  "raises":{tr:"gündeme getirir",syn:"brings up"},
+  "rapid":{tr:"hızlı",syn:"fast"},
+  "rare":{tr:"nadir",syn:"uncommon"},
+  "rarely":{tr:"nadiren",syn:"seldom",func:true},
+  "rate":{tr:"oran/hız",syn:"pace"},
+  "rates":{tr:"oranlar",syn:"rates (finance)"},
+  "rather":{tr:"oldukça/daha çok",syn:"fairly",func:true},
+  "re-enable":{tr:"yeniden etkinleştirmek",syn:"turn back on"},
+  "reach":{tr:"ulaşmak",syn:"get to"},
+  "reached":{tr:"ulaştı",syn:"got to"},
+  "real":{tr:"gerçek",syn:"actual"},
+  "recent":{tr:"son zamanlardaki",syn:"latest"},
+  "red":{tr:"kırmızı",syn:"red (color)"},
+  "reduce":{tr:"azaltmak",syn:"decrease"},
+  "referring":{tr:"atıfta bulunarak",syn:"alluding to"},
+  "reflection":{tr:"yansıma",syn:"reflection (mirror image, or thought)"},
+  "reflects":{tr:"yansıtır",syn:"mirrors"},
+  "refracts":{tr:"kırılır (ışık)",syn:"bends (light)"},
+  "regimes":{tr:"rejimler",syn:"governments"},
+  "regions":{tr:"bölgeler",syn:"areas"},
+  "regular":{tr:"düzenli",syn:"routine"},
+  "regulate":{tr:"düzenlemek",syn:"control"},
+  "reinforcement":{tr:"güçlendirme",syn:"strengthening"},
+  "religious":{tr:"dini",syn:"faith-based"},
+  "rely":{tr:"güvenmek/bağlı olmak",syn:"depend"},
+  "rem":{tr:"REM (uyku evresi)",syn:"REM (sleep stage)"},
+  "remain":{tr:"kalmak",syn:"stay"},
+  "remains":{tr:"kalmaya devam ediyor",syn:"stays"},
+  "remarkable":{tr:"dikkat çekici",syn:"notable"},
+  "remember":{tr:"hatırlamak",syn:"recall"},
+  "reminder":{tr:"hatırlatıcı",syn:"reminder (thing)"},
+  "repairs":{tr:"onarımlar",syn:"fixes"},
+  "reporting":{tr:"bildirerek",syn:"stating"},
+  "representations":{tr:"temsiller",syn:"depictions"},
+  "requires":{tr:"gerektirir",syn:"needs"},
+  "research":{tr:"araştırma",syn:"study"},
+  "researchers":{tr:"araştırmacılar",syn:"scientists"},
+  "residents":{tr:"sakinler",syn:"inhabitants"},
+  "resilient":{tr:"dayanıklı",syn:"tough"},
+  "responding":{tr:"yanıt vererek",syn:"reacting"},
+  "response":{tr:"yanıt",syn:"reply"},
+  "responsibility":{tr:"sorumluluk",syn:"duty"},
+  "responsibly":{tr:"sorumlu bir şekilde",syn:"carefully",func:true},
+  "rest":{tr:"geri kalan/dinlenme",syn:"remainder"},
+  "reunification":{tr:"yeniden birleşme",syn:"reunion"},
+  "reuse":{tr:"yeniden kullanmak",syn:"reutilize"},
+  "reveals":{tr:"ortaya koyar",syn:"shows"},
+  "reversing":{tr:"tersine çevirerek",syn:"reverting"},
+  "revival":{tr:"canlanma/diriliş",syn:"revival (renewal)"},
+  "revolutionized":{tr:"devrim yarattı",syn:"transformed"},
+  "rich":{tr:"zengin",syn:"wealthy"},
+  "rising":{tr:"yükselen",syn:"increasing"},
+  "robotic":{tr:"robotik",syn:"robot-operated"},
+  "roman":{tr:"Roma'ya ait",syn:"of Rome"},
+  "rome":{tr:"Roma",syn:"Rome (city)"},
+  "room":{tr:"oda",syn:"chamber"},
+  "rules":{tr:"kurallar",syn:"regulations"},
+  "s":{tr:"s (iyelik eki)",syn:"—",func:true},
+  "sahara":{tr:"Sahra Çölü",syn:"Sahara Desert"},
+  "said":{tr:"söyledi",syn:"stated"},
+  "sales":{tr:"satışlar",syn:"sales figures"},
+  "same":{tr:"aynı",syn:"identical",func:true},
+  "sanchez":{tr:"Sánchez (özel isim)",syn:"Sánchez (name)"},
+  "sand":{tr:"kum",syn:"sand (desert)"},
+  "sandstorms":{tr:"kum fırtınaları",syn:"sand storms"},
+  "sarah":{tr:"Sarah (özel isim)",syn:"Sarah (name)"},
+  "saves":{tr:"kurtarır/tasarruf eder",syn:"conserves"},
+  "says":{tr:"söylüyor",syn:"states"},
+  "scarce":{tr:"kıt/az bulunur",syn:"limited"},
+  "scene":{tr:"sahne",syn:"setting"},
+  "scholars":{tr:"bilginler",syn:"academics"},
+  "science":{tr:"bilim",syn:"scientific field"},
+  "scientific":{tr:"bilimsel",syn:"science-related"},
+  "scientists":{tr:"bilim insanları",syn:"researchers"},
+  "scope":{tr:"kapsam",syn:"extent"},
+  "screen":{tr:"ekran",syn:"display"},
+  "scrolls":{tr:"tomarlar/parşömenler",syn:"manuscripts"},
+  "sea":{tr:"deniz",syn:"ocean"},
+  "second":{tr:"ikinci/saniye",syn:"following the first",func:true},
+  "secretary":{tr:"bakan/sekreter",syn:"official"},
+  "see":{tr:"görmek",syn:"observe"},
+  "seema":{tr:"Seema (özel isim)",syn:"Seema (name)"},
+  "seems":{tr:"görünüyor",syn:"appears"},
+  "seen":{tr:"görülmüş",syn:"observed"},
+  "segments":{tr:"parçalar/bölümler",syn:"sections"},
+  "select":{tr:"seçmek",syn:"choose"},
+  "separated":{tr:"ayırdı",syn:"divided"},
+  "separates":{tr:"ayırır",syn:"divides"},
+  "series":{tr:"dizi/seri",syn:"sequence"},
+  "serious":{tr:"ciddi",syn:"grave"},
+  "served":{tr:"hizmet etti",syn:"functioned as"},
+  "serves":{tr:"hizmet eder",syn:"functions as"},
+  "services":{tr:"hizmetler",syn:"services (offerings)"},
+  "set":{tr:"belirlenmiş/ayarlamak",syn:"fixed"},
+  "seven":{tr:"yedi (7)",syn:"—",func:true},
+  "several":{tr:"birkaç",syn:"a number of",func:true},
+  "shah":{tr:"Shah (özel isim/soyadı)",syn:"Shah (surname)"},
+  "she":{tr:"o (kadın)",syn:"she (pronoun)",func:true},
+  "shed":{tr:"saçmak/aydınlatmak",syn:"cast (light)"},
+  "sheds":{tr:"saçar",syn:"casts"},
+  "sheets":{tr:"tabakalar",syn:"layers"},
+  "shining":{tr:"parlayan",syn:"glowing"},
+  "ships":{tr:"gemiler",syn:"vessels"},
+  "shortage":{tr:"kıtlık",syn:"scarcity"},
+  "shot":{tr:"çekim/fotoğraf",syn:"photograph"},
+  "should":{tr:"-meli/malı",syn:"ought to",func:true},
+  "shower":{tr:"sağanak/duş",syn:"rain shower"},
+  "shows":{tr:"gösterir",syn:"demonstrates"},
+  "sights":{tr:"görüntüler/manzaralar",syn:"sights (views)"},
+  "significance":{tr:"önem",syn:"importance"},
+  "significant":{tr:"önemli",syn:"considerable"},
+  "significantly":{tr:"önemli ölçüde",syn:"considerably",func:true},
+  "single":{tr:"tek",syn:"sole",func:true},
+  "sinking":{tr:"batma",syn:"sinking (motion)"},
+  "situation":{tr:"durum",syn:"circumstance"},
+  "six":{tr:"altı (6)",syn:"—",func:true},
+  "size":{tr:"boyut",syn:"dimension"},
+  "sky":{tr:"gökyüzü",syn:"the heavens"},
+  "sleep":{tr:"uyku",syn:"slumber"},
+  "slow":{tr:"yavaşlatmak/yavaş",syn:"reduce speed"},
+  "smoking":{tr:"sigara içme",syn:"smoking (habit)"},
+  "so-called":{tr:"sözde",syn:"supposedly named"},
+  "society":{tr:"toplum",syn:"community"},
+  "soft":{tr:"yumuşak",syn:"gentle"},
+  "some":{tr:"bazı",syn:"a few",func:true},
+  "sometimes":{tr:"bazen",syn:"occasionally",func:true},
+  "sophistication":{tr:"sofistike olma/incelik",syn:"refinement"},
+  "south":{tr:"güney",syn:"southern part"},
+  "southern":{tr:"güney (bölgesi)",syn:"of the south"},
+  "soviet":{tr:"Sovyet",syn:"Soviet (adj)"},
+  "space":{tr:"uzay",syn:"outer space"},
+  "spain":{tr:"İspanya",syn:"Spain (country)"},
+  "spanish":{tr:"İspanyol",syn:"of Spain"},
+  "special":{tr:"özel",syn:"unique"},
+  "species":{tr:"türler",syn:"biological species"},
+  "specific":{tr:"belirli/özgü",syn:"particular"},
+  "specks":{tr:"lekeler/zerreler",syn:"tiny particles"},
+  "speculative":{tr:"spekülatif",syn:"uncertain"},
+  "spending":{tr:"harcama/geçirme",syn:"expenditure"},
+  "squid":{tr:"kalamar",syn:"squid (sea creature)"},
+  "stage":{tr:"aşama/evre",syn:"phase"},
+  "standard":{tr:"standart",syn:"typical"},
+  "starbucks":{tr:"Starbucks (şirket)",syn:"Starbucks (company)"},
+  "stark":{tr:"çıplak/sert",syn:"harsh"},
+  "stars":{tr:"yıldızlar",syn:"stars (space)"},
+  "start":{tr:"başlamak",syn:"begin"},
+  "started":{tr:"başladı",syn:"began"},
+  "starting":{tr:"başlayarak",syn:"beginning"},
+  "state":{tr:"devlet/durum",syn:"condition"},
+  "states":{tr:"eyaletler/belirtir",syn:"states (regions)"},
+  "still":{tr:"hâlâ",syn:"yet",func:true},
+  "stood":{tr:"durdu",syn:"stood (past of stand)"},
+  "store":{tr:"depolamak/mağaza",syn:"keep"},
+  "stores":{tr:"mağazalar/depolar",syn:"shops"},
+  "strange":{tr:"garip",syn:"odd"},
+  "strategist":{tr:"stratejist",syn:"strategy expert"},
+  "strategy":{tr:"strateji",syn:"plan"},
+  "strength":{tr:"güç",syn:"power"},
+  "stress":{tr:"stres",syn:"tension"},
+  "stresses":{tr:"baskılar/vurgular",syn:"pressures"},
+  "stretching":{tr:"uzanarak",syn:"extending"},
+  "structure":{tr:"yapı",syn:"construction"},
+  "struggled":{tr:"mücadele etti",syn:"had difficulty"},
+  "studies":{tr:"çalışmalar",syn:"research works"},
+  "study":{tr:"çalışmak/çalışma",syn:"research"},
+  "studying":{tr:"çalışarak/inceleyerek",syn:"researching"},
+  "stunning":{tr:"çarpıcı/muhteşem",syn:"striking"},
+  "submarines":{tr:"denizaltılar",syn:"submersibles"},
+  "success":{tr:"başarı",syn:"achievement"},
+  "successfully":{tr:"başarıyla",syn:"effectively",func:true},
+  "such":{tr:"böyle/bu tür",syn:"like this",func:true},
+  "sufficient":{tr:"yeterli",syn:"enough"},
+  "suggest":{tr:"önermek",syn:"propose"},
+  "suggesting":{tr:"önererek",syn:"proposing"},
+  "summaries":{tr:"özetler",syn:"summaries (recaps)"},
+  "summary":{tr:"özet",syn:"recap"},
+  "sun":{tr:"güneş",syn:"the sun"},
+  "sunlight":{tr:"güneş ışığı",syn:"sunshine"},
+  "surface":{tr:"yüzey",syn:"top layer"},
+  "surrounding":{tr:"çevreleyen",syn:"around"},
+  "survive":{tr:"hayatta kalmak",syn:"endure"},
+  "survives":{tr:"hayatta kalır",syn:"endures"},
+  "sustained":{tr:"sürdürülen",syn:"maintained"},
+  "sweat":{tr:"terlemek/ter",syn:"perspire"},
+  "swift":{tr:"hızlı/çabuk",syn:"quick"},
+  "symbol":{tr:"sembol",syn:"emblem"},
+  "system":{tr:"sistem",syn:"system (structure)"},
+  "tackle":{tr:"üstesinden gelmek",syn:"address"},
+  "take":{tr:"almak",syn:"grab",func:true},
+  "targeting":{tr:"hedefleyerek",syn:"aiming at"},
+  "tax":{tr:"vergi",syn:"tax (finance)"},
+  "teachings":{tr:"öğretiler",syn:"doctrines"},
+  "tech":{tr:"teknoloji",syn:"technology"},
+  "techniques":{tr:"teknikler",syn:"methods"},
+  "technologies":{tr:"teknolojiler",syn:"technologies (plural)"},
+  "technology":{tr:"teknoloji",syn:"tech"},
+  "telescope":{tr:"teleskop",syn:"telescope (device)"},
+  "telescopes":{tr:"teleskoplar",syn:"telescopes (plural)"},
+  "temperature":{tr:"sıcaklık",syn:"heat level"},
+  "temperatures":{tr:"sıcaklıklar",syn:"heat levels"},
+  "temporarily":{tr:"geçici olarak",syn:"for now",func:true},
+  "tenants":{tr:"kiracılar",syn:"renters"},
+  "tensions":{tr:"gerilimler",syn:"tensions (conflict)"},
+  "texts":{tr:"metinler",syn:"writings"},
+  "th":{tr:". (sıra sayısı eki)",syn:"th (ordinal suffix)",func:true},
+  "than":{tr:"den/dan (karşılaştırma)",syn:"compared to",func:true},
+  "that":{tr:"o/ki",syn:"which",func:true},
+  "the":{tr:"(belirli tanımlık)",syn:"the (article)",func:true},
+  "their":{tr:"onların",syn:"their (possessive)",func:true},
+  "them":{tr:"onları",syn:"them (pronoun)",func:true},
+  "then":{tr:"sonra",syn:"afterwards",func:true},
+  "theories":{tr:"teoriler",syn:"hypotheses"},
+  "therapies":{tr:"tedaviler",syn:"treatments"},
+  "therapy":{tr:"tedavi",syn:"treatment"},
+  "there":{tr:"orada",syn:"in that place",func:true},
+  "these":{tr:"bunlar",syn:"these ones",func:true},
+  "they":{tr:"onlar",syn:"they (pronoun)",func:true},
+  "thick":{tr:"kalın",syn:"dense"},
+  "thing":{tr:"şey",syn:"object"},
+  "this":{tr:"bu",syn:"this one",func:true},
+  "those":{tr:"şunlar/onlar",syn:"those ones",func:true},
+  "thousands":{tr:"binlerce",syn:"many thousands"},
+  "three":{tr:"üç (3)",syn:"—",func:true},
+  "thrives":{tr:"gelişir/serpilir",syn:"flourishes"},
+  "through":{tr:"boyunca/aracılığıyla",syn:"via",func:true},
+  "throughout":{tr:"boyunca/her yerinde",syn:"across",func:true},
+  "time":{tr:"zaman",syn:"period"},
+  "timeline":{tr:"zaman çizelgesi",syn:"schedule"},
+  "tip":{tr:"uç/ipucu",syn:"end point"},
+  "to":{tr:"-e/-a (yönelik)",syn:"towards",func:true},
+  "today":{tr:"bugün",syn:"the present day",func:true},
+  "toilet":{tr:"tuvalet",syn:"lavatory"},
+  "toilets":{tr:"tuvaletler",syn:"lavatories"},
+  "tokushima":{tr:"Tokushima (şehir)",syn:"Tokushima (city)"},
+  "told":{tr:"söyledi",syn:"stated"},
+  "tolerate":{tr:"tahammül etmek",syn:"withstand"},
+  "took":{tr:"aldı",syn:"took over"},
+  "torn":{tr:"yırtılmış/yıkılmış",syn:"brought down"},
+  "total":{tr:"toplam",syn:"sum"},
+  "towel":{tr:"havlu",syn:"towel (item)"},
+  "towels":{tr:"havlular",syn:"towels (plural)"},
+  "towering":{tr:"yükselen/devasa",syn:"soaring"},
+  "trade":{tr:"ticaret",syn:"commerce"},
+  "traditional":{tr:"geleneksel",syn:"conventional"},
+  "traits":{tr:"özellikler",syn:"characteristics"},
+  "transferred":{tr:"aktarıldı",syn:"moved"},
+  "transportation":{tr:"ulaşım",syn:"transport"},
+  "travel":{tr:"seyahat etmek",syn:"journey"},
+  "treating":{tr:"tedavi ederek",syn:"curing"},
+  "tribes":{tr:"kabileler",syn:"tribal groups"},
+  "tries":{tr:"çalışır/deneme yapar",syn:"attempts"},
+  "trust":{tr:"güven",syn:"confidence"},
+  "twice":{tr:"iki kat/iki kez",syn:"two times",func:true},
+  "two":{tr:"iki (2)",syn:"—",func:true},
+  "u-turn":{tr:"geri dönüş (politika değişikliği)",syn:"policy reversal"},
+  "uk":{tr:"Birleşik Krallık",syn:"the United Kingdom"},
+  "under":{tr:"altında",syn:"beneath",func:true},
+  "undergone":{tr:"geçirmiş",syn:"experienced"},
+  "underscores":{tr:"vurgular",syn:"highlights"},
+  "understand":{tr:"anlamak",syn:"comprehend"},
+  "understanding":{tr:"anlayış/anlama",syn:"comprehension"},
+  "unearthed":{tr:"gün ışığına çıkarıldı",syn:"dug up"},
+  "unethical":{tr:"etik olmayan",syn:"immoral"},
+  "unified":{tr:"birleşik",syn:"united"},
+  "union":{tr:"birlik",syn:"alliance"},
+  "united":{tr:"birleşik",syn:"unified"},
+  "unity":{tr:"birlik/bütünlük",syn:"oneness"},
+  "universe":{tr:"evren",syn:"the cosmos"},
+  "university":{tr:"üniversite",syn:"university (institution)"},
+  "unknown":{tr:"bilinmeyen",syn:"unidentified"},
+  "unlike":{tr:"farklı olarak",syn:"in contrast to",func:true},
+  "unprecedented":{tr:"emsalsiz/görülmemiş",syn:"unparalleled"},
+  "unsurprisingly":{tr:"şaşırtıcı olmayan bir şekilde",syn:"predictably",func:true},
+  "up":{tr:"yukarı",syn:"upward",func:true},
+  "upcoming":{tr:"yaklaşan",syn:"forthcoming"},
+  "update":{tr:"güncelleme",syn:"upgrade"},
+  "upgrades":{tr:"yükseltmeler",syn:"improvements"},
+  "us":{tr:"bizi/ABD",syn:"USA, us",func:true},
+  "use":{tr:"kullanmak",syn:"utilize"},
+  "used":{tr:"kullanılan/kullanıldı",syn:"utilized"},
+  "user":{tr:"kullanıcı",syn:"user (person)"},
+  "users":{tr:"kullanıcılar",syn:"users (plural)"},
+  "uses":{tr:"kullanır",syn:"utilizes"},
+  "value":{tr:"değer",syn:"worth"},
+  "values":{tr:"değerler",syn:"worth, principles"},
+  "various":{tr:"çeşitli",syn:"diverse",func:true},
+  "versions":{tr:"versiyonlar",syn:"variants"},
+  "very":{tr:"çok",syn:"extremely",func:true},
+  "vesuvius":{tr:"Vezüv (yanardağ)",syn:"Vesuvius (volcano)"},
+  "violet":{tr:"mor",syn:"violet (color)"},
+  "vital":{tr:"hayati",syn:"essential"},
+  "vividly":{tr:"canlı bir şekilde",syn:"clearly",func:true},
+  "volcanic":{tr:"volkanik",syn:"volcano-related"},
+  "volcano":{tr:"volkan/yanardağ",syn:"volcano (mountain)"},
+  "volcanoes":{tr:"volkanlar",syn:"volcanoes (plural)"},
+  "votes":{tr:"oylar",syn:"votes (elections)"},
+  "waiting":{tr:"bekleyen",syn:"awaiting"},
+  "waking":{tr:"uyanma",syn:"waking up"},
+  "walk":{tr:"yürümek",syn:"stroll"},
+  "wall":{tr:"duvar",syn:"wall (structure)"},
+  "wall's":{tr:"duvarın",syn:"wall's"},
+  "war":{tr:"savaş",syn:"conflict"},
+  "warm":{tr:"ısınmak/ılık",syn:"heat up"},
+  "warming":{tr:"ısınma",syn:"heating"},
+  "warned":{tr:"uyardı",syn:"cautioned"},
+  "warns":{tr:"uyarır",syn:"cautions"},
+  "was":{tr:"idi",syn:"(past of be)",func:true},
+  "washing":{tr:"yıkama",syn:"laundering"},
+  "waste":{tr:"atık",syn:"refuse"},
+  "watched":{tr:"izlenen",syn:"monitored"},
+  "water":{tr:"su",syn:"water (liquid)"},
+  "waters":{tr:"sular",syn:"bodies of water"},
+  "wave":{tr:"dalga",syn:"wave (motion)"},
+  "way":{tr:"yol/biçim",syn:"method"},
+  "we":{tr:"biz",syn:"we (pronoun)",func:true},
+  "weakening":{tr:"zayıflama",syn:"weakening (process)"},
+  "wealth":{tr:"zenginlik",syn:"riches"},
+  "wealthy":{tr:"zengin",syn:"rich"},
+  "webb":{tr:"Webb (özel isim)",syn:"Webb (name)"},
+  "week":{tr:"hafta",syn:"seven days"},
+  "welcoming":{tr:"davetkar/hoş karşılayan",syn:"inviting"},
+  "well":{tr:"iyi",syn:"properly",func:true},
+  "were":{tr:"idiler",syn:"(past of be, plural)",func:true},
+  "west":{tr:"batı",syn:"western side"},
+  "western":{tr:"batı (bölgesi)",syn:"of the west"},
+  "what":{tr:"ne",syn:"which thing",func:true},
+  "when":{tr:"ne zaman",syn:"at which time",func:true},
+  "where":{tr:"nerede",syn:"in which place",func:true},
+  "which":{tr:"hangi/ki",syn:"that",func:true},
+  "while":{tr:"iken/oysa",syn:"whereas",func:true},
+  "who":{tr:"kim/ki",syn:"which person",func:true},
+  "whole-body":{tr:"tüm vücut",syn:"full-body"},
+  "why":{tr:"neden",syn:"for what reason",func:true},
+  "wide":{tr:"geniş",syn:"broad"},
+  "will":{tr:"-ecek (gelecek zaman)",syn:"shall",func:true},
+  "with":{tr:"ile",syn:"along with",func:true},
+  "without":{tr:"olmadan",syn:"lacking",func:true},
+  "work":{tr:"iş/çalışmak",syn:"labor"},
+  "working":{tr:"çalışan/çalışarak",syn:"functioning"},
+  "workings":{tr:"işleyiş",syn:"mechanisms"},
+  "works":{tr:"eserler/çalışır",syn:"pieces, functions"},
+  "world":{tr:"dünya",syn:"the globe"},
+  "world's":{tr:"dünyanın",syn:"world's"},
+  "worried":{tr:"endişeli",syn:"concerned"},
+  "worst":{tr:"en kötü",syn:"most severe"},
+  "would":{tr:"-ecekti (koşullu)",syn:"(conditional would)",func:true},
+  "year":{tr:"yıl",syn:"twelve months"},
+  "years":{tr:"yıllar",syn:"years (plural)"},
+  "yellow":{tr:"sarı",syn:"yellow (color)"},
+  "yet":{tr:"henüz/yine de",syn:"still",func:true},
+  "yield":{tr:"getiri/verim",syn:"return (finance)"},
+  "yields":{tr:"getiriler",syn:"returns (finance)"},
+  "you":{tr:"sen/siz",syn:"you (pronoun)",func:true},
+  "your":{tr:"senin/sizin",syn:"your (possessive)",func:true}
+};
+
+const READINGS = [
+  {
+    tab: "🧬 Life Extension",
+    title: "🧬 Life Extension Technologies",
+    text: `The pursuit of life extension has led to various high-cost interventions, notably cryonics and experimental gene therapies. Organizations like the Alcor Life Extension Foundation offer whole-body cryopreservation services for $200,000, aiming to preserve individuals at low temperatures post-mortem with the hope of future revival. Additionally, companies such as BioViva are conducting experimental gene therapy studies targeting aging-related diseases, with participation costs around $200,000 per patient. While these approaches are at the forefront of anti-aging research, they remain speculative, with no current scientific consensus confirming their efficacy in significantly extending human lifespan.`
+  },
+  {
+    tab: "🐟 Bioluminescent Fish",
+    title: "🐟 A New Bioluminescent Fish Discovery",
+    text: `In 2021, marine biologists made a groundbreaking discovery in the depths of the Pacific Ocean. They found a new species of bioluminescent fish that thrives in the dark waters nearly 5,000 meters below the surface. This fish, which glows with an eerie blue light, uses its bioluminescence to attract prey and communicate with others of its kind. What makes this discovery particularly significant is the fact that the species seems to have adapted to extreme environmental conditions, such as high pressure and low temperatures. Scientists believe that studying this fish could offer insights into how life can exist in such inhospitable environments, as well as help them understand the broader implications of deep-sea ecosystems.`
+  },
+  {
+    tab: "🧱 Berlin Wall",
+    title: "🧱 The Berlin Wall",
+    text: `The Berlin Wall, constructed in 1961, was a physical and ideological barrier that separated East and West Berlin during the Cold War. Built by the government of East Germany, the wall was meant to prevent East Berliners from fleeing to the more prosperous West Berlin. The Berlin Wall became a symbol of the division between communist and capitalist ideologies during the Cold War. For nearly three decades, the wall stood as a stark reminder of the geopolitical tensions between the Soviet Union and the Western allies. In 1989, following a wave of protests and the weakening of communist regimes across Eastern Europe, the Berlin Wall was finally torn down, marking the beginning of the reunification of Germany.`
+  },
+  {
+    tab: "📜 Dead Sea Scrolls",
+    title: "📜 The Dead Sea Scrolls",
+    text: `The discovery of the Dead Sea Scrolls in the late 1940s revolutionized our understanding of ancient Jewish history and the origins of the Bible. The scrolls, which include religious texts, commentaries, and legal documents, were found in a series of caves near the Dead Sea in what is now Israel. Many of the texts date back to the second century BCE, offering scholars an unprecedented look at the beliefs, practices, and daily lives of the Jewish people living at that time. Some of the scrolls contain versions of biblical books that differ from the traditional texts known today, suggesting that the biblical canon was still evolving during this period. The scrolls have also shed light on the development of early Christianity, as some of the ideas and interpretations found in the texts influenced the teachings of early Christian leaders.`
+  },
+  {
+    tab: "🚢 Panama Canal",
+    title: "🚢 The Panama Canal",
+    text: `The construction of the Panama Canal, completed in 1914, was one of the most significant engineering feats of the 20th century. The canal, which connects the Atlantic and Pacific Oceans, allows ships to avoid the long and dangerous journey around the southern tip of South America. The project was initially started by the French in the late 19th century but was abandoned due to the high cost and the outbreak of diseases like malaria and yellow fever. The United States took over the project in 1904, and with advancements in medical science and engineering, they were able to successfully complete the canal a decade later. Today, the Panama Canal remains a vital artery for global trade, with thousands of ships passing through each year.`
+  },
+  {
+    tab: "🧬 CRISPR",
+    title: "🧬 CRISPR Gene Editing",
+    text: `In the world of genetics, the discovery of CRISPR technology has revolutionized scientific research and the potential for medical advancements. CRISPR allows scientists to edit genes with precision, offering the possibility of treating genetic disorders like cystic fibrosis, Huntington's disease, and even some forms of cancer. However, the technology also raises ethical concerns. Critics argue that gene editing could be misused, leading to so-called designer babies, where parents select specific traits for their children. The ability to alter human DNA brings with it the challenge of balancing scientific progress with moral responsibility. Many countries are now debating how to regulate the use of CRISPR to prevent unethical applications, while still allowing for groundbreaking research in medicine.`
+  },
+  {
+    tab: "🌋 Mount Vesuvius",
+    title: "🌋 Mount Vesuvius",
+    text: `Mount Vesuvius, located near the city of Naples in Italy, is one of the most famous volcanoes in history due to its catastrophic eruption in 79 AD that buried the Roman cities of Pompeii and Herculaneum under ash and pumice. The eruption preserved the cities in remarkable detail, providing modern archaeologists with invaluable insights into daily life in ancient Rome. Buildings, frescoes, and even food were found preserved under layers of volcanic material. Today, Vesuvius remains an active volcano, and scientists closely monitor its activity to predict potential future eruptions. Despite the danger, the area surrounding Vesuvius is densely populated, making it one of the most closely watched volcanoes in the world.`
+  },
+  {
+    tab: "☕ Starbucks Policy",
+    title: "☕ Starbucks Reverses Its Cafe Policy",
+    text: `Starbucks says it is reversing rules for its cafes in North America that allowed people to use their facilities even if they had not bought anything. The changes, which are set to come into force from 27 January, are a U-turn from a policy introduced six years ago that allowed people to linger in Starbucks outlets and use their toilets without making a purchase. The move is part of the back to Starbucks strategy - a plan announced by the firm's new boss as he tries to tackle flagging sales. Starbucks said there was no change to its policy in the UK, where customers can continue to use the facilities without purchasing anything. The world's biggest coffee chain says its new code of conduct - which also addresses harassment and bans smoking and outside alcohol - aims to make its stores more welcoming.`
+  },
+  {
+    tab: "🏯 Great Wall of China",
+    title: "🏯 The Great Wall of China",
+    text: `The Great Wall of China is often considered one of the most impressive architectural achievements in human history. Stretching over 13,000 miles, it was originally built to protect Chinese states from invasions by nomadic tribes from the north. However, despite its size and scope, the Great Wall was not a single unified structure built at once. It was constructed in segments over several dynasties, starting as early as the 7th century BC, with each dynasty contributing to its expansion and reinforcement. In recent decades, historians and archaeologists have made significant progress in understanding the Wall's construction techniques and its cultural significance. They have discovered that the Wall was not only a military defense system but also served as a symbol of China's strength and unity, helping to define its borders and influence throughout history.`
+  },
+  {
+    tab: "📱 Apple AI Notifications",
+    title: "📱 Apple Pauses Its AI Notification Summaries",
+    text: `Apple has temporarily halted its AI-generated notification summaries for news and entertainment apps in the latest iOS 18.3 developer beta, following incidents of inaccurate summaries. The feature, part of Apple Intelligence, had produced misleading notifications, such as falsely reporting that Defense Secretary nominee Pete Hegseth was fired. In response to these errors, Apple plans to re-enable the feature in a future update after implementing improvements. The company will also indicate that the notification summary feature is in beta and may contain errors, allowing users to disable notifications for specific apps directly from the lock screen or Notification Center. This pause underscores the challenges tech companies face in deploying AI technologies responsibly, especially in news dissemination. Apple's swift action aims to maintain user trust and ensure the accuracy of information delivered through its platforms.`
+  }
+];
+
+const tooltip  = document.getElementById('tooltip');
+let activeSpan = null;
+let currentKey = null;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem('ae_saved_news1') || '{}'); } catch(e) {}
+
+function buildHTML(text) {
+  return text.replace(/([a-zA-Z']+(?:-[a-zA-Z]+)*)/g, (match) => {
+    const key = match.toLowerCase();
+    const data = WORDS[key];
+    if (!data) return match;
+    return `<span class="${data.func?'word func':'word content'}" data-key="${key}">${match}</span>`;
+  });
+}
+
+function switchTab(index) {
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+  currentKey = null;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===index));
+  const r = READINGS[index];
+  document.getElementById('cardTitle').textContent = r.title;
+  document.getElementById('readingText').innerHTML = buildHTML(r.text);
+  bindWordClicks();
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+const tabsBar = document.getElementById('tabsBar');
+READINGS.forEach((r,i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i===0?' active':'');
+  btn.textContent = r.tab;
+  btn.addEventListener('click', () => switchTab(i));
+  tabsBar.appendChild(btn);
+});
+switchTab(0);
+
+function persistSaved() { try { localStorage.setItem('ae_saved_news1', JSON.stringify(saved)); } catch(e) {} }
+
+function renderSaved() {
+  const section = document.getElementById('savedSection');
+  const list    = document.getElementById('savedList');
+  const count   = document.getElementById('wordCount');
+  const keys    = Object.keys(saved);
+  count.textContent = keys.length;
+  section.classList.toggle('has-words', keys.length > 0);
+  const exBtn = document.getElementById('startExBtn');
+  if (exBtn) exBtn.disabled = keys.length < 2;
+  list.innerHTML = '';
+  keys.forEach(key => {
+    const d = saved[key];
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    item.innerHTML = `<div class="saved-item-body"><div class="saved-word">${d.word}</div><div class="saved-tr">🇹🇷 ${d.tr}</div><div class="saved-syn">🔤 ${d.syn}</div>${d.note?`<div class="saved-note">${d.note}</div>`:''}</div><button class="remove-btn" onclick="removeWord('${key}')">✕</button>`;
+    list.appendChild(item);
+  });
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+function toggleSave() {
+  if (!currentKey) return;
+  const btn = document.getElementById('tSaveBtn');
+  if (saved[currentKey]) {
+    delete saved[currentKey];
+    btn.textContent = '⭐ Kaydet'; btn.classList.remove('saved');
+  } else {
+    const d = WORDS[currentKey] || {};
+    saved[currentKey] = { word: document.getElementById('tWord').textContent, tr: d.tr||'—', syn: d.syn||'—', note: d.note||'' };
+    btn.textContent = '✅ Kaydedildi'; btn.classList.add('saved');
+    recordSave();
+  }
+  persistSaved(); renderSaved();
+}
+
+function removeWord(key) {
+  delete saved[key]; persistSaved(); renderSaved();
+  if (currentKey === key) { document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function clearAll() {
+  if (!Object.keys(saved).length) return;
+  if (confirm('Tüm kayıtlı kelimeler silinsin mi?')) { saved={}; persistSaved(); renderSaved(); document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function bindWordClicks() {
+  document.querySelectorAll('.word').forEach(span => {
+    span.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeSpan && activeSpan !== span) activeSpan.classList.remove('active');
+      span.classList.add('active'); activeSpan = span;
+      currentKey = span.dataset.key;
+      const d = WORDS[currentKey] || {};
+      document.getElementById('tWord').textContent = span.textContent;
+      document.getElementById('tTr').textContent   = d.tr  || '—';
+      document.getElementById('tSyn').textContent  = d.syn || '—';
+      document.getElementById('tNote').textContent = d.note || '';
+      const btn = document.getElementById('tSaveBtn');
+      if (saved[currentKey]) { btn.textContent='✅ Kaydedildi'; btn.classList.add('saved'); }
+      else { btn.textContent='⭐ Kaydet'; btn.classList.remove('saved'); }
+      const rect = span.getBoundingClientRect(), ttW = 260;
+      tooltip.style.position = 'fixed';
+      let left = rect.left + rect.width/2 - ttW/2;
+      if (left < 8) left = 8;
+      if (left + ttW > window.innerWidth - 8) left = window.innerWidth - ttW - 8;
+      tooltip.style.visibility = 'hidden'; tooltip.style.left = left+'px'; tooltip.style.top = '0px';
+      tooltip.classList.add('show');
+      const ttH = tooltip.offsetHeight || 130;
+      tooltip.classList.remove('show'); tooltip.style.visibility = '';
+      let top = (rect.top - ttH - 12 >= 8) ? rect.top - ttH - 12 : rect.bottom + 10;
+      if (top + ttH > window.innerHeight - 8) top = window.innerHeight - ttH - 8;
+      if (top < 8) top = 8;
+      tooltip.style.left = left+'px'; tooltip.style.top = top+'px';
+      tooltip.classList.add('show');
+    });
+  });
+}
+
+document.addEventListener('click', e => {
+  if (tooltip.contains(e.target)) return;
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+});
+
+let stats = {};
+try { stats = JSON.parse(localStorage.getItem('ae_stats_news1') || '{}'); } catch(e) {}
+stats = Object.assign({ attempts:0, totalCorrect:0, totalAnswered:0, mistakes:{}, streak:0, lastStreakDate:'', weekSaves:{} }, stats);
+
+function persistStats() { try { localStorage.setItem('ae_stats_news1', JSON.stringify(stats)); } catch(e) {} }
+function getWeekKey() { const n=new Date(),j=new Date(n.getFullYear(),0,1); return n.getFullYear()+'-W'+Math.ceil(((n-j)/86400000+j.getDay()+1)/7); }
+function getTodayKey() { return new Date().toISOString().slice(0,10); }
+
+function recordSave() {
+  const wk = getWeekKey();
+  if (!stats.weekSaves) stats.weekSaves = {};
+  if (!stats.weekSaves[wk]) stats.weekSaves[wk] = 0;
+  stats.weekSaves[wk]++;
+  const today = getTodayKey(), yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if (stats.lastStreakDate === today) {}
+  else if (stats.lastStreakDate === yesterday) { stats.streak++; stats.lastStreakDate = today; }
+  else { stats.streak = 1; stats.lastStreakDate = today; }
+  persistStats(); renderStats();
+}
+
+function recordAttempt(correct, total, wrongKeys) {
+  stats.attempts++; stats.totalCorrect += correct; stats.totalAnswered += total;
+  wrongKeys.forEach(k => { stats.mistakes[k] = (stats.mistakes[k]||0)+1; });
+  persistStats(); renderStats();
+}
+
+function renderStats() {
+  const wk = getWeekKey();
+  document.getElementById('statLearned').textContent  = (stats.weekSaves&&stats.weekSaves[wk])||Object.keys(saved).length;
+  document.getElementById('statAttempts').textContent = stats.attempts||0;
+  document.getElementById('statMistakes').textContent = Object.values(stats.mistakes||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('statAccuracy').textContent = stats.totalAnswered>0 ? Math.round((stats.totalCorrect/stats.totalAnswered)*100)+'%' : '—';
+  document.getElementById('statStreak').textContent   = (stats.streak||0)+' gün';
+  const missEntries = Object.entries(stats.mistakes||{}).filter(([k])=>saved[k]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const hardBox = document.getElementById('hardWordsBox'), hardList = document.getElementById('hardWordsList');
+  if (missEntries.length) { hardBox.style.display='block'; hardList.innerHTML=missEntries.map(([k,cnt])=>`<div class="hard-chip">${saved[k]?.word||k}<span class="miss-count">✕${cnt}</span></div>`).join(''); }
+  else hardBox.style.display='none';
+  document.getElementById('statsSection').classList.toggle('visible', Object.keys(saved).length>0||stats.attempts>0);
+}
+
+function resetStats() {
+  if (!confirm('İstatistikler sıfırlansın mı?')) return;
+  stats={attempts:0,totalCorrect:0,totalAnswered:0,mistakes:{},streak:0,lastStreakDate:'',weekSaves:{}};
+  persistStats(); renderStats();
+}
+
+let exSelectedEng=null, exSelectedTr=null, exCorrect=0, exTotal=0, exWrongKeys=[];
+
+function shuffle(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr; }
+
+function startExercise() {
+  const keys = Object.keys(saved);
+  if (keys.length < 2) return;
+  const pick = shuffle([...keys]).slice(0,8);
+  exCorrect=0; exTotal=pick.length; exSelectedEng=null; exSelectedTr=null; exWrongKeys=[];
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('scoreTotal').textContent=exTotal;
+  document.getElementById('exResult').classList.remove('show');
+  const engWords=shuffle([...pick]), trWords=shuffle([...pick]);
+  const colEng=document.getElementById('colEng'), colTr=document.getElementById('colTr');
+  colEng.innerHTML=''; colTr.innerHTML='';
+  engWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card eng'; card.dataset.key=key; card.textContent=d.word;
+    card.addEventListener('click',()=>selectCard(card,'eng')); colEng.appendChild(card);
+  });
+  trWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card tr'; card.dataset.key=key; card.textContent=d.tr.split('/')[0].trim();
+    card.addEventListener('click',()=>selectCard(card,'tr')); colTr.appendChild(card);
+  });
+  document.getElementById('exerciseSection').classList.add('visible');
+  document.getElementById('exerciseSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectCard(card, side) {
+  if (card.classList.contains('correct')||card.classList.contains('dimmed')) return;
+  if (side==='eng') { document.querySelectorAll('.match-card.eng.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedEng=card; }
+  else { document.querySelectorAll('.match-card.tr.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedTr=card; }
+  if (exSelectedEng && exSelectedTr) checkMatch();
+}
+
+function checkMatch() {
+  const engKey=exSelectedEng.dataset.key, trKey=exSelectedTr.dataset.key;
+  if (engKey===trKey) {
+    exSelectedEng.classList.remove('selected'); exSelectedTr.classList.remove('selected');
+    exSelectedEng.classList.add('correct','dimmed'); exSelectedTr.classList.add('correct','dimmed');
+    exSelectedEng.innerHTML='✅ '+exSelectedEng.textContent;
+    exCorrect++; document.getElementById('scoreNum').textContent=exCorrect;
+    if (exCorrect===exTotal) { recordAttempt(exCorrect,exTotal,exWrongKeys); setTimeout(()=>document.getElementById('exResult').classList.add('show'),400); }
+  } else {
+    exWrongKeys.push(engKey);
+    exSelectedEng.classList.add('wrong'); exSelectedTr.classList.add('wrong');
+    const eng=exSelectedEng, tr=exSelectedTr;
+    setTimeout(()=>{ eng.classList.remove('wrong','selected'); tr.classList.remove('wrong','selected'); },600);
+  }
+  exSelectedEng=null; exSelectedTr=null;
+}
+
+function closeExercise() { document.getElementById('exerciseSection').classList.remove('visible'); }
+
+renderSaved();
+renderStats();
+</script>
+</body>
+</html>
