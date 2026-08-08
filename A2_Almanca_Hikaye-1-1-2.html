@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LingoTales – A2 Almanca İnteraktif Hikaye</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#D0241C; --navy:#1B3A5C; --cream:#F5F0E8; --gold:#FFD166; --green:#06D6A0; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:'Nunito',sans-serif; background:var(--cream); min-height:100vh; display:flex; flex-direction:column; }
+  header{ background:var(--navy); padding:13px 22px; box-shadow:0 2px 12px rgba(0,0,0,0.28); }
+  .header-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; }
+  .brand span:first-child{ color:var(--red); }
+  .brand span:last-child{ color:white; margin-left:6px; }
+  .header-right{ display:flex; align-items:center; }
+  .brand-sub{ font-size:15px; }
+  .btn-tiktok{ background:#000000; }
+  .social-links-row{ margin-top:10px; display:flex; justify-content:flex-end; }
+  .social-links{ display:flex; gap:9px; }
+  .social-btn{ display:flex; align-items:center; gap:6px; padding:7px 15px; border-radius:50px; text-decoration:none; font-size:13px; font-weight:800; color:white; transition:transform .18s,opacity .18s; white-space:nowrap; }
+  .social-btn:hover{ transform:translateY(-2px); opacity:.85; }
+  .btn-insta{ background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .btn-yt{ background:#FF0000; }
+  .band{ background:var(--red); color:white; text-align:center; padding:9px 16px; font-size:13px; font-weight:700; letter-spacing:.03em; }
+  main{ flex:1; max-width:820px; width:100%; margin:0 auto; padding:30px 18px 60px; }
+  .card{ background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.12); padding:30px 28px 24px; animation:fadeUp .4s ease; }
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+  .card-label{ font-size:11px; font-weight:800; letter-spacing:.13em; color:var(--red); text-transform:uppercase; margin-bottom:5px; }
+  .card-title{ font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--navy); margin-bottom:20px; letter-spacing:.03em; }
+  .card-title-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+  .card-title-row .card-title{ margin-bottom:0; }
+  .listen-btn{ flex:0 0 auto; display:flex; align-items:center; gap:6px; background:var(--navy); color:#fff; border:none; border-radius:20px; padding:8px 16px; font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; cursor:pointer; transition:background .15s; }
+  .listen-btn:hover{ background:var(--red); }
+  .listen-btn.playing{ background:var(--red); }
+  .listen-btn:disabled{ opacity:.5; cursor:default; }
+  .word-speak-btn{ background:none; border:none; cursor:pointer; font-size:15px; padding:0 0 0 6px; vertical-align:middle; line-height:1; }
+  .word.speaking{ background:var(--gold)!important; color:var(--navy)!important; border-radius:5px; }
+  .speed-row{ display:flex; align-items:center; gap:6px; margin:-2px 0 14px; flex-wrap:wrap; }
+  .speed-label{ font-size:12px; font-weight:800; color:var(--navy); opacity:.65; margin-right:2px; }
+  .speed-btn{ background:#fff; border:1.5px solid #d9d2c4; color:var(--navy); border-radius:14px; padding:4px 12px; font-family:'Nunito',sans-serif; font-weight:800; font-size:12px; cursor:pointer; transition:all .15s; }
+  .speed-btn.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .reading-text{ font-size:18px; line-height:1.95; color:#1a1a2e; }
+  .word{ cursor:pointer; border-radius:5px; padding:1px 3px; transition:background .15s,color .15s; display:inline; }
+  .word.content:hover{ background:#e8eef7; color:var(--navy); }
+  .word.func:hover{ background:#f0f0f0; }
+  .word.active{ background:var(--navy)!important; color:white!important; border-radius:5px; }
+  .hint{ margin-top:18px; text-align:center; font-size:13px; color:#999; }
+  .hint b{ color:var(--navy); }
+  .tooltip-box{ position:fixed; will-change:left,top; background:var(--navy); color:white; border-radius:14px; padding:14px 18px; max-width:260px; z-index:9999; pointer-events:none; opacity:0; transform:translateY(8px); transition:opacity .18s,transform .18s; box-shadow:0 10px 32px rgba(0,0,0,0.25); font-size:14px; }
+  .tooltip-box.show{ opacity:1; transform:translateY(0); pointer-events:all; }
+  .t-word{ font-size:17px; color:var(--gold); font-weight:800; display:block; margin-bottom:6px; }
+  .t-tr{ display:flex; align-items:flex-start; gap:6px; margin-bottom:4px; }
+  .t-tr .flag{ font-size:15px; flex-shrink:0; }
+  .t-tr .val{ font-size:14px; font-weight:700; color:white; }
+  .t-syn{ display:flex; align-items:flex-start; gap:6px; }
+  .t-syn .flag{ font-size:15px; flex-shrink:0; }
+  .t-syn .val{ font-size:13px; font-weight:600; color:var(--green); }
+  .t-note{ font-size:11.5px; color:#9ab3cc; margin-top:5px; display:block; font-style:italic; }
+  .t-save-btn{ display:flex; align-items:center; justify-content:center; gap:5px; margin-top:10px; width:100%; padding:7px 10px; border-radius:8px; border:none; background:var(--gold); color:#1a1a2e; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; pointer-events:all; }
+  .t-save-btn:hover{ background:#ffc933; transform:scale(1.03); }
+  .t-save-btn.saved{ background:var(--green); color:#0a2a20; }
+  .saved-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .saved-section.has-words{ display:block; animation:fadeUp .35s ease; }
+  .saved-header{ background:var(--navy); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .saved-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .saved-header-right{ display:flex; gap:8px; align-items:center; }
+  .clear-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .clear-btn:hover{ background:rgba(255,255,255,0.25); }
+  .word-count{ background:var(--gold); color:var(--navy); border-radius:50px; padding:3px 11px; font-size:12px; font-weight:800; }
+  .saved-list{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .saved-item{ background:#f7f9fc; border-radius:12px; padding:12px 16px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; border-left:4px solid var(--navy); animation:fadeUp .25s ease; }
+  .saved-item-body{ flex:1; min-width:0; }
+  .saved-word{ font-size:16px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+  .saved-tr{ font-size:13px; color:#333; margin-bottom:2px; }
+  .saved-syn{ font-size:12px; color:#06a07a; font-weight:600; }
+  .saved-note{ font-size:11px; color:#888; font-style:italic; margin-top:2px; }
+  .remove-btn{ background:none; border:none; cursor:pointer; color:#ccc; font-size:18px; line-height:1; padding:2px 4px; border-radius:6px; transition:color .15s,background .15s; flex-shrink:0; }
+  .remove-btn:hover{ color:var(--red); background:#ffeaea; }
+  .stats-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .stats-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .stats-header{ background:linear-gradient(135deg,var(--navy),#2a5298); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; }
+  .stats-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .stats-reset-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .stats-reset-btn:hover{ background:rgba(255,255,255,0.25); }
+  .stats-body{ padding:18px 18px 22px; display:flex; flex-direction:column; gap:14px; }
+  .stats-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat-box{ background:#f4f7fc; border-radius:14px; padding:14px 16px; text-align:center; border-top:4px solid var(--navy); }
+  .stat-box.accent{ border-top-color:var(--green); }
+  .stat-box.warn{ border-top-color:var(--gold); }
+  .stat-box.danger{ border-top-color:var(--red); }
+  .stat-value{ font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--navy); line-height:1; }
+  .stat-box.accent .stat-value{ color:#06a07a; }
+  .stat-box.warn .stat-value{ color:#c9960a; }
+  .stat-box.danger .stat-value{ color:var(--red); }
+  .stat-label{ font-size:12px; font-weight:700; color:#888; margin-top:4px; }
+  .hard-words-box{ background:#fff8e1; border-radius:14px; padding:14px 16px; border-left:4px solid var(--gold); }
+  .hard-words-title{ font-size:13px; font-weight:800; color:#c9960a; margin-bottom:10px; }
+  .hard-words-list{ display:flex; flex-wrap:wrap; gap:7px; }
+  .hard-chip{ background:white; border:1.5px solid #f0d070; border-radius:50px; padding:4px 12px; font-size:13px; font-weight:700; color:var(--navy); display:flex; align-items:center; gap:5px; }
+  .hard-chip .miss-count{ font-size:11px; color:var(--red); font-weight:800; }
+  .streak-box{ background:linear-gradient(135deg,#fff3f3,#fff8e1); border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px; border:1.5px solid #fde8c0; }
+  .streak-icon{ font-size:32px; line-height:1; }
+  .streak-text{ font-size:13px; font-weight:700; color:#555; }
+  .streak-num{ font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--red); }
+  .exercise-section{ margin-top:16px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .exercise-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .exercise-header{ background:var(--red); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .exercise-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .exercise-body{ padding:20px 18px 24px; }
+  .ex-instruction{ font-size:13.5px; color:#555; font-weight:600; margin-bottom:18px; text-align:center; }
+  .match-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .match-col{ display:flex; flex-direction:column; gap:8px; }
+  .match-card{ padding:11px 14px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; border:2.5px solid transparent; transition:all .18s; user-select:none; min-height:52px; display:flex; align-items:center; justify-content:center; line-height:1.3; }
+  .match-card.eng{ background:#eef2fb; color:var(--navy); border-color:#c5d2ee; }
+  .match-card.tr{ background:#f0faf6; color:#0a5c40; border-color:#a8e6d0; }
+  .match-card.selected{ border-color:var(--gold); background:#fff8e1; transform:scale(1.03); box-shadow:0 4px 14px rgba(255,209,102,.35); }
+  .match-card.correct{ border-color:var(--green); background:#d4fdf0; color:#056b44; cursor:default; animation:pop .25s ease; }
+  .match-card.wrong{ border-color:var(--red); background:#fde8e7; animation:shake .3s ease; }
+  .match-card.dimmed{ opacity:.3; cursor:default; pointer-events:none; }
+  @keyframes pop{ 0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)} }
+  @keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)} }
+  .score-bar{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; font-size:14px; font-weight:700; color:var(--navy); }
+  .score-num{ font-size:24px; font-weight:800; color:var(--red); }
+  .ex-result{ display:none; text-align:center; margin-top:18px; padding:18px; background:#d4fdf0; border-radius:14px; font-size:16px; font-weight:800; color:#056b44; }
+  .ex-result.show{ display:block; animation:fadeUp .3s ease; }
+  .ex-btn{ display:inline-block; margin-top:12px; padding:10px 28px; background:var(--navy); color:white; border:none; border-radius:50px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .ex-btn:hover{ background:#152d48; transform:scale(1.03); }
+  .start-ex-btn{ display:flex; align-items:center; justify-content:center; gap:7px; width:calc(100% - 36px); margin:0 18px 18px; padding:12px; background:var(--red); color:white; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .start-ex-btn:hover{ background:#b01e17; transform:scale(1.02); }
+  .start-ex-btn:disabled{ background:#ccc; cursor:default; transform:none; }
+  footer{ background:#0f1923; color:#5a7a99; text-align:center; padding:14px; font-size:12px; }
+  footer strong{ color:white; }
+  @media(max-width:520px){ .reading-text{font-size:16px} .card{padding:20px 15px 18px} }
+  .tabs-wrapper{ margin-bottom:18px; }
+  .tabs{ display:grid; grid-template-columns:repeat(5,1fr); gap:7px; }
+  .tab-btn{ padding:9px 6px; border-radius:12px; border:2px solid var(--navy); background:white; color:var(--navy); font-family:'Nunito',sans-serif; font-size:12px; font-weight:800; cursor:pointer; transition:background .18s,color .18s,transform .12s,box-shadow .18s; text-align:center; line-height:1.25; }
+  .tab-btn:hover{ background:#e8eef7; transform:translateY(-1px); }
+  .tab-btn.active{ background:var(--navy); color:white; box-shadow:0 4px 14px rgba(27,58,92,0.28); }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="brand"><span>Lingo</span><span>Tales</span></div>
+    <div class="header-right">
+      <div class="brand brand-sub"><span>AKTİF</span><span>İNGİLİZCE</span></div>
+    </div>
+  </div>
+  <div class="social-links-row">
+    <div class="social-links">
+      <a class="social-btn btn-insta" href="https://www.instagram.com/aktifingilizceonline" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+        Instagram
+      </a>
+      <a class="social-btn btn-yt" href="https://www.youtube.com/@aktifingilizce" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2.1.3 4.2.3 4.2s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.3 21.6 12 21.6 12 21.6s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.2v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+        YouTube
+      </a>
+      <a class="social-btn btn-tiktok" href="https://www.tiktok.com/@aktif.ingilizce" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M16.6 5.82c-1.02-.9-1.6-2.2-1.6-3.62h-3.14v13.5c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1 0-5.9c.27 0 .53.04.78.1V9.4a6.1 6.1 0 0 0-.78-.05A6.1 6.1 0 1 0 15 15.45V9.98c1.2.86 2.66 1.36 4.24 1.36V8.2c-.98 0-1.88-.32-2.64-.86-.02 0 0 0 0 0z"/></svg>
+        TikTok
+      </a>
+    </div>
+  </div>
+</header>
+<div class="band">📖 Kelimeye tıkla → 🇹🇷 Türkçesini + 🇬🇧 İngilizcesini + 🔤 Almanca eş anlamlısını gör!</div>
+<main>
+  <div class="tabs-wrapper"><div class="tabs" id="tabsBar"></div></div>
+  <div class="card">
+    <div class="card-label">LingoTales – A2 Seviye İnteraktif Almanca Hikaye</div>
+    <div class="card-title-row">
+      <div class="card-title" id="cardTitle"></div>
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Dinle</button>
+    </div>
+    <div class="speed-row">
+      <span class="speed-label">Hız:</span>
+      <button class="speed-btn" id="speedSlow" onclick="setRate(0.7,this)">🐢 Yavaş</button>
+      <button class="speed-btn active" id="speedNorm" onclick="setRate(1,this)">🏃 Normal</button>
+    </div>
+    <div class="reading-text" id="readingText"></div>
+    <p class="hint">👆 Herhangi bir kelimeye tıkla — <b>Türkçe anlamı</b> ve <b>İngilizce eş anlamlısı</b> çıksın!</p>
+  </div>
+  <div class="saved-section" id="savedSection">
+    <div class="saved-header">
+      <h2>⭐ Kaydettiğin Kelimeler</h2>
+      <div class="saved-header-right">
+        <span class="word-count" id="wordCount">0</span>
+        <button class="clear-btn" onclick="clearAll()">🗑 Hepsini Sil</button>
+      </div>
+    </div>
+    <button class="start-ex-btn" id="startExBtn" onclick="startExercise()" disabled>🎯 Eşleştirme Egzersizi Başlat</button>
+    <div class="saved-list" id="savedList"></div>
+  </div>
+  <div class="stats-section" id="statsSection">
+    <div class="stats-header">
+      <h2>📊 Kelime Skorum</h2>
+      <button class="stats-reset-btn" onclick="resetStats()">Sıfırla</button>
+    </div>
+    <div class="stats-body">
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-value" id="statLearned">0</div><div class="stat-label">Bu hafta kaydedilen kelime</div></div>
+        <div class="stat-box accent"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Doğru eşleştirme oranı</div></div>
+        <div class="stat-box warn"><div class="stat-value" id="statAttempts">0</div><div class="stat-label">Toplam egzersiz turu</div></div>
+        <div class="stat-box danger"><div class="stat-value" id="statMistakes">0</div><div class="stat-label">Toplam hatalı deneme</div></div>
+      </div>
+      <div class="streak-box"><div class="streak-icon">🔥</div><div><div class="streak-text">Günlük seri</div><div class="streak-num" id="statStreak">0 gün</div></div></div>
+      <div class="hard-words-box" id="hardWordsBox" style="display:none">
+        <div class="hard-words-title">😅 En zorlandığın kelimeler</div>
+        <div class="hard-words-list" id="hardWordsList"></div>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-section" id="exerciseSection">
+    <div class="exercise-header">
+      <h2>🎯 Eşleştirme Egzersizi</h2>
+      <button class="ex-btn" style="margin-top:0;padding:6px 16px;font-size:13px;" onclick="closeExercise()">✕ Kapat</button>
+    </div>
+    <div class="exercise-body">
+      <p class="ex-instruction">Sol sütundan bir İngilizce kelime, sağ sütundan Türkçesi'ni seç!</p>
+      <div class="match-grid">
+        <div class="match-col" id="colEng"></div>
+        <div class="match-col" id="colTr"></div>
+      </div>
+      <div class="score-bar">Doğru: <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span></div>
+      <div class="ex-result" id="exResult">🎉 Tebrikler! Hepsini doğru eşleştirdin!<br><button class="ex-btn" onclick="startExercise()">🔄 Tekrar Oyna</button></div>
+    </div>
+  </div>
+</main>
+<footer><strong>LingoTales</strong> &copy; 2025 · Hikayelerle Dil Öğren</footer>
+<div class="tooltip-box" id="tooltip">
+  <span class="t-word" id="tWord"></span><button class="word-speak-btn" id="wordSpeakBtn" onclick="speakWord()">🔊</button>
+  <div class="t-tr"><span class="flag">🇹🇷</span><span class="val" id="tTr"></span></div>
+  <div class="t-tr"><span class="flag">🇬🇧</span><span class="val" id="tEn"></span></div>
+  <div class="t-syn"><span class="flag">🔤</span><span class="val" id="tSyn"></span></div>
+  <span class="t-note" id="tNote"></span>
+  <button class="t-save-btn" id="tSaveBtn" onclick="toggleSave()">⭐ Kaydet</button>
+</div>
+<script>
+const WORDS = {
+  "hallo":{tr:"merhaba",en:"hello",syn:"Guten Tag"},
+  "ich":{tr:"ben",en:"I",syn:"—",func:true},
+  "bin":{tr:"-im/-yim (olmak)",en:"am",syn:"—",func:true,note:"sein fiili → ich bin"},
+  "ein":{tr:"bir",en:"a / an",syn:"—",func:true},
+  "mann":{tr:"erkek, adam",en:"man",syn:"Kerl"},
+  "und":{tr:"ve",en:"and",syn:"—",func:true},
+  "sechsunddreißig":{tr:"otuz altı",en:"thirty-six",syn:"—"},
+  "jahre":{tr:"yıl, yaşında",en:"years",syn:"Jahr (tekil)"},
+  "alt":{tr:"yaşında, eski",en:"old",syn:"—"},
+  "lehrer":{tr:"öğretmen",en:"teacher",syn:"Pädagoge"},
+  "von":{tr:"-den/-dan, tarafından",en:"by, of",syn:"—",func:true},
+  "beruf":{tr:"meslek",en:"profession",syn:"Job"},
+  "arbeite":{tr:"çalışıyorum",en:"work (I work)",syn:"—",note:"arbeiten fiili → ich arbeite"},
+  "viel":{tr:"çok",en:"a lot, much",syn:"sehr",func:true},
+  "aber":{tr:"ama, fakat",en:"but",syn:"jedoch",func:true},
+  "liebe":{tr:"seviyorum",en:"love (I love)",syn:"mögen",note:"lieben fiili → ich liebe"},
+  "meinen":{tr:"benim (-i hali)",en:"my (accusative)",syn:"—",func:true},
+  "job":{tr:"iş",en:"job",syn:"Beruf"},
+  "verheiratet":{tr:"evli",en:"married",syn:"—"},
+  "meine":{tr:"benim",en:"my",syn:"—",func:true},
+  "frau":{tr:"eş, kadın",en:"wife, woman",syn:"Ehefrau"},
+  "ist":{tr:"-dir (olmak)",en:"is",syn:"—",func:true,note:"sein fiili → er/sie/es ist"},
+  "sehr":{tr:"çok",en:"very",syn:"viel",func:true},
+  "nett":{tr:"nazik, hoş",en:"nice",syn:"freundlich"},
+  "wir":{tr:"biz",en:"we",syn:"—",func:true},
+  "haben":{tr:"sahip olmak",en:"to have",syn:"besitzen",func:true},
+  "einen":{tr:"bir (-i hali)",en:"a / an (accusative)",syn:"—",func:true},
+  "sohn":{tr:"oğul",en:"son",syn:"—"},
+  "er":{tr:"o (erkek)",en:"he",syn:"—",func:true},
+  "vier":{tr:"dört",en:"four",syn:"—"},
+  "klein":{tr:"küçük",en:"small",syn:"winzig"},
+  "aktiv":{tr:"hareketli, aktif",en:"active",syn:"lebendig"},
+  "am":{tr:"-de/-da (an+dem)",en:"at the / on the",syn:"—",func:true},
+  "morgen":{tr:"sabah",en:"morning",syn:"Vormittag"},
+  "stehe":{tr:"kalkıyorum",en:"get up (I get up)",syn:"—",note:"aufstehen fiili → ich stehe...auf"},
+  "früh":{tr:"erken",en:"early",syn:"zeitig"},
+  "auf":{tr:"kalkmak (ek fiil), üzerinde",en:"up, on",syn:"—",func:true},
+  "trinke":{tr:"içiyorum",en:"drink (I drink)",syn:"—",note:"trinken fiili → ich trinke"},
+  "kaffee":{tr:"kahve",en:"coffee",syn:"—"},
+  "lerne":{tr:"öğreniyorum",en:"learn (I learn)",syn:"—",note:"lernen fiili → ich lerne"},
+  "deutsch":{tr:"Almanca",en:"German",syn:"—"},
+  "lernen":{tr:"öğrenmek",en:"to learn",syn:"studieren"},
+  "interessant":{tr:"ilginç",en:"interesting",syn:"spannend"},
+  "jeden":{tr:"her (-i hali)",en:"every",syn:"—",func:true},
+  "tag":{tr:"gün",en:"day",syn:"—"},
+  "das":{tr:"o, bu (nötr)",en:"the / that (neuter)",syn:"—",func:true},
+  "buch":{tr:"kitap",en:"book",syn:"—"},
+  "gut":{tr:"iyi",en:"good",syn:"toll"},
+  "nachmittag":{tr:"öğleden sonra",en:"afternoon",syn:"—"},
+  "habe":{tr:"sahibim",en:"have (I have)",syn:"—",func:true,note:"haben fiili → ich habe"},
+  "freizeit":{tr:"boş zaman",en:"free time",syn:"Freistunde"},
+  "spiele":{tr:"oynuyorum",en:"play (I play)",syn:"—",note:"spielen fiili → ich spiele"},
+  "mit":{tr:"ile",en:"with",syn:"zusammen mit",func:true},
+  "meinem":{tr:"benim (-e hali)",en:"my (dative)",syn:"—",func:true},
+  "im":{tr:"-de/-da (in+dem)",en:"in the",syn:"—",func:true},
+  "park":{tr:"park",en:"park",syn:"—"},
+  "der":{tr:"o, bu (eril)",en:"the (masculine)",syn:"—",func:true},
+  "groß":{tr:"büyük",en:"big, tall",syn:"riesig"},
+  "grün":{tr:"yeşil",en:"green",syn:"—"},
+  "spielen":{tr:"oynamak",en:"to play",syn:"—"},
+  "ball":{tr:"top",en:"ball",syn:"—"},
+  "lacht":{tr:"gülüyor",en:"laughs",syn:"—",note:"lachen fiili → er lacht"},
+  "abend":{tr:"akşam",en:"evening",syn:"—"},
+  "kochen":{tr:"yemek pişirmek",en:"to cook",syn:"—"},
+  "abendessen":{tr:"akşam yemeği",en:"dinner",syn:"Dinner"},
+  "essen":{tr:"yemek yemek, yemek",en:"food, to eat",syn:"Mahlzeit"},
+  "zusammen":{tr:"birlikte",en:"together",syn:"gemeinsam",func:true},
+  "lecker":{tr:"lezzetli",en:"delicious",syn:"köstlich"},
+  "später":{tr:"daha sonra",en:"later",syn:"danach",func:true},
+  "geht":{tr:"gidiyor",en:"goes",syn:"—",note:"gehen fiili → er geht"},
+  "mein":{tr:"benim (eril/nötr)",en:"my",syn:"—",func:true},
+  "schlafen":{tr:"uyumak",en:"to sleep",syn:"—"},
+  "es":{tr:"o (nötr)",en:"it",syn:"—",func:true},
+  "ruhig":{tr:"sessiz, sakin",en:"quiet, calm",syn:"still"},
+  "haus":{tr:"ev",en:"house",syn:"Zuhause"},
+  "sitze":{tr:"oturuyorum",en:"sit (I sit)",syn:"—",note:"sitzen fiili → ich sitze"},
+  "tisch":{tr:"masa",en:"table",syn:"—"},
+  "wieder":{tr:"tekrar, yine",en:"again",syn:"erneut",func:true},
+  "bisschen":{tr:"biraz",en:"a little bit",syn:"etwas",func:true},
+  "ziel":{tr:"hedef",en:"goal",syn:"Zweck"},
+  "dann":{tr:"sonra, o zaman",en:"then",syn:"danach",func:true},
+  "gehe":{tr:"gidiyorum",en:"go (I go)",syn:"—",note:"gehen fiili → ich gehe"},
+  "auch":{tr:"ayrıca, de/da",en:"also, too",syn:"ebenfalls",func:true},
+  "gute":{tr:"iyi (çekimli)",en:"good",syn:"—"},
+  "nacht":{tr:"gece",en:"night",syn:"—"},
+  "alle":{tr:"hepsi, herkes",en:"all, everyone",syn:"—",func:true},
+  "anderen":{tr:"diğer (-e hali)",en:"other",syn:"—",func:true},
+  "ausflug":{tr:"gezi",en:"trip, outing",syn:"—"},
+  "auto":{tr:"araba",en:"car",syn:"Wagen"},
+  "brot":{tr:"ekmek",en:"bread",syn:"—"},
+  "dauert":{tr:"sürüyor",en:"lasts",syn:"—",note:"dauern fiili → es dauert"},
+  "dem":{tr:"o, bu (-e hali, eril/nötr)",en:"the (dative)",syn:"—",func:true},
+  "die":{tr:"o, bu (dişil/çoğul)",en:"the (feminine/plural)",syn:"—",func:true},
+  "dreißig":{tr:"otuz",en:"thirty",syn:"—"},
+  "enten":{tr:"ördekler",en:"ducks",syn:"—"},
+  "fahren":{tr:"gitmek (araçla)",en:"to drive, to go (by vehicle)",syn:"—"},
+  "fahrt":{tr:"yolculuk",en:"journey, ride",syn:"Reise"},
+  "familie":{tr:"aile",en:"family",syn:"—"},
+  "froh":{tr:"mutlu, sevinçli",en:"happy, glad",syn:"glücklich"},
+  "frühstück":{tr:"kahvaltı",en:"breakfast",syn:"—"},
+  "frühstücken":{tr:"kahvaltı yapmak",en:"to have breakfast",syn:"—"},
+  "für":{tr:"için",en:"for",syn:"—",func:true},
+  "gehen":{tr:"gitmek (yürüyerek)",en:"to go, to walk",syn:"—"},
+  "glücklich":{tr:"mutlu",en:"happy",syn:"froh"},
+  "gras":{tr:"çim",en:"grass",syn:"—"},
+  "hat":{tr:"sahip (o)",en:"has",syn:"—",func:true,note:"haben fiili → er/sie/es hat"},
+  "hause":{tr:"eve, evde",en:"home",syn:"—",func:true},
+  "in":{tr:"içinde",en:"in",syn:"—",func:true},
+  "isst":{tr:"yiyor",en:"eats",syn:"—",note:"essen fiili → er/sie/es isst"},
+  "kindern":{tr:"çocuklar (-e hali)",en:"children (dative)",syn:"—"},
+  "kleines":{tr:"küçük",en:"small",syn:"winzig"},
+  "küche":{tr:"mutfak",en:"kitchen",syn:"—"},
+  "länger":{tr:"daha uzun",en:"longer",syn:"mehr"},
+  "läuft":{tr:"koşuyor (o)",en:"runs",syn:"—",note:"laufen fiili → er läuft"},
+  "machen":{tr:"yapmak",en:"to make, to do",syn:"—"},
+  "marmelade":{tr:"reçel",en:"jam",syn:"—"},
+  "milch":{tr:"süt",en:"milk",syn:"—"},
+  "minuten":{tr:"dakikalar",en:"minutes",syn:"—"},
+  "müde":{tr:"yorgun",en:"tired",syn:"—"},
+  "nach":{tr:"sonra, -e doğru",en:"after, to",syn:"—",func:true},
+  "natur":{tr:"doğa",en:"nature",syn:"—"},
+  "obst":{tr:"meyve",en:"fruit",syn:"—"},
+  "picknick":{tr:"piknik",en:"picnic",syn:"—"},
+  "rucksack":{tr:"sırt çantası",en:"backpack",syn:"—"},
+  "samstagmorgen":{tr:"cumartesi sabahı",en:"Saturday morning",syn:"—"},
+  "scheint":{tr:"parlıyor (o)",en:"shines",syn:"—",note:"scheinen fiili → sie/es scheint"},
+  "schläft":{tr:"uyuyor (o)",en:"sleeps",syn:"—",note:"schlafen fiili → er/sie/es schläft"},
+  "schön":{tr:"güzel",en:"beautiful, nice",syn:"—"},
+  "see":{tr:"göl",en:"lake",syn:"—"},
+  "sieht":{tr:"görüyor (o)",en:"sees",syn:"—",note:"sehen fiili → er/sie/es sieht"},
+  "sind":{tr:"-dir(ler) (olmak, çoğul)",en:"are",syn:"—",func:true,note:"sein fiili → wir/sie sind"},
+  "sonne":{tr:"güneş",en:"sun",syn:"—"},
+  "spazieren":{tr:"yürüyüşe çıkmak",en:"to go for a walk",syn:"—"},
+  "spielt":{tr:"oynuyor (o)",en:"plays",syn:"—",note:"spielen fiili → er spielt"},
+  "sprechen":{tr:"konuşmak",en:"to speak, to talk",syn:"reden"},
+  "trinkt":{tr:"içiyor (o)",en:"drinks",syn:"—",note:"trinken fiili → er/sie/es trinkt"},
+  "unsere":{tr:"bizim",en:"our",syn:"—",func:true},
+  "viele":{tr:"birçok, çok sayıda",en:"many",syn:"—",func:true},
+  "warm":{tr:"sıcak",en:"warm",syn:"—"},
+  "wasser":{tr:"su",en:"water",syn:"—"},
+  "wetter":{tr:"hava (durumu)",en:"weather",syn:"—"},
+  "zum":{tr:"-e (zu+dem)",en:"to the",syn:"—",func:true},
+  "über":{tr:"hakkında, üzerinde",en:"about, over",syn:"—",func:true},
+  "acht":{tr:"sekiz",en:"eight",syn:"—"},
+  "alexanderplatz":{tr:"Alexanderplatz (Berlin'de bir meydan)",en:"Alexanderplatz (a square in Berlin)",syn:"—",func:true},
+  "als":{tr:"olarak",en:"as",syn:"—",func:true},
+  "an":{tr:"-de/-da, kenarında",en:"at, on",syn:"—",func:true},
+  "angst":{tr:"korku",en:"fear",syn:"Furcht"},
+  "antwortet":{tr:"cevap veriyor (o)",en:"answers",syn:"—",note:"antworten fiili → er antwortet"},
+  "arbeitet":{tr:"çalışıyor (o)",en:"works",syn:"—",note:"arbeiten fiili → er arbeitet"},
+  "augen":{tr:"gözler",en:"eyes",syn:"—"},
+  "aus":{tr:"dışına, -den (çıkmak)",en:"out, from",syn:"—",func:true},
+  "bahnhof":{tr:"tren istasyonu",en:"train station",syn:"—"},
+  "bello":{tr:"Bello (köpeğin adı)",en:"Bello (the dog's name)",syn:"—",func:true},
+  "berlin":{tr:"Berlin",en:"Berlin",syn:"—",func:true},
+  "besitzer":{tr:"sahip",en:"owner",syn:"—"},
+  "bist":{tr:"-sin (olmak, sen)",en:"are (you)",syn:"—",func:true,note:"sein fiili → du bist"},
+  "bleibt":{tr:"kalıyor (o)",en:"stays",syn:"—",note:"bleiben fiili → er bleibt"},
+  "brauner":{tr:"kahverengi (çekimli)",en:"brown",syn:"—"},
+  "büro":{tr:"ofis",en:"office",syn:"—"},
+  "dank":{tr:"teşekkür",en:"thanks",syn:"Danke"},
+  "dankeschön":{tr:"teşekkür (isim)",en:"thank-you (noun)",syn:"Danke"},
+  "darf":{tr:"izni var (o/sen)",en:"is/am allowed to",syn:"—",func:true,note:"dürfen fiili → ich/er darf"},
+  "dein":{tr:"senin",en:"your",syn:"—",func:true},
+  "den":{tr:"o, bu (-i hali, eril)",en:"the (accusative, masc.)",syn:"—",func:true},
+  "dich":{tr:"seni",en:"you (accusative)",syn:"—",func:true},
+  "diesen":{tr:"bu (-i hali)",en:"this (accusative)",syn:"—",func:true},
+  "du":{tr:"sen",en:"you",syn:"—",func:true},
+  "eine":{tr:"bir (dişil)",en:"a (feminine)",syn:"—",func:true},
+  "einem":{tr:"bir (-e hali)",en:"a (dative)",syn:"—",func:true},
+  "einer":{tr:"bir (dişil -e hali)",en:"a (feminine dative)",syn:"—",func:true},
+  "einladen":{tr:"davet etmek",en:"to invite",syn:"—"},
+  "etwas":{tr:"bir şey",en:"something",syn:"—",func:true},
+  "fenster":{tr:"pencere",en:"window",syn:"—"},
+  "freude":{tr:"sevinç",en:"joy",syn:"Glück"},
+  "freundlicher":{tr:"arkadaş canlısı (çekimli)",en:"friendly",syn:"nett"},
+  "fröhlich":{tr:"neşeli",en:"cheerful, joyful",syn:"glücklich"},
+  "fuß":{tr:"ayak (zu Fuß = yürüyerek)",en:"foot",syn:"—"},
+  "fünf":{tr:"beş",en:"five",syn:"—"},
+  "gefunden":{tr:"bulunmuş",en:"found",syn:"—",note:"finden fiili → geçmiş ortaç"},
+  "gehabt":{tr:"sahip olmuştu",en:"had (past participle)",syn:"—",note:"haben fiili → geçmiş ortaç"},
+  "gelaufen":{tr:"koşmuş, gelmiş",en:"run, come (past participle)",syn:"—",note:"laufen fiili → geçmiş ortaç"},
+  "gerne":{tr:"seve seve, memnuniyetle",en:"gladly",syn:"—",func:true},
+  "gibt":{tr:"veriyor (o)",en:"gives",syn:"—",note:"geben fiili → er gibt"},
+  "große":{tr:"büyük (çekimli)",en:"big, great",syn:"groß"},
+  "großen":{tr:"büyük (-e/-i hali)",en:"big (dative/accusative)",syn:"groß"},
+  "guten":{tr:"iyi (çekimli)",en:"good",syn:"gut"},
+  "halsband":{tr:"tasma",en:"collar",syn:"—"},
+  "heißt":{tr:"adı ...'dır (o)",en:"is called",syn:"—",note:"heißen fiili → er/sie heißt"},
+  "helfe":{tr:"yardım ediyorum",en:"help (I help)",syn:"—",note:"helfen fiili → ich helfe"},
+  "her":{tr:"buraya (yön)",en:"here, this way",syn:"—",func:true},
+  "heute":{tr:"bugün",en:"today",syn:"—"},
+  "hinter":{tr:"arkasında",en:"behind",syn:"—",func:true},
+  "hoch":{tr:"yükseğe, yukarı",en:"high, up",syn:"—"},
+  "hund":{tr:"köpek",en:"dog",syn:"—"},
+  "hört":{tr:"duyuyor (o)",en:"hears",syn:"—",note:"hören fiili → er hört"},
+  "idee":{tr:"fikir",en:"idea",syn:"—"},
+  "ihrem":{tr:"onun (-e hali, dişil)",en:"her (dative)",syn:"—",func:true},
+  "ja":{tr:"evet",en:"yes",syn:"—",func:true},
+  "kein":{tr:"hiç, hiçbir",en:"no, none",syn:"—",func:true},
+  "kleine":{tr:"küçük (çekimli)",en:"small",syn:"klein"},
+  "kleinen":{tr:"küçük (-e/-i hali)",en:"small (dative/accusative)",syn:"klein"},
+  "kleiner":{tr:"küçük (eril)",en:"small (masc.)",syn:"klein"},
+  "kommt":{tr:"geliyor (o)",en:"comes",syn:"—",note:"kommen fiili → er kommt"},
+  "kopfhörern":{tr:"kulaklıklar (-e hali, çoğul)",en:"headphones (dative plural)",syn:"—"},
+  "käse":{tr:"peynir",en:"cheese",syn:"—"},
+  "laura":{tr:"Laura (isim)",en:"Laura (name)",syn:"—",func:true},
+  "laut":{tr:"yüksek sesle",en:"loud, aloud",syn:"—"},
+  "leise":{tr:"sessizce",en:"quietly",syn:"—"},
+  "liest":{tr:"okuyor (o)",en:"reads",syn:"—",note:"lesen fiili → er/sie liest"},
+  "lächelt":{tr:"gülümsüyor (o)",en:"smiles",syn:"—",note:"lächeln fiili → er lächelt"},
+  "macht":{tr:"yapıyor (o)",en:"makes, does",syn:"—",note:"machen fiili → er macht"},
+  "max":{tr:"Max (isim)",en:"Max (name)",syn:"—",func:true},
+  "menschen":{tr:"insanlar",en:"people",syn:"—"},
+  "musik":{tr:"müzik",en:"music",syn:"—"},
+  "noch":{tr:"hâlâ, henüz",en:"still, yet",syn:"—",func:true},
+  "normalen":{tr:"normal (çekimli)",en:"normal",syn:"—"},
+  "plötzlich":{tr:"aniden",en:"suddenly",syn:"—"},
+  "polizistin":{tr:"kadın polis",en:"policewoman",syn:"—"},
+  "ruft":{tr:"bağırıyor, çağırıyor (o)",en:"calls, shouts",syn:"—",note:"rufen fiili → er/sie ruft"},
+  "sagt":{tr:"söylüyor (o)",en:"says",syn:"—",note:"sagen fiili → er/sie sagt"},
+  "schaut":{tr:"bakıyor (o)",en:"looks",syn:"—",note:"schauen fiili → er schaut"},
+  "schnell":{tr:"hızlı, çabuk",en:"fast, quickly",syn:"—"},
+  "schon":{tr:"zaten, çoktan",en:"already",syn:"—",func:true},
+  "seine":{tr:"onun (eril/nötr)",en:"his",syn:"—",func:true},
+  "seinen":{tr:"onun (-i hali)",en:"his (accusative)",syn:"—",func:true},
+  "seiner":{tr:"onun (dişil -e hali)",en:"his (dative fem.)",syn:"—",func:true},
+  "seit":{tr:"-den beri",en:"since, for",syn:"—",func:true},
+  "sie":{tr:"o (dişil), onlar",en:"she, they",syn:"—",func:true},
+  "sieben":{tr:"yedi",en:"seven",syn:"—"},
+  "sitz":{tr:"koltuk, oturma yeri",en:"seat",syn:"—"},
+  "sitzen":{tr:"oturmak",en:"to sit",syn:"—"},
+  "so":{tr:"böylece, öyle",en:"so, thus",syn:"—",func:true},
+  "springt":{tr:"zıplıyor (o)",en:"jumps",syn:"—",note:"springen fiili → er springt"},
+  "station":{tr:"istasyon",en:"station",syn:"—"},
+  "stehen":{tr:"durmak, ayakta durmak",en:"to stand",syn:"—"},
+  "steht":{tr:"kalkıyor, ayakta duruyor (o)",en:"stands, gets up",syn:"—",note:"stehen fiili → er steht"},
+  "steigt":{tr:"iniyor/biniyor (o)",en:"gets off/on",syn:"—",note:"steigen fiili → er steigt"},
+  "stunde":{tr:"saat (süre)",en:"hour",syn:"—"},
+  "stück":{tr:"parça",en:"piece",syn:"—"},
+  "sucht":{tr:"arıyor (o)",en:"searches",syn:"—",note:"suchen fiili → er/sie sucht"},
+  "süß":{tr:"tatlı, sevimli",en:"sweet, cute",syn:"—"},
+  "tasche":{tr:"çanta, cep",en:"bag, pocket",syn:"—"},
+  "tasse":{tr:"fincan",en:"cup",syn:"—"},
+  "traurig":{tr:"üzgün",en:"sad",syn:"—"},
+  "u-bahn":{tr:"metro",en:"subway",syn:"—"},
+  "u-bahn-station":{tr:"metro istasyonu",en:"subway station",syn:"—"},
+  "uhr":{tr:"saat",en:"o'clock, clock",syn:"—"},
+  "um":{tr:"saat...'de, etrafında",en:"at (time), around",syn:"—",func:true},
+  "umarmt":{tr:"sarılıyor (o)",en:"hugs",syn:"—",note:"umarmen fiili → er/sie umarmt"},
+  "unter":{tr:"altında",en:"under",syn:"—",func:true},
+  "verlässt":{tr:"terk ediyor, ayrılıyor (o)",en:"leaves",syn:"—",note:"verlassen fiili → er verlässt"},
+  "vielen":{tr:"birçok (-e/-i hali)",en:"many (dative/accusative)",syn:"—",func:true},
+  "vögel":{tr:"kuşlar",en:"birds",syn:"—"},
+  "weggelaufen":{tr:"kaçmış",en:"run away (past participle)",syn:"—",note:"weglaufen fiili → geçmiş ortaç"},
+  "wenn":{tr:"-diğinde, eğer",en:"when, if",syn:"—",func:true},
+  "wer":{tr:"kim",en:"who",syn:"—",func:true},
+  "wird":{tr:"olacak (o)",en:"becomes",syn:"—",note:"werden fiili → er/sie/es wird"},
+  "wo":{tr:"nerede",en:"where",syn:"—",func:true},
+  "wohnt":{tr:"oturuyor, yaşıyor (o)",en:"lives",syn:"—",note:"wohnen fiili → er wohnt"},
+  "wohnung":{tr:"daire, ev",en:"apartment",syn:"—"},
+  "wunderbarer":{tr:"harika (çekimli)",en:"wonderful",syn:"—"},
+  "zeit":{tr:"zaman",en:"time",syn:"—"},
+  "zu":{tr:"-e/-a, -mek için",en:"to, for",syn:"—",func:true},
+  "zuhause":{tr:"ev, yuva",en:"home",syn:"—"},
+  "zur":{tr:"-e (zu+der)",en:"to the (fem.)",syn:"—",func:true},
+  "abenteuer":{tr:"macera",en:"adventure",syn:"—"},
+  "abzuholen":{tr:"almaya, karşılamaya",en:"to pick up",syn:"—"},
+  "anika":{tr:"Anika (isim)",en:"Anika (name)",syn:"—",func:true},
+  "ankam":{tr:"vardı, geldi (o)",en:"arrived",syn:"—",note:"ankommen fiili → er/sie kam an"},
+  "anschließend":{tr:"ardından, sonrasında",en:"afterwards",syn:"danach",func:true},
+  "atmete":{tr:"nefes aldı (o)",en:"breathed",syn:"—",note:"atmen fiili → sie atmete"},
+  "aufgeregt":{tr:"heyecanlı",en:"excited",syn:"—"},
+  "bahn":{tr:"tren, demiryolu",en:"railway, train",syn:"Zug"},
+  "bahnsteig":{tr:"peron",en:"platform",syn:"—"},
+  "bei":{tr:"yanında, -de",en:"at, with",syn:"—",func:true},
+  "beide":{tr:"her ikisi",en:"both",syn:"—",func:true},
+  "bekam":{tr:"aldı (o)",en:"got, received",syn:"—",note:"bekommen fiili → sie bekam"},
+  "beruhigend":{tr:"sakinleştirici bir şekilde",en:"reassuringly",syn:"—"},
+  "besten":{tr:"en iyi (-i hali)",en:"best",syn:"—"},
+  "bestimmt":{tr:"kesinlikle, mutlaka",en:"definitely",syn:"sicher",func:true},
+  "bitte":{tr:"lütfen",en:"please",syn:"—",func:true},
+  "breiten":{tr:"geniş (çekimli)",en:"wide, broad",syn:"—"},
+  "bringt":{tr:"getiriyor (o)",en:"brings",syn:"—",note:"bringen fiili → er bringt"},
+  "café":{tr:"kafe",en:"café",syn:"—"},
+  "doch":{tr:"ama, yine de",en:"but, yet",syn:"aber",func:true},
+  "dort":{tr:"orada",en:"there",syn:"—",func:true},
+  "entschuldigung":{tr:"özür dilerim, affedersiniz",en:"excuse me, sorry",syn:"—"},
+  "entspannt":{tr:"rahat, gevşemiş",en:"relaxed",syn:"—"},
+  "erleichtert":{tr:"rahatlamış",en:"relieved",syn:"—"},
+  "erschrak":{tr:"korktu (o)",en:"was startled",syn:"—",note:"erschrecken fiili → sie erschrak"},
+  "ersten":{tr:"ilk (-e hali)",en:"first",syn:"—",func:true},
+  "erzählte":{tr:"anlattı (o)",en:"told",syn:"—",note:"erzählen fiili → sie erzählte"},
+  "fest":{tr:"sıkıca",en:"tightly, firmly",syn:"—"},
+  "finden":{tr:"bulmak",en:"to find",syn:"—"},
+  "freund":{tr:"arkadaş (erkek)",en:"friend",syn:"—"},
+  "freundliche":{tr:"nazik, dost canlısı",en:"friendly",syn:"nett"},
+  "freuten":{tr:"sevindiler",en:"were happy",syn:"—",note:"sich freuen fiili → sie freuten sich"},
+  "fundbüro":{tr:"kayıp eşya bürosu",en:"lost-and-found office",syn:"—"},
+  "gemeinsam":{tr:"birlikte",en:"together",syn:"zusammen",func:true},
+  "gemeinsame":{tr:"ortak, birlikte geçirilen",en:"shared, common",syn:"—"},
+  "gemütlich":{tr:"rahat, keyifli",en:"cozy",syn:"—"},
+  "gemütliches":{tr:"rahat, keyifli (çekimli)",en:"cozy",syn:"—"},
+  "gepäck":{tr:"bagaj",en:"luggage",syn:"—"},
+  "geschenk":{tr:"hediye",en:"gift",syn:"—"},
+  "ging":{tr:"gitti (o)",en:"went",syn:"—",note:"gehen fiili → sie ging"},
+  "gingen":{tr:"gittiler",en:"went (plural)",syn:"—",note:"gehen fiili → sie gingen"},
+  "glück":{tr:"şans, mutluluk",en:"luck",syn:"—"},
+  "glücklicherweise":{tr:"neyse ki, iyi ki",en:"fortunately",syn:"—",func:true},
+  "großes":{tr:"büyük (çekimli)",en:"great, big",syn:"groß"},
+  "hatte":{tr:"sahipti (o)",en:"had",syn:"—",func:true,note:"haben fiili → sie hatte"},
+  "hauptbahnhof":{tr:"ana tren garı",en:"main train station",syn:"—"},
+  "heiße":{tr:"sıcak (çekimli)",en:"hot",syn:"warm"},
+  "helfen":{tr:"yardım etmek",en:"to help",syn:"—"},
+  "hielt":{tr:"tuttu (o)",en:"held",syn:"—",note:"halten fiili → sie hielt"},
+  "holten":{tr:"aldılar",en:"got, fetched",syn:"—",note:"holen fiili → sie holten"},
+  "händen":{tr:"eller (-e hali, çoğul)",en:"hands (dative)",syn:"—"},
+  "hörte":{tr:"dinledi, duydu (o)",en:"listened, heard",syn:"—",note:"hören fiili → sie hörte"},
+  "ihm":{tr:"ona (erkek/nötr)",en:"him, it (dative)",syn:"—",func:true},
+  "ihn":{tr:"onu (erkek, -i hali)",en:"him (accusative)",syn:"—",func:true},
+  "ihr":{tr:"onun (dişil), ona",en:"her",syn:"—",func:true},
+  "ihre":{tr:"onun (dişil, -i hali)",en:"her",syn:"—",func:true},
+  "ihren":{tr:"onun (-i hali, eril)",en:"her (accusative)",syn:"—",func:true},
+  "ihrer":{tr:"onun (dişil, -e hali)",en:"her (dative)",syn:"—",func:true},
+  "kam":{tr:"geldi (o)",en:"came",syn:"—",note:"kommen fiili → sie kam"},
+  "keine":{tr:"hiç, hiçbir",en:"no, none",syn:"—",func:true},
+  "kurzen":{tr:"kısa (-e hali)",en:"short",syn:"—"},
+  "können":{tr:"yapabilmek",en:"can, to be able to",syn:"—",func:true},
+  "lachend":{tr:"gülerek",en:"laughing",syn:"—"},
+  "langer":{tr:"uzun (eril, -in hali)",en:"long",syn:"—"},
+  "lieblingsbücher":{tr:"favori kitaplar",en:"favorite books",syn:"—"},
+  "lief":{tr:"koştu (o)",en:"ran",syn:"—",note:"laufen fiili → sie lief"},
+  "lukas":{tr:"Lukas (isim)",en:"Lukas (name)",syn:"—",func:true},
+  "lächeln":{tr:"gülümseme",en:"smile",syn:"—"},
+  "lächelte":{tr:"gülümsedi (o)",en:"smiled",syn:"—",note:"lächeln fiili → sie lächelte"},
+  "meinen":{tr:"benim (-i hali)",en:"my (accusative)",syn:"—",func:true},
+  "minuten":{tr:"dakikalar",en:"minutes",syn:"—"},
+  "mir":{tr:"bana",en:"me (dative)",syn:"—",func:true},
+  "mitarbeiter":{tr:"çalışan (erkek)",en:"employee",syn:"—"},
+  "mitarbeiterin":{tr:"çalışan (kadın)",en:"employee (female)",syn:"—"},
+  "moment":{tr:"an",en:"moment",syn:"—"},
+  "münchen":{tr:"Münih",en:"Munich",syn:"—",func:true},
+  "nervös":{tr:"gergin",en:"nervous",syn:"—"},
+  "nicht":{tr:"değil",en:"not",syn:"—",func:true},
+  "notizbuch":{tr:"defter",en:"notebook",syn:"—"},
+  "nur":{tr:"sadece",en:"only",syn:"—",func:true},
+  "nächsten":{tr:"bir sonraki (-e hali)",en:"next",syn:"—"},
+  "passagiere":{tr:"yolcular",en:"passengers",syn:"—"},
+  "rief":{tr:"aradı, çağırdı (o)",en:"called",syn:"—",note:"rufen fiili → er rief"},
+  "sagte":{tr:"söyledi (o)",en:"said",syn:"—",note:"sagen fiili → sie sagte"},
+  "sah":{tr:"gördü (o)",en:"saw",syn:"—",note:"sehen fiili → sie sah"},
+  "saß":{tr:"oturuyordu (o)",en:"sat",syn:"—",note:"sitzen fiili → sie saß"},
+  "schaffner":{tr:"kondüktör",en:"conductor",syn:"—"},
+  "schaute":{tr:"baktı (o)",en:"looked",syn:"—",note:"schauen fiili → sie schaute"},
+  "schließlich":{tr:"sonunda",en:"finally",syn:"endlich",func:true},
+  "schokolade":{tr:"çikolata",en:"chocolate",syn:"—"},
+  "sich":{tr:"kendi(ni)",en:"himself/herself/itself",syn:"—",func:true},
+  "sitzplatz":{tr:"oturma yeri, koltuk",en:"seat",syn:"Sitz"},
+  "sofort":{tr:"hemen",en:"immediately",syn:"—",func:true},
+  "sollte":{tr:"yapmalıydı (o)",en:"should",syn:"—",func:true,note:"sollen fiili → sie sollte"},
+  "sonniger":{tr:"güneşli (eril)",en:"sunny",syn:"—"},
+  "sorge":{tr:"endişe (Keine Sorge = merak etme)",en:"worry",syn:"—"},
+  "stand":{tr:"duruyordu (o)",en:"stood",syn:"—",note:"stehen fiili → sie stand"},
+  "standen":{tr:"duruyorlardı",en:"stood (plural)",syn:"—",note:"stehen fiili → sie standen"},
+  "stieg":{tr:"indi, bindi (o)",en:"got off/on",syn:"—",note:"steigen fiili → sie stieg"},
+  "stunden":{tr:"saatler",en:"hours",syn:"—"},
+  "tief":{tr:"derin, derince",en:"deep, deeply",syn:"—"},
+  "tranken":{tr:"içtiler",en:"drank",syn:"—",note:"trinken fiili → sie tranken"},
+  "tun":{tr:"yapmak",en:"to do",syn:"machen"},
+  "unglaublich":{tr:"inanılmaz",en:"incredibly",syn:"—"},
+  "verbringen":{tr:"geçirmek (zaman)",en:"to spend (time)",syn:"—"},
+  "vergessen":{tr:"unutmak, unutulmuş",en:"to forget, forgotten",syn:"—"},
+  "war":{tr:"idi (o)",en:"was",syn:"—",func:true,note:"sein fiili → sie war"},
+  "wartezeit":{tr:"bekleme süresi",en:"waiting time",syn:"—"},
+  "was":{tr:"ne",en:"what",syn:"—",func:true},
+  "weil":{tr:"çünkü",en:"because",syn:"—",func:true},
+  "wiederzusehen":{tr:"tekrar görmek",en:"to see again",syn:"—"},
+  "wochenende":{tr:"hafta sonu",en:"weekend",syn:"—"},
+  "wollte":{tr:"istiyordu (o)",en:"wanted",syn:"—",func:true,note:"wollen fiili → sie wollte"},
+  "wurde":{tr:"oldu (o)",en:"became",syn:"—",note:"werden fiili → sie wurde"},
+  "wusste":{tr:"biliyordu (o)",en:"knew",syn:"—",note:"wissen fiili → sie wusste"},
+  "zehn":{tr:"on",en:"ten",syn:"—"},
+  "zug":{tr:"tren",en:"train",syn:"Bahn"},
+  "zugpersonal":{tr:"tren personeli",en:"train staff",syn:"—"},
+  "zurück":{tr:"geri",en:"back",syn:"—",func:true},
+  "zwei":{tr:"iki",en:"two",syn:"—"}
+};
+
+const READINGS = [
+  {
+    tab: "🎒 Der Rucksack",
+    title: "🎒 Anikas Reise nach München",
+    text: `Es war ein sonniger Samstagmorgen. Anika saß im Zug nach München. Sie wollte das Wochenende bei ihrem besten Freund Lukas verbringen. In ihrer Tasche hatte sie ihre Lieblingsbücher, ein Notizbuch und ein kleines Geschenk für Lukas. Die Fahrt war sehr gemütlich, Anika hörte Musik und schaute entspannt aus dem Fenster.
+Nach zwei Stunden kam der Zug am Hauptbahnhof in München an. Die Passagiere standen auf und holten ihr Gepäck. Anika stieg schnell aus, weil sie sehr aufgeregt war, Lukas nach langer Zeit wiederzusehen. Doch als sie auf dem Bahnsteig stand, erschrak sie plötzlich: Wo war ihr Rucksack? Sie hatte ihn auf dem Sitzplatz im Zug vergessen!
+Anika wurde nervös und wusste im ersten Moment nicht, was sie tun sollte. Glücklicherweise sah sie eine freundliche Mitarbeiterin der Bahn. Anika lief schnell zu ihr und sagte: Entschuldigung, ich habe meinen Rucksack im Zug vergessen! Können Sie mir bitte helfen? Die Frau lächelte beruhigend: Keine Sorge, wir finden Ihre Tasche bestimmt. Sie ging gemeinsam mit Anika zum Fundbüro im Bahnhof.
+Dort rief ein Mitarbeiter sofort das Zugpersonal an. Nach nur zehn Minuten sagte er mit einem breiten Lächeln: Sie haben großes Glück! Der Schaffner hat Ihren Rucksack gefunden. Er bringt ihn mit dem nächsten Zug zurück.
+Anika atmete tief aus und war unglaublich erleichtert. Nach einer kurzen Wartezeit bekam sie ihre Tasche wieder zurück. Als Lukas schließlich am Bahnhof ankam, um sie abzuholen, hielt Anika ihren Rucksack fest in den Händen. Sie erzählte ihm lachend von ihrem kleinen Abenteuer. Anschließend gingen beide zusammen in ein gemütliches Café, tranken heiße Schokolade und freuten sich auf das gemeinsame Wochenende.`
+  }
+];
+
+const tooltip  = document.getElementById('tooltip');
+let activeSpan = null;
+let currentKey = null;
+let isSpeaking = false;
+let germanVoice = null;
+let currentRate = 1;
+let keepAliveInterval = null;
+let fallbackTimers = [];
+let playbackId = 0;
+let calibratedCPMs = {}; // measured chars-per-ms per rate, learned after each full listen
+try {
+  calibratedCPMs = JSON.parse(localStorage.getItem('lt_tts_calib_a2s1') || '{}');
+} catch (e) { calibratedCPMs = {}; }
+function persistCalibration() {
+  try { localStorage.setItem('lt_tts_calib_a2s1', JSON.stringify(calibratedCPMs)); } catch (e) {}
+}
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem('lt_saved_a2s1') || '{}'); } catch(e) {}
+
+function wrapWords(text) {
+  return text.replace(/([a-zA-ZäöüÄÖÜßéÉ']+(?:-[a-zA-ZäöüÄÖÜß]+)*)/g, (match) => {
+    const key = match.toLowerCase();
+    const data = WORDS[key];
+    if (!data) return match;
+    return `<span class="${data.func?'word func':'word content'}" data-key="${key}">${match}</span>`;
+  });
+}
+function buildHTML(text) {
+  return text.split(/\n+/).map(line => wrapWords(line.trim())).join('<br><br>');
+}
+
+let currentTab = 0;
+function switchTab(index) {
+  currentTab = index;
+  if (window.speechSynthesis) safeCancel();
+  isSpeaking = false;
+  playbackId++;
+  if (keepAliveInterval) { clearInterval(keepAliveInterval); keepAliveInterval = null; }
+  if (typeof clearFallbackTimers === 'function') clearFallbackTimers();
+  clearSpeakingHighlight();
+  const lb = document.getElementById('listenBtn');
+  if (lb) { lb.classList.remove('playing'); lb.textContent = '🔊 Dinle'; }
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+  currentKey = null;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===index));
+  const r = READINGS[index];
+  document.getElementById('cardTitle').textContent = r.title;
+  document.getElementById('readingText').innerHTML = buildHTML(r.text);
+  bindWordClicks();
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+const tabsBar = document.getElementById('tabsBar');
+READINGS.forEach((r,i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i===0?' active':'');
+  btn.textContent = r.tab;
+  btn.addEventListener('click', () => switchTab(i));
+  tabsBar.appendChild(btn);
+});
+switchTab(0);
+
+function persistSaved() { try { localStorage.setItem('lt_saved_a2s1', JSON.stringify(saved)); } catch(e) {} }
+
+function renderSaved() {
+  const section = document.getElementById('savedSection');
+  const list    = document.getElementById('savedList');
+  const count   = document.getElementById('wordCount');
+  const keys    = Object.keys(saved);
+  count.textContent = keys.length;
+  section.classList.toggle('has-words', keys.length > 0);
+  const exBtn = document.getElementById('startExBtn');
+  if (exBtn) exBtn.disabled = keys.length < 2;
+  list.innerHTML = '';
+  keys.forEach(key => {
+    const d = saved[key];
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    item.innerHTML = `<div class="saved-item-body"><div class="saved-word">${d.word}</div><div class="saved-tr">🇹🇷 ${d.tr}</div><div class="saved-tr">🇬🇧 ${d.en||'—'}</div><div class="saved-syn">🔤 ${d.syn}</div>${d.note?`<div class="saved-note">${d.note}</div>`:''}</div><button class="remove-btn" onclick="removeWord('${key}')">✕</button>`;
+    list.appendChild(item);
+  });
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+function toggleSave() {
+  if (!currentKey) return;
+  const btn = document.getElementById('tSaveBtn');
+  if (saved[currentKey]) {
+    delete saved[currentKey];
+    btn.textContent = '⭐ Kaydet'; btn.classList.remove('saved');
+  } else {
+    const d = WORDS[currentKey] || {};
+    saved[currentKey] = { word: document.getElementById('tWord').textContent, tr: d.tr||'—', en: d.en||'—', syn: d.syn||'—', note: d.note||'' };
+    btn.textContent = '✅ Kaydedildi'; btn.classList.add('saved');
+    recordSave();
+  }
+  persistSaved(); renderSaved();
+}
+
+function removeWord(key) {
+  delete saved[key]; persistSaved(); renderSaved();
+  if (currentKey === key) { document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function clearAll() {
+  if (!Object.keys(saved).length) return;
+  if (confirm('Tüm kayıtlı kelimeler silinsin mi?')) { saved={}; persistSaved(); renderSaved(); document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function bindWordClicks() {
+  document.querySelectorAll('.word').forEach(span => {
+    span.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeSpan && activeSpan !== span) activeSpan.classList.remove('active');
+      span.classList.add('active'); activeSpan = span;
+      currentKey = span.dataset.key;
+      const d = WORDS[currentKey] || {};
+      document.getElementById('tWord').textContent = span.textContent;
+      document.getElementById('tTr').textContent   = d.tr  || '—';
+      document.getElementById('tEn').textContent   = d.en  || '—';
+      document.getElementById('tSyn').textContent  = d.syn || '—';
+      document.getElementById('tNote').textContent = d.note || '';
+      const btn = document.getElementById('tSaveBtn');
+      if (saved[currentKey]) { btn.textContent='✅ Kaydedildi'; btn.classList.add('saved'); }
+      else { btn.textContent='⭐ Kaydet'; btn.classList.remove('saved'); }
+      const rect = span.getBoundingClientRect(), ttW = 260;
+      tooltip.style.position = 'fixed';
+      let left = rect.left + rect.width/2 - ttW/2;
+      if (left < 8) left = 8;
+      if (left + ttW > window.innerWidth - 8) left = window.innerWidth - ttW - 8;
+      tooltip.style.visibility = 'hidden'; tooltip.style.left = left+'px'; tooltip.style.top = '0px';
+      tooltip.classList.add('show');
+      const ttH = tooltip.offsetHeight || 130;
+      tooltip.classList.remove('show'); tooltip.style.visibility = '';
+      let top = (rect.top - ttH - 12 >= 8) ? rect.top - ttH - 12 : rect.bottom + 10;
+      if (top + ttH > window.innerHeight - 8) top = window.innerHeight - ttH - 8;
+      if (top < 8) top = 8;
+      tooltip.style.left = left+'px'; tooltip.style.top = top+'px';
+      tooltip.classList.add('show');
+    });
+  });
+}
+
+document.addEventListener('click', e => {
+  if (tooltip.contains(e.target)) return;
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+});
+
+let stats = {};
+try { stats = JSON.parse(localStorage.getItem('lt_stats_a2s1') || '{}'); } catch(e) {}
+stats = Object.assign({ attempts:0, totalCorrect:0, totalAnswered:0, mistakes:{}, streak:0, lastStreakDate:'', weekSaves:{} }, stats);
+
+function persistStats() { try { localStorage.setItem('lt_stats_a2s1', JSON.stringify(stats)); } catch(e) {} }
+function getWeekKey() { const n=new Date(),j=new Date(n.getFullYear(),0,1); return n.getFullYear()+'-W'+Math.ceil(((n-j)/86400000+j.getDay()+1)/7); }
+function getTodayKey() { return new Date().toISOString().slice(0,10); }
+
+function recordSave() {
+  const wk = getWeekKey();
+  if (!stats.weekSaves) stats.weekSaves = {};
+  if (!stats.weekSaves[wk]) stats.weekSaves[wk] = 0;
+  stats.weekSaves[wk]++;
+  const today = getTodayKey(), yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if (stats.lastStreakDate === today) {}
+  else if (stats.lastStreakDate === yesterday) { stats.streak++; stats.lastStreakDate = today; }
+  else { stats.streak = 1; stats.lastStreakDate = today; }
+  persistStats(); renderStats();
+}
+
+function recordAttempt(correct, total, wrongKeys) {
+  stats.attempts++; stats.totalCorrect += correct; stats.totalAnswered += total;
+  wrongKeys.forEach(k => { stats.mistakes[k] = (stats.mistakes[k]||0)+1; });
+  persistStats(); renderStats();
+}
+
+function renderStats() {
+  const wk = getWeekKey();
+  document.getElementById('statLearned').textContent  = (stats.weekSaves&&stats.weekSaves[wk])||Object.keys(saved).length;
+  document.getElementById('statAttempts').textContent = stats.attempts||0;
+  document.getElementById('statMistakes').textContent = Object.values(stats.mistakes||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('statAccuracy').textContent = stats.totalAnswered>0 ? Math.round((stats.totalCorrect/stats.totalAnswered)*100)+'%' : '—';
+  document.getElementById('statStreak').textContent   = (stats.streak||0)+' gün';
+  const missEntries = Object.entries(stats.mistakes||{}).filter(([k])=>saved[k]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const hardBox = document.getElementById('hardWordsBox'), hardList = document.getElementById('hardWordsList');
+  if (missEntries.length) { hardBox.style.display='block'; hardList.innerHTML=missEntries.map(([k,cnt])=>`<div class="hard-chip">${saved[k]?.word||k}<span class="miss-count">✕${cnt}</span></div>`).join(''); }
+  else hardBox.style.display='none';
+  document.getElementById('statsSection').classList.toggle('visible', Object.keys(saved).length>0||stats.attempts>0);
+}
+
+function resetStats() {
+  if (!confirm('İstatistikler sıfırlansın mı?')) return;
+  stats={attempts:0,totalCorrect:0,totalAnswered:0,mistakes:{},streak:0,lastStreakDate:'',weekSaves:{}};
+  persistStats(); renderStats();
+}
+
+let exSelectedEng=null, exSelectedTr=null, exCorrect=0, exTotal=0, exWrongKeys=[];
+
+function shuffle(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr; }
+
+function startExercise() {
+  const keys = Object.keys(saved);
+  if (keys.length < 2) return;
+  const pick = shuffle([...keys]).slice(0,8);
+  exCorrect=0; exTotal=pick.length; exSelectedEng=null; exSelectedTr=null; exWrongKeys=[];
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('scoreTotal').textContent=exTotal;
+  document.getElementById('exResult').classList.remove('show');
+  const engWords=shuffle([...pick]), trWords=shuffle([...pick]);
+  const colEng=document.getElementById('colEng'), colTr=document.getElementById('colTr');
+  colEng.innerHTML=''; colTr.innerHTML='';
+  engWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card eng'; card.dataset.key=key; card.textContent=d.word;
+    card.addEventListener('click',()=>selectCard(card,'eng')); colEng.appendChild(card);
+  });
+  trWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card tr'; card.dataset.key=key; card.textContent=d.tr.split('/')[0].trim();
+    card.addEventListener('click',()=>selectCard(card,'tr')); colTr.appendChild(card);
+  });
+  document.getElementById('exerciseSection').classList.add('visible');
+  document.getElementById('exerciseSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectCard(card, side) {
+  if (card.classList.contains('correct')||card.classList.contains('dimmed')) return;
+  if (side==='eng') { document.querySelectorAll('.match-card.eng.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedEng=card; }
+  else { document.querySelectorAll('.match-card.tr.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedTr=card; }
+  if (exSelectedEng && exSelectedTr) checkMatch();
+}
+
+function checkMatch() {
+  const engKey=exSelectedEng.dataset.key, trKey=exSelectedTr.dataset.key;
+  if (engKey===trKey) {
+    exSelectedEng.classList.remove('selected'); exSelectedTr.classList.remove('selected');
+    exSelectedEng.classList.add('correct','dimmed'); exSelectedTr.classList.add('correct','dimmed');
+    exSelectedEng.innerHTML='✅ '+exSelectedEng.textContent;
+    exCorrect++; document.getElementById('scoreNum').textContent=exCorrect;
+    if (exCorrect===exTotal) { recordAttempt(exCorrect,exTotal,exWrongKeys); setTimeout(()=>document.getElementById('exResult').classList.add('show'),400); }
+  } else {
+    exWrongKeys.push(engKey);
+    exSelectedEng.classList.add('wrong'); exSelectedTr.classList.add('wrong');
+    const eng=exSelectedEng, tr=exSelectedTr;
+    setTimeout(()=>{ eng.classList.remove('wrong','selected'); tr.classList.remove('wrong','selected'); },600);
+  }
+  exSelectedEng=null; exSelectedTr=null;
+}
+
+function closeExercise() { document.getElementById('exerciseSection').classList.remove('visible'); }
+
+renderSaved();
+renderStats();
+
+/* ---------- Sesli Dinleme (Android + iPhone, Web Speech API) ---------- */
+
+function setRate(rate, btn) {
+  currentRate = rate;
+  document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (isSpeaking) toggleListen(true); // restart with new rate if currently playing
+}
+
+function pickGermanVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  germanVoice = voices.find(v => v.lang === 'de-DE') ||
+                voices.find(v => v.lang && v.lang.startsWith('de')) || null;
+}
+if (window.speechSynthesis) {
+  pickGermanVoice();
+  window.speechSynthesis.onvoiceschanged = pickGermanVoice;
+}
+
+function clearFallbackTimers() {
+  fallbackTimers.forEach(id => clearTimeout(id));
+  fallbackTimers = [];
+}
+
+function clearSpeakingHighlight() {
+  document.querySelectorAll('#readingText .word.speaking').forEach(s => s.classList.remove('speaking'));
+}
+
+function safeCancel() {
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+}
+
+function speakRaw(text, onEnd, onBoundary, onStart) {
+  if (!window.speechSynthesis) {
+    alert('Bu tarayıcı sesli okumayı desteklemiyor.');
+    return;
+  }
+  safeCancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'de-DE';
+  if (germanVoice) utter.voice = germanVoice;
+  utter.rate = currentRate;
+  utter.onstart = () => { if (onStart) onStart(); };
+  utter.onend = () => { if (onEnd) onEnd(); };
+  utter.onerror = () => { if (onEnd) onEnd(); };
+  if (onBoundary) utter.onboundary = onBoundary;
+  try { window.speechSynthesis.speak(utter); } catch (e) {}
+}
+
+// Splits text into short chunks (sentence by sentence, and further at commas/spaces
+// if a single sentence is still long) so that no individual utterance ever runs long
+// enough to hit the ~15s Chrome/Android speechSynthesis stall bug. Each chunk keeps
+// track of its starting offset in the original text so highlighting stays in sync.
+function splitIntoChunks(text, maxLen) {
+  const chunks = [];
+  const sentenceRegex = /[^.!?]*[.!?]+(?:\s+|$)|[^.!?]+$/g;
+  let m;
+  while ((m = sentenceRegex.exec(text)) !== null) {
+    const piece = m[0];
+    if (piece.length === 0) { sentenceRegex.lastIndex++; continue; }
+    const pieceStart = m.index;
+    if (piece.length <= maxLen) {
+      chunks.push({ text: piece, offset: pieceStart });
+      continue;
+    }
+    // Sentence itself is long — break it further at a comma or space near the limit.
+    let subStart = 0;
+    while (subStart < piece.length) {
+      let end = Math.min(subStart + maxLen, piece.length);
+      if (end < piece.length) {
+        let breakPoint = piece.lastIndexOf(',', end);
+        if (breakPoint <= subStart) breakPoint = piece.lastIndexOf(' ', end);
+        if (breakPoint > subStart) end = breakPoint + 1;
+      }
+      chunks.push({ text: piece.slice(subStart, end), offset: pieceStart + subStart });
+      subStart = end;
+    }
+  }
+  return chunks;
+}
+
+function toggleListen(restart) {
+  const btn = document.getElementById('listenBtn');
+  if (isSpeaking && !restart) {
+    playbackId++; // invalidate any in-flight callbacks/loop from the old utterance
+    safeCancel();
+    if (keepAliveInterval) { clearInterval(keepAliveInterval); keepAliveInterval = null; }
+    isSpeaking = false;
+    clearSpeakingHighlight();
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Dinle';
+    return;
+  }
+
+  const myId = ++playbackId; // this call "owns" the upcoming utterance
+
+  const r = READINGS[currentTab];
+  const plainText = r.text.replace(/\n+/g, ' ');
+  const totalChars = plainText.length;
+  const chunks = splitIntoChunks(plainText, 110);
+  let chunkIndex = 0;
+
+  // Build token list (all word-like matches, in order) mapped to DOM spans (dictionary words only)
+  const wordSpans = Array.from(document.querySelectorAll('#readingText .word'));
+  const tokenRegex = /[a-zA-ZäöüÄÖÜßéÉ']+(?:-[a-zA-ZäöüÄÖÜß]+)*/g;
+  const tokens = [];
+  let m, spanPointer = 0;
+  while ((m = tokenRegex.exec(plainText)) !== null) {
+    const isDictWord = !!WORDS[m[0].toLowerCase()];
+    const span = isDictWord ? wordSpans[spanPointer] : null;
+    if (isDictWord) spanPointer++;
+    tokens.push({ start: m.index, end: m.index + m[0].length, span });
+  }
+
+  isSpeaking = true;
+  btn.classList.add('playing');
+  btn.textContent = '⏸ Durdur';
+  clearSpeakingHighlight();
+
+  // --- Continuous, self-calibrating highlight loop ---
+  // Instead of pre-scheduling one setTimeout per word (which drifts further
+  // out of sync as small per-word timing errors add up over the passage),
+  // we track a single "pace" (chars per ms) from a time anchor and re-derive
+  // the current position every frame. If the device's TTS engine ever fires
+  // a real boundary event (word or sentence), we use it to correct the pace
+  // on the fly. We also *learn* the real pace from how long the previous
+  // full listen actually took (many engines don't slow down as much as the
+  // rate value implies), so accuracy improves each time this rate is used.
+  const rateKey = currentRate;
+  let anchorTime = null;
+  let anchorChar = 0;
+  let charsPerMs = calibratedCPMs[rateKey] || (15 * (0.55 + 0.45 * currentRate)) / 1000;
+  let lastToken = null;
+  let rafId = null;
+  let playStartTime = null;
+  let chunkEndBound = totalChars; // highlight can never run past the chunk currently being spoken
+
+  function findTokenAt(pos) {
+    for (let i = 0; i < tokens.length; i++) {
+      if (pos >= tokens[i].start && pos < tokens[i].end) return tokens[i];
+    }
+    for (let i = 0; i < tokens.length; i++) {
+      if (tokens[i].start >= pos) return tokens[i];
+    }
+    return tokens[tokens.length - 1] || null;
+  }
+
+  function loop() {
+    if (myId !== playbackId || anchorTime === null) return;
+    const now = performance.now();
+    const rawEstChar = anchorChar + (now - anchorTime) * charsPerMs;
+    // Never let the estimate run past the chunk actually being spoken right now —
+    // this is the hard backstop against the highlight racing ahead of real audio.
+    const estChar = Math.min(rawEstChar, chunkEndBound - 1, totalChars - 1);
+    const token = findTokenAt(estChar);
+    if (token && token !== lastToken) {
+      clearSpeakingHighlight();
+      if (token.span) {
+        token.span.classList.add('speaking');
+        token.span.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+      lastToken = token;
+    }
+    if (estChar < totalChars - 1) rafId = requestAnimationFrame(loop);
+  }
+  function finishAll() {
+    if (myId !== playbackId) return; // stale callback from a canceled utterance
+    if (rafId) cancelAnimationFrame(rafId);
+    // Learn from this play's real duration so the next listen at this
+    // rate starts already-calibrated instead of guessing again.
+    if (playStartTime !== null) {
+      const actualDuration = performance.now() - playStartTime;
+      if (actualDuration > 400) {
+        const measuredCPMs = totalChars / actualDuration;
+        calibratedCPMs[rateKey] = calibratedCPMs[rateKey]
+          ? (calibratedCPMs[rateKey] * 0.5 + measuredCPMs * 0.5)
+          : measuredCPMs;
+        persistCalibration();
+      }
+    }
+    isSpeaking = false;
+    clearSpeakingHighlight();
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Dinle';
+  }
+
+  // Speaks chunks one after another (chaining on each chunk's natural onend).
+  // Because every individual utterance is short, we never hit the Chrome/Android
+  // ~15s stall bug, so no pause()/resume() "keep-alive" hack is needed — that
+  // hack was itself the cause of playback silently cutting out mid-passage.
+  //
+  // IMPORTANT: many Android/Chrome builds never fire onboundary events at all,
+  // so the highlight can't rely on them to stay in sync — it was racing far
+  // ahead of the real audio because it only had a rough time-based guess to
+  // go on. Instead, we measure how long EACH chunk actually took to speak
+  // (via its onend, which always fires) and use that real, per-character
+  // pace to drive the next chunk's highlight. Any onboundary events that do
+  // arrive are still used as a bonus live correction.
+  let chunkAudioStart = null;
+
+  function playChunk() {
+    if (myId !== playbackId) return;
+    if (chunkIndex >= chunks.length) { finishAll(); return; }
+    const chunk = chunks[chunkIndex];
+
+    // Anchor immediately so the highlight has somewhere sane to start even
+    // if onstart never fires; onstart (below) will refine this once real
+    // audio begins.
+    anchorTime = performance.now();
+    anchorChar = chunk.offset;
+    chunkAudioStart = anchorTime;
+    chunkEndBound = chunk.offset + chunk.text.length;
+    if (chunkIndex === 0) {
+      playStartTime = anchorTime;
+      if (!rafId) rafId = requestAnimationFrame(loop);
+    }
+
+    speakRaw(chunk.text, () => {
+      // this chunk really finished speaking — this is our ground truth.
+      if (myId !== playbackId) return;
+      const elapsed = performance.now() - chunkAudioStart;
+      if (elapsed > 60 && chunk.text.length > 3) {
+        let measuredRate = chunk.text.length / elapsed;
+        measuredRate = Math.max(charsPerMs * 0.3, Math.min(charsPerMs * 3, measuredRate));
+        charsPerMs = (charsPerMs * 0.35) + (measuredRate * 0.65);
+      }
+      chunkIndex++;
+      playChunk();
+    }, (event) => {
+      if (myId !== playbackId) return; // stale callback from a canceled utterance
+      if (typeof event.charIndex !== 'number') return;
+      // Bonus live correction on devices that do support it. Ignore
+      // non-word boundaries and clamp so one odd event can't cause a spike.
+      if (event.name && event.name !== 'word') return;
+      const globalCharIndex = chunk.offset + event.charIndex;
+      const now = performance.now();
+      const deltaChar = globalCharIndex - anchorChar;
+      const deltaTime = now - anchorTime;
+      if (deltaTime > 30 && deltaChar > 0) {
+        let measuredRate = deltaChar / deltaTime;
+        measuredRate = Math.max(charsPerMs * 0.3, Math.min(charsPerMs * 3, measuredRate));
+        charsPerMs = (charsPerMs * 0.4) + (measuredRate * 0.6);
+      }
+      anchorChar = globalCharIndex;
+      anchorTime = now;
+    }, () => {
+      // onstart for this chunk — refine the anchor to when audio truly began
+      if (myId !== playbackId) return;
+      anchorTime = performance.now();
+      anchorChar = chunk.offset;
+      chunkAudioStart = anchorTime;
+    });
+  }
+
+  playChunk();
+
+  // Failsafe: some engines never fire onstart — begin the loop anyway shortly after.
+  setTimeout(() => {
+    if (myId === playbackId && anchorTime === null) {
+      anchorTime = performance.now();
+      anchorChar = 0;
+      playStartTime = performance.now();
+      rafId = requestAnimationFrame(loop);
+    }
+  }, 150);
+}
+
+function speakWord() {
+  const word = document.getElementById('tWord').textContent;
+  if (word) speakRaw(word);
+}
+
+
+</script>
+</body>
+</html>
