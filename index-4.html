@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom 12 Reading Book – Active English</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#D0241C; --navy:#1B3A5C; --cream:#F5F0E8; --gold:#FFD166; --green:#06D6A0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',sans-serif; background:var(--cream); min-height:100vh; display:flex; flex-direction:column; }
+  header { background:var(--navy); padding:13px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 12px rgba(0,0,0,0.28); }
+  .brand { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; }
+  .brand span:first-child { color:var(--red); }
+  .brand span:last-child { color:white; margin-left:6px; }
+  .social-links { display:flex; gap:9px; }
+  .social-btn { display:flex; align-items:center; gap:6px; padding:7px 15px; border-radius:50px; text-decoration:none; font-size:13px; font-weight:800; color:white; transition:transform .18s,opacity .18s; white-space:nowrap; }
+  .social-btn:hover { transform:translateY(-2px); opacity:.85; }
+  .btn-insta { background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .btn-yt { background:#FF0000; }
+  .btn-tiktok { background:#000000; }
+  .band { background:var(--red); color:white; text-align:center; padding:9px 16px; font-size:13px; font-weight:700; letter-spacing:.03em; }
+  main { flex:1; max-width:920px; width:100%; margin:0 auto; padding:36px 18px 60px; }
+  .hero { text-align:center; margin-bottom:34px; }
+  .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:44px; color:var(--navy); letter-spacing:.03em; line-height:1.1; }
+  .hero h1 span { color:var(--red); }
+  .hero p { margin-top:10px; font-size:15px; color:#666; font-weight:600; max-width:520px; margin-left:auto; margin-right:auto; }
+  .cards { display:grid; grid-template-columns:1fr; gap:20px; }
+  @media(min-width:720px) { .cards { grid-template-columns:repeat(3,1fr); } }
+  .card { background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.12); padding:28px 24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; text-decoration:none; transition:transform .18s,box-shadow .18s; border-top:6px solid var(--navy); animation:fadeUp .4s ease; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 10px 34px rgba(27,58,92,0.20); }
+  .card.c2 { border-top-color:var(--red); }
+  .card.c3 { border-top-color:var(--gold); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .card-icon { font-size:40px; line-height:1; }
+  .card-label { font-size:11px; font-weight:800; letter-spacing:.12em; color:var(--red); text-transform:uppercase; }
+  .card.c2 .card-label { color:var(--navy); }
+  .card.c3 .card-label { color:#c9960a; }
+  .card-title { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--navy); letter-spacing:.02em; line-height:1.1; }
+  .card-desc { font-size:14px; color:#555; line-height:1.55; flex:1; }
+  .card-meta { display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:800; color:var(--navy); background:#eef2fb; padding:5px 12px; border-radius:50px; }
+  .card-cta { margin-top:6px; display:inline-flex; align-items:center; gap:6px; padding:10px 22px; background:var(--navy); color:white; border-radius:50px; font-size:13.5px; font-weight:800; transition:background .15s,transform .12s; }
+  .card:hover .card-cta { background:var(--red); transform:scale(1.03); }
+  footer { background:#0f1923; color:#5a7a99; text-align:center; padding:14px; font-size:12px; }
+  footer strong { color:white; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span>WISDOM</span><span>12</span></div>
+  <div class="social-links">
+    <a class="social-btn btn-insta" href="https://www.instagram.com/aktifingilizceonline" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+      Instagram
+    </a>
+    <a class="social-btn btn-yt" href="https://www.youtube.com/@aktifingilizce" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2.1.3 4.2.3 4.2s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.3 21.6 12 21.6 12 21.6s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.2v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+      YouTube
+    </a>
+    <a class="social-btn btn-tiktok" href="https://www.tiktok.com/@aktif.ingilizce" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6c0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64c0 3.33 2.76 5.7 5.69 5.7c3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+      TikTok
+    </a>
+  </div>
+</header>
+<div class="band">📚 Wisdom 12 Reading Book – 3 farklı çalışma seti, tek noktadan eriş!</div>
+<main>
+  <div class="hero">
+    <h1>Wisdom 12 <span>Reading Book</span></h1>
+    <p>Kelime tıkla, Türkçesini ve eş anlamlısını öğren, kaydet, egzersizle pekiştir. Aşağıdan çalışmak istediğin bölümü seç.</p>
+  </div>
+  <div class="cards">
+    <a class="card c1" href="active-english-full-book-1-69-1.html">
+      <div class="card-icon">📖</div>
+      <div class="card-label">Bölüm 1</div>
+      <div class="card-title">Reading Passages</div>
+      <div class="card-desc">Güncel haber ve bilim temalı 69 okuma parçası. Kelime tıklama, çeviri, kaydetme ve eşleştirme egzersizi ile çalış.</div>
+      <div class="card-meta">🔢 69 Parça</div>
+      <div class="card-cta">Başla →</div>
+    </a>
+    <a class="card c2" href="active-english-paragraph-completion-1-145-2.html">
+      <div class="card-icon">✍️</div>
+      <div class="card-label">Bölüm 2</div>
+      <div class="card-title">Paragraph Completion</div>
+      <div class="card-desc">145 tamamlanmış paragraf metni. Aynı interaktif kelime öğrenme sistemiyle okuma pratiği yap.</div>
+      <div class="card-meta">🔢 145 Parça</div>
+      <div class="card-cta">Başla →</div>
+    </a>
+    <a class="card c3" href="active-english-odd-sentence-readings-1-150.html">
+      <div class="card-icon">🔀</div>
+      <div class="card-label">Bölüm 3</div>
+      <div class="card-title">Irrelevant Sentences</div>
+      <div class="card-desc">150 ilginç ve çeşitli konulu paragraf. Anlam bozan cümle alıştırmalarından derlenmiş okuma metinleri.</div>
+      <div class="card-meta">🔢 150 Parça</div>
+      <div class="card-cta">Başla →</div>
+    </a>
+  </div>
+</main>
+<footer><strong>Active English</strong> &copy; 2026 · aktifingilizceonline</footer>
+</body>
+</html>
