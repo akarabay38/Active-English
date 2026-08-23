@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktif İngilizce | TOEFL CBT Exam - 3</title>
+<style>
+  :root{
+    --ink:#16233c;
+    --ink-soft:#4a5876;
+    --line:#dbe2ef;
+    --paper:#ffffff;
+    --canvas:#f4f6fb;
+    --brand:#12448c;
+    --brand-dark:#0c3269;
+    --brand-soft:#e8f0fe;
+    --answered:#1f8a5f;
+    --answered-soft:#e4f6ee;
+    --flag:#c8790a;
+    --danger:#c0392b;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: 'Segoe UI', Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; font-family:var(--sans); background:var(--canvas); color:var(--ink);
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+  /* ---------- TOP BAR ---------- */
+  #topbar{
+    background:var(--brand-dark); color:#fff; display:flex; align-items:center;
+    justify-content:space-between; padding:10px 22px; flex-wrap:wrap; gap:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,.15); position:sticky; top:0; z-index:50;
+  }
+  #brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px;}
+  #brand .logo{
+    width:30px;height:30px;border-radius:8px;background:#fff;color:var(--brand-dark);
+    display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;
+  }
+  #brand small{display:block; font-weight:400; opacity:.8; font-size:11px;}
+  #statusbar{display:flex; align-items:center; gap:18px; font-size:14px;}
+  #timerbox{
+    background:rgba(255,255,255,.12); padding:6px 14px; border-radius:8px;
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:16px; min-width:88px; text-align:center;
+  }
+  #timerbox.low{background:#7a1f1f; animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  #moduleTag{background:rgba(255,255,255,.15); padding:5px 12px; border-radius:20px; font-weight:600; font-size:13px;}
+
+  /* ---------- MAIN ---------- */
+  #app{flex:1; display:flex; flex-direction:column;}
+  .screen{flex:1; display:none; flex-direction:column;}
+  .screen.active{display:flex;}
+
+  /* Intro screen */
+  #intro{align-items:center; justify-content:center; padding:30px;}
+  .intro-card{
+    background:var(--paper); max-width:680px; width:100%; padding:40px 44px;
+    border-radius:16px; box-shadow:0 10px 40px rgba(20,40,80,.10); border:1px solid var(--line);
+  }
+  .intro-card h1{margin:0 0 6px; font-size:26px; color:var(--brand-dark);}
+  .intro-card .sub{color:var(--ink-soft); margin-bottom:22px; font-size:14px;}
+  .directions-box{
+    background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px;
+    padding:18px 20px; margin-bottom:22px; font-size:14.5px; line-height:1.65;
+  }
+  .directions-box b{color:var(--brand-dark);}
+  .directions-box strong.warn{color:var(--danger);}
+  #startBtn{
+    background:var(--brand); color:#fff; border:none; padding:13px 28px; font-size:16px;
+    border-radius:8px; cursor:pointer; font-weight:700; letter-spacing:.2px;
+  }
+  #startBtn:hover{background:var(--brand-dark);}
+
+  /* Question layout */
+  #qWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #qHeader{
+    padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  #qHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  #qHeader .qnum{font-size:13px; color:var(--ink-soft);}
+  #split{flex:1; display:flex; overflow:hidden;}
+  #passagePane{
+    flex:1; max-width:50%; overflow-y:auto; padding:28px 30px; background:var(--paper);
+    border-right:1px solid var(--line); font-family:var(--serif); font-size:16px; line-height:1.75;
+  }
+  #passagePane h3{font-family:var(--sans); color:var(--brand-dark); font-size:14px; text-transform:uppercase; letter-spacing:.6px; margin-top:0;}
+  #passagePane p{margin:0 0 14px;}
+  #questionPane{flex:1; overflow-y:auto; padding:30px 34px; background:var(--canvas);}
+  #questionPane.full{max-width:900px; margin:0 auto; width:100%;}
+
+  .qtext{font-size:16.5px; font-weight:600; margin-bottom:18px; line-height:1.5;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{
+    display:flex; align-items:flex-start; gap:12px; background:var(--paper); border:1.5px solid var(--line);
+    border-radius:10px; padding:13px 16px; cursor:pointer; transition:.15s; font-size:15px; line-height:1.5;
+  }
+  .opt:hover{border-color:var(--brand); background:#f8fbff;}
+  .opt.selected{border-color:var(--brand); background:var(--brand-soft); box-shadow:0 0 0 1px var(--brand) inset;}
+  .opt .letter{
+    flex:0 0 auto; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:700; color:var(--ink-soft);
+  }
+  .opt.selected .letter{background:var(--brand); border-color:var(--brand); color:#fff;}
+
+  .noticebox, .msgbox{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:20px 24px;
+    margin-bottom:22px; font-family:var(--serif); font-size:16px; line-height:1.7;
+  }
+  .noticebox h4, .msgbox h4{font-family:var(--sans); margin:0 0 10px; color:var(--brand-dark); font-size:14px; text-transform:uppercase; letter-spacing:.5px;}
+  .msgline{margin-bottom:10px;}
+  .msgline b{color:var(--brand-dark);}
+
+  /* fill-in-blank */
+  .fillpassage{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:26px 30px;
+    font-family:var(--serif); font-size:17px; line-height:2.3;
+  }
+  .word-token{white-space:nowrap; margin:0 1px;}
+  .letterbox{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:28px; border-bottom:2px solid var(--ink-soft); font-family:var(--sans);
+    font-size:15px; font-weight:700; text-align:center; margin:0 1px; color:var(--ink);
+  }
+  .blankinput{
+    width:22px; height:28px; text-align:center; border:none; border-bottom:2px solid var(--brand);
+    font-family:var(--sans); font-size:15px; font-weight:700; background:transparent; color:var(--brand-dark);
+    text-transform:lowercase; margin:0 1px; padding:0;
+  }
+  .blankinput:focus{outline:none; background:var(--brand-soft); border-radius:3px 3px 0 0;}
+  .word-index{
+    font-size:11px; vertical-align:super; color:var(--flag); font-weight:800; margin-right:1px;
+  }
+  .active-word .letterbox{color:var(--brand-dark);}
+  .active-word{background:var(--brand-soft); border-radius:6px; padding:2px 3px;}
+
+  /* bottom nav */
+  #navbar{
+    background:var(--paper); border-top:1px solid var(--line); padding:14px 26px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .navbtn{
+    padding:11px 22px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper);
+    font-size:14.5px; font-weight:700; cursor:pointer; color:var(--ink); transition:.15s;
+  }
+  .navbtn:hover:not(:disabled){border-color:var(--brand); color:var(--brand);}
+  .navbtn:disabled{opacity:.35; cursor:not-allowed;}
+  .navbtn.primary{background:var(--brand); color:#fff; border-color:var(--brand);}
+  .navbtn.primary:hover{background:var(--brand-dark);}
+  .navbtn.review{background:var(--brand-soft); border-color:#c8dcfb; color:var(--brand-dark);}
+  #navcenter{font-size:13px; color:var(--ink-soft);}
+
+  /* Review screen */
+  #review{padding:30px; overflow-y:auto;}
+  .review-inner{max-width:820px; margin:0 auto; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:30px 34px;}
+  .review-inner h2{margin-top:0; color:var(--brand-dark);}
+  .review-legend{display:flex; gap:18px; font-size:13px; margin-bottom:20px; color:var(--ink-soft);}
+  .legend-dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px;}
+  .grid20{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:26px;}
+  .revcell{
+    border:1.5px solid var(--line); border-radius:8px; padding:12px 6px; text-align:center;
+    cursor:pointer; font-weight:700; font-size:14px; background:var(--paper); transition:.15s;
+  }
+  .revcell:hover{border-color:var(--brand);}
+  .revcell.answered{background:var(--answered-soft); border-color:var(--answered); color:var(--answered);}
+  .revcell.unanswered{background:#fdf1e8; border-color:var(--flag); color:var(--flag);}
+  .revcell small{display:block; font-weight:400; font-size:10px; margin-top:2px;}
+
+  /* End / results */
+  #endscreen{align-items:center; justify-content:center; padding:30px;}
+  .end-card{background:var(--paper); max-width:640px; width:100%; border-radius:16px; padding:44px; text-align:center; box-shadow:0 10px 40px rgba(20,40,80,.1); border:1px solid var(--line);}
+  .end-card h1{color:var(--brand-dark); margin-top:0;}
+  .score-big{font-size:52px; font-weight:800; color:var(--brand); margin:14px 0;}
+  .score-sub{color:var(--ink-soft); margin-bottom:24px; font-size:14px;}
+  .breakdown{display:flex; gap:16px; justify-content:center; margin-bottom:28px; flex-wrap:wrap;}
+  .breakdown div{background:var(--canvas); border-radius:10px; padding:14px 20px; min-width:130px;}
+  .breakdown div b{display:block; font-size:22px; color:var(--brand-dark);}
+  .breakdown div span{font-size:12px; color:var(--ink-soft);}
+
+  /* Social footer */
+  #social{
+    background:var(--brand-dark); color:#fff; padding:14px 26px; display:flex; align-items:center;
+    justify-content:center; gap:22px; font-size:13.5px; flex-wrap:wrap;
+  }
+  #social a{color:#fff; text-decoration:none; display:flex; align-items:center; gap:7px; opacity:.92; font-weight:600;}
+  #social a:hover{opacity:1; text-decoration:underline;}
+  #social .ico{width:18px; height:18px; display:inline-block;}
+
+  /* ---------- LISTENING ---------- */
+  #lWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #lHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;}
+  #lHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  #lHeader .lctx{font-size:12.5px; color:var(--ink-soft); font-style:italic;}
+  #lBody{flex:1; overflow-y:auto; padding:30px 24px; display:flex; justify-content:center;}
+  .lcard{max-width:640px; width:100%;}
+  .audiocard{
+    background:var(--paper); border:1.5px solid var(--line); border-radius:14px; padding:26px 28px;
+    text-align:center; margin-bottom:26px;
+  }
+  .audiocard .hint{font-size:13px; color:var(--ink-soft); margin-bottom:16px;}
+  #playBtn{
+    background:var(--brand); color:#fff; border:none; border-radius:50px; padding:14px 30px;
+    font-size:15.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:10px;
+  }
+  #playBtn:hover{background:var(--brand-dark);}
+  #playBtn.playing{background:var(--flag);}
+  #playBtn:disabled{opacity:.5; cursor:not-allowed;}
+  #playStatus{margin-top:12px; font-size:13px; color:var(--brand-dark); font-weight:600; min-height:16px;}
+  .lqtext{font-size:16px; font-weight:600; margin-bottom:16px; line-height:1.5;}
+  #lNavbar{background:var(--paper); border-top:1px solid var(--line); padding:14px 26px;
+    display:flex; align-items:center; justify-content:flex-end;}
+  .no-return-note{font-size:12px; color:var(--danger); margin-top:10px; text-align:center;}
+
+  /* ---------- SPEAKING ---------- */
+  #sWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #sHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;}
+  #sHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  #sBody{flex:1; overflow-y:auto; padding:26px 24px; display:flex; justify-content:center;}
+  .scard{max-width:640px; width:100%; text-align:center;}
+  .sinstruct{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:14px 18px;
+    font-size:13.5px; line-height:1.6; margin-bottom:20px; text-align:left; color:var(--ink);}
+  .simg{width:100%; max-width:420px; border-radius:14px; margin:0 auto 22px; display:block; box-shadow:0 8px 24px rgba(20,40,80,.12);}
+  .sstatus{font-size:15px; font-weight:700; color:var(--brand-dark); min-height:24px; margin-bottom:14px;}
+  .sstatus.rec{color:var(--danger);}
+  .scountdown{
+    font-size:64px; font-weight:800; color:var(--brand); font-variant-numeric:tabular-nums;
+    margin:10px 0 18px; transition:.2s;
+  }
+  .scountdown.low{color:var(--danger); transform:scale(1.08);}
+  .srecdot{display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--danger);
+    margin-right:8px; animation:recpulse 1s infinite;}
+  @keyframes recpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .sstopmsg{
+    background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:16px 20px;
+    font-size:14px; font-weight:600; line-height:1.6; margin-top:6px;
+  }
+  #speakStartBtn, #speakingDoneBtn{
+    background:var(--brand); color:#fff; border:none; padding:13px 28px; font-size:15.5px;
+    border-radius:8px; cursor:pointer; font-weight:700;
+  }
+  #speakStartBtn:hover, #speakingDoneBtn:hover{background:var(--brand-dark);}
+  .replay-list{display:flex; flex-direction:column; gap:10px; margin:18px 0; text-align:left;}
+  .replay-item{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:8px; font-size:13.5px;}
+  .replay-item .rtop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .replay-item audio{height:32px; max-width:220px;}
+  .rfeedback{background:var(--brand-soft); border-radius:8px; padding:8px 12px; font-size:12.5px; color:var(--brand-dark); line-height:1.5;}
+  .rfeedback .rstat{font-weight:700; margin-right:6px;}
+  .summary-box{background:var(--canvas); border-radius:10px; padding:14px 18px; margin-bottom:14px; font-size:13px; color:var(--ink-soft); text-align:left;}
+
+  /* ---------- WRITING ---------- */
+  #wWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #wHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;}
+  #wHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  #wBody{flex:1; overflow-y:auto; padding:28px 24px; display:flex; justify-content:center;}
+  .wcard{max-width:720px; width:100%;}
+  .wtimerbig{font-size:46px; font-weight:800; color:var(--brand); text-align:center; font-variant-numeric:tabular-nums; margin-bottom:8px;}
+  .wtimerbig.low{color:var(--danger);}
+  .wprompt{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:16px 20px; font-size:14px; line-height:1.65; margin-bottom:18px;}
+  .wpost{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:14px; line-height:1.6;}
+  .wpost b{color:var(--brand-dark);}
+  .wbank{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:22px; min-height:44px; padding:14px; background:var(--paper); border:1px dashed var(--line); border-radius:10px;}
+  .wanswer{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; min-height:56px; padding:14px; background:var(--canvas); border:2px solid var(--brand); border-radius:10px; margin-bottom:22px;}
+  .wchip{background:var(--brand); color:#fff; padding:9px 16px; border-radius:8px; font-size:14.5px; font-weight:600; cursor:pointer; user-select:none; transition:.12s;}
+  .wchip:hover{background:var(--brand-dark);}
+  .wchip.bank{background:var(--paper); color:var(--ink); border:1.5px solid var(--line);}
+  .wchip.bank:hover{border-color:var(--brand); color:var(--brand);}
+  .wstopmsg{background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:14px 18px; font-size:14px; font-weight:600; text-align:center; margin-bottom:16px;}
+  #wSubmitBtn{background:var(--brand); color:#fff; border:none; padding:11px 24px; border-radius:8px; font-weight:700; font-size:14.5px; cursor:pointer; display:block; margin:0 auto;}
+  #wSubmitBtn:hover{background:var(--brand-dark);}
+  .wtextarea{width:100%; min-height:260px; border:1.5px solid var(--line); border-radius:10px; padding:16px 18px;
+    font-family:var(--sans); font-size:15px; line-height:1.6; resize:vertical;}
+  .wtextarea:focus{outline:none; border-color:var(--brand);}
+  .wwordcount{text-align:right; font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  /* ---------- DETAILED REVIEW ---------- */
+  #detailedReview{flex:1; flex-direction:column; overflow:hidden;}
+  #reviewHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;}
+  #reviewContent{flex:1; overflow-y:auto; padding:24px; display:flex; justify-content:center;}
+  .reviewInner{max-width:820px; width:100%;}
+  .reviewSection{margin-bottom:30px;}
+  .reviewSection h2{color:var(--brand-dark); font-size:17px; border-bottom:2px solid var(--brand-soft); padding-bottom:8px; margin-bottom:14px;}
+  .ansRow{border-radius:10px; padding:12px 16px; margin-bottom:8px; font-size:13.5px; line-height:1.6; border:1.5px solid var(--line);}
+  .ansRow.correct{background:var(--answered-soft); border-color:var(--answered);}
+  .ansRow.wrong{background:#fdecec; border-color:var(--danger);}
+  .ansRow .qn{font-weight:700; margin-right:6px;}
+  .ansRow .tag{font-weight:800; float:right;}
+  .ansRow.correct .tag{color:var(--answered);}
+  .ansRow.wrong .tag{color:var(--danger);}
+  .ansRow .line{margin-top:4px;}
+  .ansRow b.lbl{color:var(--ink-soft); font-weight:700; margin-right:4px;}
+
+  @media(max-width:820px){
+    #split{flex-direction:column; overflow-y:auto;}
+    #passagePane{max-width:100%; border-right:none; border-bottom:1px solid var(--line); max-height:38vh;}
+    #questionPane{overflow:visible;}
+    .grid20{grid-template-columns:repeat(4,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="brand">
+    <div class="logo">Aİ</div>
+    <div>Aktif İngilizce <small>TOEFL CBT Exam - 3</small></div>
+  </div>
+  <div id="statusbar">
+    <span id="moduleTag">Directions</span>
+    <span id="timerbox">Untimed</span>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="screen" id="intro">
+    <div class="intro-card">
+      <h1>TOEFL Reading Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this test, you will answer 40 reading questions to demonstrate how well you understand academic and non-academic texts in English. There are three types of tasks.<br><br>
+        In an actual test, you will be able to use <b>Next</b> and <b>Back</b> to move to the next question or return to previous questions within the same module. You <strong class="warn">WILL NOT</strong> be able to return to Module 1 once you have begun Module 2.
+      </div>
+      <button id="startBtn">Start Test — 35:00</button>
+    </div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div class="screen" id="qWrap">
+    <div id="qHeader">
+      <h2 id="qGroupTitle">—</h2>
+      <span class="qnum" id="qNumLabel">Question 1 of 20</span>
+    </div>
+    <div id="split">
+      <div id="passagePane" style="display:none;"></div>
+      <div id="questionPane"></div>
+    </div>
+    <div id="navbar">
+      <button class="navbtn" id="backBtn">← Back</button>
+      <div id="navcenter">
+        <button class="navbtn review" id="reviewBtn">📋 Review</button>
+      </div>
+      <button class="navbtn primary" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- REVIEW SCREEN -->
+  <div class="screen" id="review">
+    <div class="review-inner">
+      <h2 id="reviewTitle">Review — Module 1</h2>
+      <div class="review-legend">
+        <span><span class="legend-dot" style="background:var(--answered)"></span>Answered</span>
+        <span><span class="legend-dot" style="background:var(--flag)"></span>Unanswered</span>
+      </div>
+      <div class="grid20" id="reviewGrid"></div>
+      <button class="navbtn primary" id="closeReviewBtn">Back to Question</button>
+    </div>
+  </div>
+
+  <!-- LISTENING DIRECTIONS -->
+  <div class="screen active" id="listenIntro">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div class="intro-card">
+        <h1>Listening Section</h1>
+        <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+        <div class="directions-box">
+          <b>Directions</b><br><br>
+          In this test, you will answer 34 questions to demonstrate how well you understand spoken English. There are three types of tasks.<br><br>
+          You <strong class="warn">WILL NOT</strong> be able to return to previous questions.
+        </div>
+        <button id="startListenBtn">Start Listening Section</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTENING QUESTION SCREEN -->
+  <div class="screen" id="lWrap">
+    <div id="lHeader">
+      <h2 id="lGroupTitle">—</h2>
+      <span class="qnum" id="lNumLabel">Question 1</span>
+    </div>
+    <div id="lBody">
+      <div class="lcard">
+        <div class="audiocard">
+          <div class="hint" id="lAudioHint">Press play and listen carefully. The transcript will not be shown.</div>
+          <button id="playBtn">▶ Play Audio</button>
+          <div id="playStatus"></div>
+        </div>
+        <div id="lQuestionArea"></div>
+      </div>
+    </div>
+    <div id="lNavbar">
+      <div class="no-return-note" style="margin-right:auto;">⚠ You cannot go back once you click Next.</div>
+      <button class="navbtn primary" id="lNextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- SPEAKING DIRECTIONS -->
+  <div class="screen" id="speakIntro">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div class="intro-card">
+        <h1>Speaking Section</h1>
+        <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+        <div class="directions-box">
+          <b>Directions</b><br><br>
+          In the speaking section, you will answer 11 questions to demonstrate how well you can speak English. There are two types of tasks.
+        </div>
+        <div class="directions-box" id="micPermissionNote">
+          🎙️ This section needs microphone access to record your answers. Click below to allow it and begin.
+        </div>
+        <button id="speakStartBtn">Allow Microphone &amp; Start Speaking Section</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEAKING QUESTION SCREEN -->
+  <div class="screen" id="sWrap">
+    <div id="sHeader">
+      <h2 id="sPartTitle">—</h2>
+      <span class="qnum" id="sNumLabel">Question 1</span>
+    </div>
+    <div id="sBody">
+      <div class="scard">
+        <img class="simg" id="sImage" src="" alt="Speaking task illustration">
+        <div class="sinstruct" id="sInstructText"></div>
+        <div class="sstatus" id="sStatus">Get ready...</div>
+        <div class="scountdown" id="sCountdown" style="display:none;">8</div>
+        <div class="sstopmsg" id="sStopMsg" style="display:none;">
+          Stop Speaking. Response time has ended. Please wait. We are currently saving your response.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEAKING DONE SCREEN -->
+  <div class="screen" id="speakDone">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div class="intro-card">
+        <h1>Speaking test is over.</h1>
+        <div class="sub">Thanks for completing all 11 speaking questions.</div>
+        <div class="summary-box" id="speakSummaryBox"></div>
+        <div class="replay-list" id="replayList"></div>
+        <button id="speakingDoneBtn">Finish Exam →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING DIRECTIONS -->
+  <div class="screen" id="writeIntro">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div class="intro-card">
+        <h1>Writing Section</h1>
+        <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+        <div class="directions-box">
+          <b>Directions</b><br><br>
+          In this section, you will complete three writing tasks: unscrambling words to build correct sentences, writing a professional email, and contributing to an academic discussion post. Manage your time carefully — each task has its own timer.
+        </div>
+        <button id="writeStartBtn">Start Writing Section</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING TASK SCREEN -->
+  <div class="screen" id="wWrap">
+    <div id="wHeader">
+      <h2 id="wTitle">—</h2>
+      <span class="qnum" id="wNumLabel">Question 1</span>
+    </div>
+    <div id="wBody">
+      <div class="wcard">
+        <div class="wtimerbig" id="wTimer">00:25</div>
+        <div class="wstopmsg" id="wStopMsg" style="display:none;"></div>
+        <div id="wInstructText" class="wprompt" style="display:none;"></div>
+        <div id="wPromptArea"></div>
+        <div id="wTaskArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING DONE SCREEN -->
+  <div class="screen" id="writeDone">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div class="intro-card">
+        <h1>The end of writing test.</h1>
+        <div class="sub" id="writeSummary"></div>
+        <button id="writeDoneBtn">Finish Exam →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAILED REVIEW -->
+  <div class="screen" id="detailedReview">
+    <div id="reviewHeader">
+      <h2 style="margin:0;font-size:15px;color:var(--brand-dark);font-weight:700;">Detailed Answer Review</h2>
+      <button class="navbtn" id="closeDetailedReviewBtn">← Back to Results</button>
+    </div>
+    <div id="reviewContent">
+      <div class="reviewInner" id="reviewInner"></div>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="screen" id="endscreen">
+    <div class="end-card">
+      <h1 id="endTitle">Test Complete</h1>
+      <div class="score-big" id="scoreBig">0/40</div>
+      <div class="score-sub" id="scoreSub">Total correct answers</div>
+      <div class="breakdown">
+        <div><b id="m1score">0/20</b><span>Reading · Module 1</span></div>
+        <div><b id="m2score">0/20</b><span>Reading · Module 2</span></div>
+        <div><b id="l1score">0/18</b><span>Listening · Module 1</span></div>
+        <div><b id="l2score">0/16</b><span>Listening · Module 2</span></div>
+        <div><b id="w1score">0/10</b><span>Writing · Sentences</span></div>
+      </div>
+      <div class="score-sub" id="writingFreeSummary"></div>
+      <div class="score-sub">Speaking responses were recorded — you can play them back on the previous screen.</div>
+      <button id="openDetailedReviewBtn" style="margin-top:18px;background:var(--brand);color:#fff;border:none;padding:13px 28px;font-size:15.5px;border-radius:8px;cursor:pointer;font-weight:700;">See Detailed Answers →</button>
+      <div class="score-sub">Thanks for practicing with Aktif İngilizce 👏</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="social">
+  <a href="https://youtube.com/@aktifingilizce?si=yr61jiAYpsrpKcKV" target="_blank" rel="noopener">▶ YouTube</a>
+  <a href="https://www.instagram.com/idealingilizce?igsh=N2t5NnU2NTc4a3R0" target="_blank" rel="noopener">📷 Instagram</a>
+  <a href="https://www.tiktok.com/@aktif.ingilizce" target="_blank" rel="noopener">🎵 TikTok @aktif.ingilizce</a>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+function W(number, answer, patternStr){
+  return {number, answer, pattern: patternStr.trim().split(/\s+/)};
+}
+
+const FILL_M1_TEXT = [
+"In recent years, space ",1," has entered a new era driven by private companies. The primary objective is to make access to the ",2," more affordable. Engineers have developed ",3," rockets that can land back on Earth, drastically reducing the ",4," of launches.",
+"Furthermore, there is a growing interest in establishing a permanent human ",5," on Mars. However, achieving this requires overcoming severe ",6," risks and ensuring the physical ",7," of astronauts during long voyages. Despite these ",8," challenges, scientists remain highly ",9,". Ultimately, collaboration across global ",10," is vital."
+];
+
+const FILL_M1_WORDS = [
+  W(1,"exploration","e _ _ _ _ _ a _ _ _ n"),
+  W(2,"universe","u _ _ _ _ _ s e"),
+  W(3,"reusable","r _ _ _ a _ _ e"),
+  W(4,"expense","e _ _ _ _ s _"),
+  W(5,"settlement","s _ _ _ _ e _ _ _ t"),
+  W(6,"radiation","r _ _ _ _ _ i _ n"),
+  W(7,"health","h _ _ _ _ h"),
+  W(8,"enormous","e _ _ _ _ _ u s"),
+  W(9,"motivated","m _ _ _ v _ _ _ d"),
+  W(10,"agencies","a _ _ _ c _ _ s")
+];
+
+const FILL_M2_TEXT = [
+"A balanced diet is crucial for maintaining optimal physical health. Nutritionists advise that people should ",1," a wide variety of fresh fruits and vegetables daily. It is important to avoid foods that contain ",2," preservatives and excessive amounts of sugar. Regular intake of vitamins helps to ",3," the human immune system. Furthermore, drinking enough water is necessary for proper ",4,".",
+"While many people try strict diets to lose weight, these are rarely ",5," in the long run. Instead, building healthy, lifelong ",6," is the best approach. Doctors also ",7," the importance of portion control. Overeating can lead to severe ",8," complications over time. Ultimately, staying active and eating well are the core ",9," of a long and ",10," life."
+];
+
+const FILL_M2_WORDS = [
+  W(1,"consume","c _ _ _ _ _ e"),
+  W(2,"artificial","a _ _ _ f _ _ _ _ l"),
+  W(3,"strengthen","s _ _ _ _ _ _ h _ n"),
+  W(4,"digestion","d _ _ _ s _ _ _ n"),
+  W(5,"sustainable","s _ _ _ a _ _ _ _ _ e"),
+  W(6,"habits","h _ _ _ _ s"),
+  W(7,"emphasize","e _ _ _ _ s _ _ e"),
+  W(8,"medical","m _ _ _ c _ l"),
+  W(9,"pillars","p _ _ _ _ r s"),
+  W(10,"vigorous","v _ _ _ r _ _ s")
+];
+
+function MC(number, q, options, correct){ return {number, type:"mc", q, options, correct}; }
+
+const MODULE1 = {
+  fillText: FILL_M1_TEXT, fillWords: FILL_M1_WORDS,
+  groups: [
+    {
+      id:"notice", title:"Notice — Campus Library", type:"passage-inline",
+      passageHTML:`<h4>Notice to All Campus Library Users</h4><p>Beginning November 15th, the Central Library will undergo major renovations on the second floor to install new soundproof study pods. During this period, all psychology and sociology books typically housed on the second floor will be temporarily relocated to the basement level. To compensate for the noise and disruption, we are extending the library's operating hours until midnight on weekdays. Additionally, students can now use our website to request "Curbside Pickup" for any book, allowing you to collect your reserved materials directly from the front desk without entering the building.</p>`,
+      questions:[
+        MC(11,"What is the main purpose of this notice?",["To announce the hiring of new library staff.","To inform students about upcoming construction and changes in services.","To apologize for losing psychology and sociology books.","To advertise a new coffee shop opening in the basement."],1),
+        MC(12,"According to the notice, what new option is available to customers?",["Extending their book borrowing period by two weeks.","Booking soundproof study pods online.","Requesting books to be prepared for pickup at the front desk.","Accessing the library 24 hours a day on weekends."],2)
+      ]
+    },
+    {
+      id:"announcement", title:"Announcement — Fitness Center Guidelines", type:"passage-inline",
+      passageHTML:`<h4>To: All Fitness Center Members — From: Management</h4><p><b>Subject: Updated Gym Guidelines</b></p><p>To ensure a safe and hygienic environment for everyone, we are updating our equipment usage rules effective Monday. We are no longer providing community towels at the front desk. All members are now required to bring their own personal sweat towels. After using any cardiovascular machine or free weight, it is your responsibility to wipe down the equipment using the newly installed sanitizing spray stations located in every corner of the gym. Our floor staff will no longer be wiping down machines between users; they will strictly focus on maintaining the locker rooms and repairing damaged equipment.</p>`,
+      questions:[
+        MC(13,"What is the main goal of this announcement?",["To introduce new rules regarding gym hygiene and equipment care.","To announce a price increase for gym memberships.","To explain how to use the new cardiovascular machines.","To invite members to a free fitness class on Monday."],0),
+        MC(14,"Based on the announcement, what are the employees' duties?",["Wiping down the cardiovascular machines between users.","Handing out community towels at the front desk.","Maintaining the locker rooms and fixing equipment.","Spraying members' personal towels with sanitizer."],2)
+      ]
+    },
+    {
+      id:"passage3", title:"Reading Passage — Green Roofs", type:"passage-split",
+      passageHTML:`<h3>Green Roofs in Urban Architecture</h3>
+      <p><b>Paragraph 1:</b> Green roofs, which involve covering a building's roof with vegetation and soil, are becoming increasingly popular in urban architecture. These living structures are not merely decorative; they provide a substantial layer of insulation, reducing the amount of energy required to heat and cool the building beneath them. By absorbing sunlight, green roofs also help mitigate the "urban heat island effect," a phenomenon where concrete cities become unnaturally hot compared to surrounding rural areas.</p>
+      <p><b>Paragraph 2:</b> Beyond temperature control, green roofs offer significant stormwater management benefits. In traditional cities, heavy rainfall hits hard roofs and rushes into street drains, often causing flash floods and overwhelming sewage systems. However, the soil and plants on a green roof act like a sponge, absorbing up to 80% of the rainfall. The water that does escape is naturally filtered by the roots, which removes harmful pollutants before they can reach local rivers and lakes.</p>
+      <p><b>Paragraph 3:</b> Despite their clear environmental advantages, the widespread installation of green roofs faces several barriers. The initial construction costs are significantly higher than those of standard roofs, requiring waterproof membranes, root barriers, and drainage layers. Furthermore, older buildings often lack the structural integrity needed to support the heavy weight of wet soil and mature plants. Maintenance can also be a challenge, as the vegetation requires regular watering and weeding, much like a traditional garden.</p>`,
+      questions:[
+        MC(15,"What is the primary purpose of the passage?",["To argue that all older buildings should be demolished.","To describe the benefits and structural challenges of green roofs.","To explain how to grow a traditional garden in the countryside.","To compare the cost of electricity in rural and urban areas."],1),
+        MC(16,'The word "substantial" in Paragraph 1 is closest in meaning to:',["invisible","temporary","significant","fragile"],2),
+        MC(17,"According to the passage, how do green roofs manage stormwater?",["By directing water rapidly into street drains.","By absorbing the rainfall into the soil and plants like a sponge.","By evaporating all the water immediately using solar panels.","By physically blocking rain clouds from forming over the city."],1),
+        MC(18,"What can be inferred from Paragraph 3 about older buildings?",["They are the easiest types of buildings to upgrade with green roofs.","They were designed to handle massive amounts of extra weight on their roofs.","They might collapse or suffer damage if a heavy green roof is installed on them.","They naturally stay cooler than modern buildings during the summer."],2),
+        MC(19,'Why does the author mention "rivers and lakes" in Paragraph 2?',["To give an example of water bodies protected from pollution by green roofs.","To describe where urban residents prefer to go on vacation.","To explain where the soil for green roofs is typically harvested.","To show that green roofs consume too much local water."],0),
+        MC(20,"According to Paragraph 3, all of the following are mentioned as barriers to green roofs EXCEPT:",["The high initial costs of construction.","A lack of structural integrity in older buildings.","The difficulty of finding seeds for the roof plants.","The need for regular maintenance like weeding and watering."],2)
+      ]
+    }
+  ]
+};
+
+const MODULE2 = {
+  fillText: FILL_M2_TEXT, fillWords: FILL_M2_WORDS,
+  groups: [
+    {
+      id:"post", title:"Software Forum Post", type:"passage-inline",
+      passageHTML:`<h4>Software Company User Forum</h4><p><b>User: TechPro99</b></p><p>I have been using your photo editing software for five years, but this latest mandatory update is a total disaster. You completely changed the user interface, hiding all the essential tools I use every day behind multiple confusing menus. It took me twice as long to finish my project last night. If you don't offer an option to revert to the classic layout soon, I will be canceling my subscription and moving to a competitor.</p>`,
+      questions:[
+        MC(11,"What is the writer's attitude toward the software update?",["Grateful for the modern new look.","Frustrated that the tools are harder to find and use.","Confused about how to pay for the subscription.","Excited to try a competitor's product."],1),
+        MC(12,"What can be inferred about the user's workflow?",["They rely heavily on specific tools that were easily accessible in the old version.","They usually spend a month finishing a single photo project.","They have never used a photo editing program before today.","They prefer using multiple menus rather than shortcuts."],0)
+      ]
+    },
+    {
+      id:"messages", title:"Group Presentation Messages", type:"passage-inline",
+      passageHTML:`<h4>Team Message Thread</h4>
+      <p class="msgline"><b>Leo (10:00 AM):</b> Guys, our history presentation is on Friday. Have we decided who is doing the introduction and the conclusion?</p>
+      <p class="msgline"><b>Maya (10:05 AM):</b> I can handle the introduction. I already researched the background context of the Industrial Revolution.</p>
+      <p class="msgline"><b>Sam (10:12 AM):</b> Perfect. I'm working on the main economic impacts section right now. However, I need someone to format the slides—my laptop is broken.</p>
+      <p class="msgline"><b>Chloe (10:20 AM):</b> Don't worry, Sam, just send me your text. I'll design all the slides tonight and add the conclusion at the end.</p>`,
+      questions:[
+        MC(13,"Why does Leo initiate this conversation?",["To tell the group he is dropping the class.","To check the status of specific roles for an upcoming presentation.","To ask Maya for help with his economic research.","To borrow Sam's laptop."],1),
+        MC(14,"How does Chloe solve Sam's problem?",["She agrees to put his text into the presentation slides for him.","She buys him a new laptop.","She writes the economic impacts section so he doesn't have to.","She asks the professor to move the presentation to next week."],0)
+      ]
+    },
+    {
+      id:"passage3", title:"Reading Passage — The Printing Press", type:"passage-split",
+      passageHTML:`<h3>The Printing Press and the Cultural Revolution</h3>
+      <p>Johannes Gutenberg's invention of the mechanical movable type printing press in 1440 ignited a cultural revolution across Europe. Prior to this, books were painstakingly copied by hand by monks, making them rare, incredibly expensive, and accessible only to the wealthy elite and the clergy. Gutenberg's innovation involved casting individual metal letters that could be arranged, inked, and pressed onto paper, allowing for the mass production of texts.</p>
+      <p>The immediate consequence of the printing press was a dramatic drop in the cost of books. Information could now spread rapidly and accurately. This technological leap played a critical role in the advancement of the Renaissance and the Scientific Revolution. Because scientific texts and diagrams could be perfectly duplicated, scholars across different countries could easily share and verify each other's discoveries without fearing copyist errors.</p>
+      <p>Furthermore, the printing press standardized language and spelling across regions. As books printed in local vernaculars (everyday languages like German and French) became more popular than traditional Latin texts, literacy rates among the common people soared. This democratization of knowledge eventually challenged established authorities, as people could now read and interpret texts, such as religious scriptures, for themselves.</p>`,
+      questions:[
+        MC(15,"Which of the following best summarizes the main idea of the passage?",["Books copied by hand were much more beautiful than printed books.","The printing press lowered the cost of books and profoundly transformed European society by spreading knowledge.","Johannes Gutenberg invented the printing press to translate Latin texts into French.","The Scientific Revolution occurred solely because of changes in spelling rules."],1),
+        MC(16,'In the first paragraph, what does the phrase "ignited a cultural revolution" mean?',["Literally set fire to libraries across Europe.","Sparked massive and rapid societal changes.","Caused people to stop reading entirely.","Ended the Renaissance period."],1),
+        MC(17,"According to the passage, how were books produced before 1440?",["They were typed on early computers.","They were printed using wooden blocks.","They were copied by hand by monks.","They were imported from the Americas."],2),
+        MC(18,'Why does the author mention that "scientific texts and diagrams could be perfectly duplicated"?',["To explain why artists hated the printing press.","To show how the printing press aided scientific collaboration and accuracy.","To prove that monks were terrible at drawing diagrams.","To argue that science is more important than literature."],1),
+        MC(19,"What can be inferred from the passage about the use of Latin?",["It was the primary language of the common people.","It became more popular after the invention of the printing press.","It was the language in which early, hand-copied books were likely written.","Gutenberg banned the printing of Latin books."],2),
+        MC(20,"According to the passage, which of the following is NOT mentioned as an effect of the printing press?",["A drop in the cost of books.","The standardization of language and spelling.","The invention of the modern postal system.","Soaring literacy rates among common people."],2)
+      ]
+    }
+  ]
+};
+
+const MODULES = [MODULE1, MODULE2];
+
+/* =========================================================
+   STATE
+========================================================= */
+const state = {
+  moduleIndex: 0,
+  qIndex: 0,          // 0..19 within current module
+  answers: [ {}, {} ], // per module: {questionNumber: value}
+  fillLetters: [ {}, {} ], // per module: {wordNumber: {blankIdx: letter}}
+  timeLeft: 35*60,
+  timerId: null,
+  started: false,
+  finished: false,
+  module1Locked: false
+};
+
+/* Build flat list of 20 "slots" per module:
+   slots 0-9 -> fill word #1-10 (all shown on same paragraph screen, target word = slot+1)
+   slots 10-19 -> the MC questions in order from groups */
+function getModuleData(mIdx){ return MODULES[mIdx]; }
+
+function getSlotInfo(mIdx, slotIdx){
+  const mod = getModuleData(mIdx);
+  if(slotIdx < 10){
+    return {kind:"fill", wordNumber:slotIdx+1};
+  }
+  // find question with number slotIdx+1 (11..20) across groups
+  const qNum = slotIdx+1;
+  for(const g of mod.groups){
+    const found = g.questions.find(q=>q.number===qNum);
+    if(found) return {kind:"mc", group:g, question:found};
+  }
+  return null;
+}
+
+/* =========================================================
+   RENDER: FILL-IN PARAGRAPH
+========================================================= */
+function renderFillParagraph(mIdx, activeWordNumber){
+  const mod = getModuleData(mIdx);
+  const wordsByNum = {};
+  mod.fillWords.forEach(w=>wordsByNum[w.number]=w);
+  let html = `<h3>Complete the Passage</h3><p style="font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin-top:-8px;">Fill in the missing letters for each numbered word. Use <b>Next</b>/<b>Back</b> to move between words ${1}–${10}, or click any word directly.</p>`;
+  html += `<div class="fillpassage">`;
+  mod.fillText.forEach(part=>{
+    if(typeof part === "number"){
+      const w = wordsByNum[part];
+      html += renderWordTokens(mIdx, w, part===activeWordNumber);
+    } else {
+      html += part.replace(/\n/g,"<br><br>");
+    }
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderWordTokens(mIdx, w, isActive){
+  const saved = state.fillLetters[mIdx][w.number] || {};
+  let out = `<span class="word-token ${isActive?'active-word':''}" data-wordnum="${w.number}" title="Word ${w.number}">`;
+  out += `<span class="word-index">${w.number}</span>`;
+  let blankIdx = 0;
+  w.pattern.forEach(tok=>{
+    if(tok === "_"){
+      const val = saved[blankIdx] || "";
+      out += `<input class="blankinput" maxlength="1" data-word="${w.number}" data-blank="${blankIdx}" value="${val}">`;
+      blankIdx++;
+    } else {
+      out += `<span class="letterbox">${tok}</span>`;
+    }
+  });
+  out += `</span> `;
+  return out;
+}
+
+function attachFillListeners(mIdx){
+  document.querySelectorAll('.blankinput').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const wn = +e.target.dataset.word, bi = +e.target.dataset.blank;
+      e.target.value = e.target.value.replace(/[^a-zA-Z]/g,'').slice(0,1).toLowerCase();
+      if(!state.fillLetters[mIdx][wn]) state.fillLetters[mIdx][wn] = {};
+      state.fillLetters[mIdx][wn][bi] = e.target.value;
+      // auto-advance to next blank input
+      if(e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>-1 && idx < inputs.length-1) inputs[idx+1].focus();
+      }
+      updateNavAndReviewState();
+    });
+    inp.addEventListener('keydown', e=>{
+      if(e.key==="Backspace" && !e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>0) inputs[idx-1].focus();
+      }
+    });
+  });
+  document.querySelectorAll('.word-token').forEach(tok=>{
+    tok.addEventListener('click', e=>{
+      if(e.target.classList.contains('blankinput')) return;
+      const wn = +tok.dataset.wordnum;
+      state.qIndex = wn-1;
+      renderCurrentQuestion();
+    });
+  });
+}
+
+function isWordComplete(mIdx, w){
+  const saved = state.fillLetters[mIdx][w.number] || {};
+  let blanks = w.pattern.filter(t=>t==="_").length;
+  for(let i=0;i<blanks;i++){ if(!saved[i]) return false; }
+  return true;
+}
+function isWordCorrect(mIdx, w){
+  const saved = state.fillLetters[mIdx][w.number] || {};
+  let blankIdx=0, ansIdx=0;
+  for(const tok of w.pattern){
+    if(tok==="_"){
+      const letter = w.answer[ansIdx];
+      if((saved[blankIdx]||"").toLowerCase() !== letter.toLowerCase()) return false;
+      blankIdx++;
+    }
+    ansIdx++;
+  }
+  return true;
+}
+
+/* =========================================================
+   RENDER: MC QUESTIONS
+========================================================= */
+function renderMC(mIdx, group, question){
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+
+  if(group.type === "passage-split"){
+    passagePane.style.display = "block";
+    passagePane.innerHTML = group.passageHTML;
+    questionPane.classList.remove('full');
+  } else {
+    passagePane.style.display = "none";
+    questionPane.classList.add('full');
+  }
+
+  let html = "";
+  if(group.type === "passage-inline"){
+    html += group.passageHTML;
+  }
+  html += `<div class="qtext">${question.number}. ${question.q}</div>`;
+  html += `<div class="options">`;
+  const letters = ["A","B","C","D"];
+  const saved = state.answers[mIdx][question.number];
+  question.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}">
+      <span class="letter">${letters[i]}</span><span>${opt}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  questionPane.innerHTML = html;
+
+  questionPane.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const choice = +el.dataset.choice;
+      state.answers[mIdx][question.number] = choice;
+      questionPane.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+      updateNavAndReviewState();
+    });
+  });
+}
+
+/* =========================================================
+   MAIN RENDER
+========================================================= */
+function renderCurrentQuestion(){
+  const mIdx = state.moduleIndex;
+  const slot = getSlotInfo(mIdx, state.qIndex);
+  document.getElementById('moduleTag').textContent = "Module " + (mIdx+1) + " of 2";
+  document.getElementById('qNumLabel').textContent = "Question " + (state.qIndex+1) + " of 20";
+
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+
+  if(slot.kind === "fill"){
+    document.getElementById('qGroupTitle').textContent = "Part 1 — Complete the Passage";
+    passagePane.style.display = "none";
+    questionPane.classList.add('full');
+    questionPane.innerHTML = renderFillParagraph(mIdx, slot.wordNumber);
+    attachFillListeners(mIdx);
+    // scroll active word into view
+    const activeEl = document.querySelector('.active-word');
+    if(activeEl) activeEl.scrollIntoView({block:"center", behavior:"smooth"});
+  } else {
+    document.getElementById('qGroupTitle').textContent = slot.group.title;
+    renderMC(mIdx, slot.group, slot.question);
+  }
+
+  document.getElementById('backBtn').disabled = (state.qIndex===0);
+  const isLastOfModule = (state.qIndex === 19);
+  document.getElementById('nextBtn').textContent = isLastOfModule
+    ? (mIdx===0 ? "Finish Module 1 →" : "Continue to Listening →")
+    : "Next →";
+}
+
+function updateNavAndReviewState(){ /* placeholder for live UI refresh if needed */ }
+
+/* =========================================================
+   NAV
+========================================================= */
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  if(state.qIndex>0){ state.qIndex--; renderCurrentQuestion(); }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  if(state.qIndex < 19){
+    state.qIndex++;
+    renderCurrentQuestion();
+  } else {
+    if(state.moduleIndex===0){
+      goToModule2();
+    } else {
+      if(state.timerId) clearInterval(state.timerId);
+      document.getElementById('timerbox').textContent = "Untimed";
+      goToWriting();
+    }
+  }
+});
+
+function goToModule2(){
+  state.module1Locked = true;
+  state.moduleIndex = 1;
+  state.qIndex = 0;
+  renderCurrentQuestion();
+}
+
+function goToReading(){
+  document.getElementById('moduleTag').textContent = "Directions";
+  document.getElementById('timerbox').textContent = "35:00";
+  showScreen('intro');
+}
+
+/* Review screen */
+document.getElementById('reviewBtn').addEventListener('click', openReview);
+document.getElementById('closeReviewBtn').addEventListener('click', ()=>{
+  showScreen('qWrap');
+});
+
+function openReview(){
+  const mIdx = state.moduleIndex;
+  document.getElementById('reviewTitle').textContent = "Review — Module " + (mIdx+1);
+  const grid = document.getElementById('reviewGrid');
+  grid.innerHTML = "";
+  for(let s=0; s<20; s++){
+    const slot = getSlotInfo(mIdx, s);
+    let answered = false;
+    if(slot.kind==="fill"){
+      const mod = getModuleData(mIdx);
+      const w = mod.fillWords.find(x=>x.number===slot.wordNumber);
+      answered = isWordComplete(mIdx, w);
+    } else {
+      answered = state.answers[mIdx][slot.question.number] !== undefined;
+    }
+    const cell = document.createElement('div');
+    cell.className = "revcell " + (answered ? "answered":"unanswered");
+    cell.innerHTML = (s+1) + "<small>" + (answered?"Answered":"Blank") + "</small>";
+    cell.addEventListener('click', ()=>{
+      state.qIndex = s;
+      showScreen('qWrap');
+      renderCurrentQuestion();
+    });
+    grid.appendChild(cell);
+  }
+  showScreen('review');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* =========================================================
+   TIMER
+========================================================= */
+function formatTime(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
+}
+function startTimer(){
+  document.getElementById('timerbox').textContent = formatTime(state.timeLeft);
+  state.timerId = setInterval(()=>{
+    state.timeLeft--;
+    const box = document.getElementById('timerbox');
+    box.textContent = formatTime(state.timeLeft);
+    if(state.timeLeft <= 300) box.classList.add('low');
+    if(state.timeLeft <= 0){
+      clearInterval(state.timerId);
+      finishTest(true);
+    }
+  }, 1000);
+}
+
+/* =========================================================
+   START / FINISH
+========================================================= */
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  state.started = true;
+  showScreen('qWrap');
+  renderCurrentQuestion();
+  startTimer();
+});
+
+function scoreModule(mIdx){
+  const mod = getModuleData(mIdx);
+  let correct = 0;
+  mod.fillWords.forEach(w=>{ if(isWordCorrect(mIdx,w)) correct++; });
+  mod.groups.forEach(g=>{
+    g.questions.forEach(q=>{
+      if(state.answers[mIdx][q.number] === q.correct) correct++;
+    });
+  });
+  return correct;
+}
+
+/* =========================================================
+   LISTENING DATA
+========================================================= */
+function SQ(number, text, options, correct){
+  return {number, audio:[{speaker:null, text}], options, correct, kind:"sqr"};
+}
+function L(number, prompt, options, correct){
+  return {number, prompt, options, correct, kind:"comp"};
+}
+function block(context, audioLines, questions){
+  return {context, audioLines, questions};
+}
+
+function sqrBlock(contextLabel, q){
+  return {context:contextLabel, audioLines:[{speaker:null, text:q.audio[0].text}], single:true, questions:[q]};
+}
+function convBlock(contextLabel, lines, questions){
+  return {context:contextLabel, audioLines:lines, single:false, questions};
+}
+
+const M1_SQR_CTX = "Theme: At a Restaurant \u00b7 Listen to each question, then choose the best response.";
+const listen1_sqr = [
+  SQ(1,"Could we get a table for four by the window?",
+    ["Yes, I have four brothers.","Let me check if one is available right now.","The window is very clean.","We ate dinner here last week."],1),
+  SQ(2,"Does this soup contain any dairy products?",
+    ["Yes, it is made with heavy cream.","I will order the soup.","The dairy farm is located in the valley.","It comes in a large white bowl."],0),
+  SQ(3,"Can we split the bill into two separate credit cards?",
+    ["The food was quite expensive today.","Of course, I will process those for you now.","My credit card expires next year.","We have a table ready."],1),
+  SQ(4,"How long is the wait for a table right now?",
+    ["The waiters are very friendly.","It should be about twenty to thirty minutes.","I ordered the steak medium rare.","The restaurant opened in 2015."],1),
+  SQ(5,"Is the seafood pasta spicy?",
+    ["No, it has a very mild garlic sauce.","Seafood is my favorite dish.","The chef went home early.","I can bring you some extra napkins."],0),
+  SQ(6,"What time does the kitchen close tonight?",
+    ["We take our last orders at 10:30 PM.","The front door is locked.","I usually cook at home on Fridays.","The kitchen is very spacious."],0),
+  SQ(7,"I think I dropped my sunglasses under the table.",
+    ["The sun is shining brightly today.","Let me bring a flashlight to help you look for them.","I don't wear glasses.","Our table is made of oak wood."],1),
+  SQ(8,"Could you recommend a good dessert?",
+    ["The dessert menu is printed on green paper.","Our chocolate lava cake is the most popular choice.","I am not hungry right now.","The bill is forty dollars."],1)
+];
+
+const listen1_blocks = [
+  ...listen1_sqr.map(q=>sqrBlock(M1_SQR_CTX,q)),
+  convBlock("Listen to a conversation between two coworkers.",
+    [{speaker:"Man",text:"I can't believe it, I've lost my car keys again. I've checked my jacket pockets and my desk drawer."},
+     {speaker:"Woman",text:"Did you check the staff breakroom? You were making coffee in there about twenty minutes ago."},
+     {speaker:"Man",text:"Oh, you're right! I probably left them on the counter next to the sugar. I'll go check right now."}],
+    [L(9,"What is the man's problem?",
+      ["He spilled coffee on his jacket.","He lost his car keys.","He cannot find his desk.","He forgot to buy sugar."],1),
+     L(10,"Where is the man going next?",
+      ["To his car.","To a coffee shop across the street.","To the staff breakroom.","To the security office."],2)]),
+  convBlock("Listen to a conversation between a student and a professor.",
+    [{speaker:"Woman",text:"Excuse me, Professor. I noticed that the textbook required for our chemistry class is sold out at the campus bookstore."},
+     {speaker:"Man",text:"Don't worry. I have placed two copies of the book on reserve at the main library. You can borrow them for three hours at a time to take notes."}],
+    [L(11,"Why is the woman concerned?",
+      ["The campus bookstore is closed.","She failed her chemistry exam.","The required textbook is sold out.","The library books are too heavy."],2),
+     L(12,"What does the professor suggest the woman do?",
+      ["Buy the book online instead.","Borrow a reserved copy from the library.","Drop the chemistry class.","Share a book with her roommate."],1)]),
+  convBlock("Listen to an announcement at an art museum.",
+    [{speaker:"Announcer",text:"Attention museum patrons. The City Art Museum will be closing in thirty minutes at 5:00 PM. Please begin making your way to the exits. The gift shop will remain open for an additional fifteen minutes. Thank you for visiting."}],
+    [L(13,"What is the main topic of the announcement?",
+      ["A new art exhibition opening.","The upcoming closure of the museum for the day.","A lost child at the front desk.","A discount in the gift shop."],1),
+     L(14,"When does the gift shop close?",
+      ["At 4:30 PM.","At 5:00 PM.","At 5:15 PM.","At 6:00 PM."],2)]),
+  convBlock("Listen to a short excerpt from a psychology class.",
+    [{speaker:"Professor",text:"Let's talk about human sleep cycles. Sleep isn't just a flat line of unconsciousness; it's divided into multiple stages. The most critical stage is REM, or Rapid Eye Movement sleep. This occurs about 90 minutes after you fall asleep. During REM sleep, your brain becomes highly active, almost as if you were awake, and this is when the most vivid dreams occur. Crucially, REM sleep is when your brain processes and consolidates memories from the day. Without enough REM sleep, people struggle to learn new information and experience severe mood swings. This is why pulling an all-nighter before an exam is actually the worst thing a student can do for their memory."}],
+    [L(15,"What is the main topic of the lecture?",
+      ["How to cure insomnia.","The stages of sleep, specifically REM sleep.","The history of dream interpretation.","How to stay awake during exams."],1),
+     L(16,"When does REM sleep typically begin?",
+      ["Immediately upon closing your eyes.","About 90 minutes after falling asleep.","Right before you wake up in the morning.","Only during afternoon naps."],1),
+     L(17,"What happens in the brain during REM sleep?",
+      ["It completely shuts down.","It stops producing memories.","It becomes highly active to process memories.","It lowers the body's temperature."],2),
+     L(18,"What does the professor imply about staying up all night before an exam?",
+      ["It is a great way to memorize extra facts.","It will negatively impact your ability to recall information.","It is only harmful if you drink too much coffee.","It guarantees a high grade on the test."],1)])
+];
+
+const M2_SQR_CTX = "Theme: University Campus \u00b7 Listen to each question, then choose the best response.";
+const listen2_sqr = [
+  SQ(1,"Where is the main science building located?",
+    ["Yes, I study biology.","It is right behind the library.","Science is a difficult subject.","The building is very old."],1),
+  SQ(2,"Are you taking the advanced calculus class this semester?",
+    ["The professor is very strict.","Math is taught on Tuesdays.","Yes, it meets every Monday and Wednesday.","The calculator costs fifty dollars."],2),
+  SQ(3,"Could you lend me your notes from yesterday's lecture?",
+    ["I wrote them in a blue notebook.","Yesterday was extremely cold.","Sure, I can email pictures of them to you.","The lecture lasted for two hours."],2),
+  SQ(4,"Did the professor upload the final syllabus to the website?",
+    ["The internet connection here is very fast.","No, he said he will post it tomorrow morning.","I am reading a novel for class.","The syllabus is five pages long."],1),
+  SQ(5,"When is the history assignment due?",
+    ["It must be submitted by Friday at midnight.","The history department is on the third floor.","It is an essay about the French Revolution.","Yes, I finished it yesterday."],0),
+  SQ(6,"Is the student cafeteria open on weekends?",
+    ["I usually eat cereal for breakfast.","The cafeteria serves excellent pizza.","Yes, but it closes early at 7:00 PM.","The chefs wear white hats."],2),
+  SQ(7,"How much does the introductory physics textbook cost?",
+    ["Physics is my major.","It is around eighty dollars used.","The bookstore is crowded today.","It is a very heavy book."],1),
+  SQ(8,"Who is the academic advisor for the engineering department?",
+    ["Dr. Peterson handles all engineering advising.","Engineering degrees take four years.","You can schedule an appointment online.","The engineering lab is fully equipped."],0)
+];
+
+const listen2_blocks = [
+  ...listen2_sqr.map(q=>sqrBlock(M2_SQR_CTX,q)),
+  convBlock("Listen to a conversation between two friends.",
+    [{speaker:"Man",text:"Did you manage to get tickets for the jazz concert on Saturday?"},
+     {speaker:"Woman",text:"No, they sold out in less than ten minutes online! But I put my name on the waitlist just in case someone cancels."},
+     {speaker:"Man",text:"Fingers crossed! If not, we can always just go to the movies."}],
+    [L(9,"Why didn't the woman buy concert tickets?",
+      ["She doesn't like jazz music.","They were too expensive.","They sold out too quickly online.","The website crashed."],2),
+     L(10,"What is their backup plan if they don't get tickets?",
+      ["Go to a restaurant.","Go to the movies.","Watch the concert on TV.","Play jazz music at home."],1)]),
+  convBlock("Listen to a traffic announcement.",
+    [{speaker:"Announcer",text:"Attention drivers. Due to an overturned cargo truck, Highway 4 North is completely closed between Exits 12 and 15. Emergency crews are on the scene, but the road is expected to remain closed for at least four hours. Please use alternate routes and expect heavy delays in the downtown area."}],
+    [L(11,"What is the main idea of this announcement?",
+      ["To advertise a new trucking company.","To report a major road closure due to an accident.","To announce a new highway exit opening.","To ask for volunteers to clean the highway."],1),
+     L(12,"How long is the closure expected to last?",
+      ["One hour.","Two hours.","Four hours.","Twelve hours."],2)]),
+  convBlock("Listen to a short excerpt from an economics class.",
+    [{speaker:"Professor",text:"Today in economics, we are exploring the law of Supply and Demand. In simple terms, if a product is scarce, meaning there isn't much of it available, but many people want to buy it, the price will inevitably skyrocket. Think about concert tickets for a very famous pop star. The arena only holds 20,000 seats, the supply, but a million fans want to go, the demand. Conversely, if there is a surplus of a product, say, a company produces too many winter coats and it's suddenly spring, the demand drops. To get rid of the coats, the company must slash prices. So, the equilibrium point is where the supplier's price matches exactly what the average consumer is willing to pay."}],
+    [L(13,"What is the main topic of the lecture?",
+      ["How to become a famous pop star.","The economic principle of Supply and Demand.","The cost of manufacturing winter coats.","How to build larger concert arenas."],1),
+     L(14,"According to the professor, what happens when a product is scarce but highly desired?",
+      ["The price drops significantly.","The price skyrockets.","The product is given away for free.","The government bans the product."],1),
+     L(15,"What does the professor imply about selling winter coats in the spring?",
+      ["It is very easy because people plan ahead.","It is difficult, forcing companies to lower prices.","It is illegal in most countries.","It causes a shortage of summer clothing."],1),
+     L(16,'In the lecture, what does the word "scarce" mean?',
+      ["Plentiful and cheap","Very frightening","Limited or not having much available","Broken and unusable"],2)])
+];
+
+const LISTEN_MODULES = [
+  {title:"Listening · Module 1", blocks: listen1_blocks},
+  {title:"Listening · Module 2", blocks: listen2_blocks}
+];
+
+/* Flatten blocks into slots: each slot = {block, question} */
+function flattenListenModule(mod){
+  const slots = [];
+  mod.blocks.forEach(b=>{
+    b.questions.forEach(q=> slots.push({block:b, question:q}));
+  });
+  return slots;
+}
+
+const listenState = {
+  moduleIndex: 0,
+  slots: [],
+  slotIndex: 0,
+  answers: [ {}, {} ],
+  lastPlayedBlock: null,
+  isPlaying: false
+};
+
+/* ---------- TTS ---------- */
+let cachedVoice = null;
+function pickVoice(){
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  if(!voices.length) return null;
+  return voices.find(v=>v.name==="Google UK English Female")
+      || voices.find(v=>v.lang==="en-GB")
+      || voices.find(v=>v.lang && v.lang.startsWith("en"))
+      || voices[0];
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = ()=>{ cachedVoice = pickVoice(); };
+  cachedVoice = pickVoice();
+}
+
+function speakBlockAudio(lines, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  if(!cachedVoice) cachedVoice = pickVoice();
+  let i = 0;
+  function next(){
+    if(i >= lines.length){ listenState.isPlaying=false; updatePlayUI(false); if(onEnd) onEnd(); return; }
+    const line = lines[i++];
+    const text = (line.speaker ? line.speaker + ". " : "") + line.text;
+    const utter = new SpeechSynthesisUtterance(text);
+    if(cachedVoice) utter.voice = cachedVoice;
+    utter.lang = "en-GB";
+    utter.rate = 0.96;
+    utter.onend = next;
+    utter.onerror = next;
+    window.speechSynthesis.speak(utter);
+  }
+  listenState.isPlaying = true;
+  updatePlayUI(true);
+  next();
+}
+
+function updatePlayUI(playing){
+  const btn = document.getElementById('playBtn');
+  const status = document.getElementById('playStatus');
+  if(!btn) return;
+  if(playing){
+    btn.textContent = "🔊 Playing...";
+    btn.classList.add('playing');
+    btn.disabled = true;
+    status.textContent = "Listening in progress — please wait.";
+  } else {
+    btn.textContent = "🔁 Replay Audio";
+    btn.classList.remove('playing');
+    btn.disabled = false;
+    status.textContent = "";
+  }
+}
+
+/* ---------- RENDER LISTENING ---------- */
+function renderListenSlot(){
+  const mod = LISTEN_MODULES[listenState.moduleIndex];
+  const slot = listenState.slots[listenState.slotIndex];
+  const q = slot.question;
+  const b = slot.block;
+
+  document.getElementById('moduleTag').textContent = mod.title;
+  document.getElementById('lGroupTitle').textContent = q.kind === "sqr" ? "Short Question-Response" : "Listening Comprehension";
+  document.getElementById('lNumLabel').textContent = "Question " + q.number + " of " + (listenState.moduleIndex===0?18:16);
+  document.getElementById('lAudioHint').textContent = b.context || "Press play and listen carefully. The transcript will not be shown.";
+
+  // Reset / prep audio button. Auto-play only when we land on the FIRST question of a new block.
+  const isFirstQOfBlock = b.questions[0].number === q.number;
+  updatePlayUI(false);
+  document.getElementById('playBtn').textContent = isFirstQOfBlock ? "▶ Play Audio" : "🔁 Replay Audio";
+
+  const btn = document.getElementById('playBtn');
+  btn.onclick = ()=> speakBlockAudio(b.audioLines, ()=>{});
+
+  // Question area
+  const area = document.getElementById('lQuestionArea');
+  let html = "";
+  if(q.kind === "comp"){
+    html += `<div class="lqtext">${q.number}. ${q.prompt}</div>`;
+  } else {
+    html += `<div class="lqtext" style="font-weight:600;color:var(--ink-soft);font-size:13.5px;">Choose the best response:</div>`;
+  }
+  html += `<div class="options">`;
+  const letters = ["A","B","C","D"];
+  const saved = listenState.answers[listenState.moduleIndex][q.number];
+  q.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}">
+      <span class="letter">${letters[i]}</span><span>${opt}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  area.innerHTML = html;
+
+  area.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const choice = +el.dataset.choice;
+      listenState.answers[listenState.moduleIndex][q.number] = choice;
+      area.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+
+  // Auto-play audio the first time we arrive at a new block
+  if(listenState.lastPlayedBlock !== b){
+    listenState.lastPlayedBlock = b;
+    speakBlockAudio(b.audioLines, ()=>{});
+  }
+}
+
+document.getElementById('startListenBtn').addEventListener('click', ()=>{
+  listenState.moduleIndex = 0;
+  listenState.slots = flattenListenModule(LISTEN_MODULES[0]);
+  listenState.slotIndex = 0;
+  listenState.lastPlayedBlock = null;
+  showScreen('lWrap');
+  renderListenSlot();
+});
+
+document.getElementById('lNextBtn').addEventListener('click', ()=>{
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  if(listenState.slotIndex < listenState.slots.length - 1){
+    listenState.slotIndex++;
+    renderListenSlot();
+  } else if(listenState.moduleIndex === 0){
+    listenState.moduleIndex = 1;
+    listenState.slots = flattenListenModule(LISTEN_MODULES[1]);
+    listenState.slotIndex = 0;
+    listenState.lastPlayedBlock = null;
+    renderListenSlot();
+  } else {
+    goToReading();
+  }
+});
+
+/* ---------- SCORING ---------- */
+function scoreListenModule(mIdx){
+  let correct = 0;
+  const slots = flattenListenModule(LISTEN_MODULES[mIdx]);
+  slots.forEach(s=>{
+    if(listenState.answers[mIdx][s.question.number] === s.question.correct) correct++;
+  });
+  return correct;
+}
+
+function finishTest(timeUp){
+  if(state.finished) return;
+  state.finished = true;
+  if(state.timerId) clearInterval(state.timerId);
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  const r1 = scoreModule(0);
+  const r2 = scoreModule(1);
+  const l1 = scoreListenModule(0);
+  const l2 = scoreListenModule(1);
+  const total = r1+r2+l1+l2;
+  const maxTotal = 40 + 18 + 16;
+  document.getElementById('endTitle').textContent = timeUp ? "Time's Up — Test Ended" : "Test Complete";
+  document.getElementById('scoreBig').textContent = total + "/" + maxTotal;
+  document.getElementById('m1score').textContent = r1 + "/20";
+  document.getElementById('m2score').textContent = r2 + "/20";
+  document.getElementById('l1score').textContent = l1 + "/18";
+  document.getElementById('l2score').textContent = l2 + "/16";
+  const w1 = writeState.task1Answers.filter(a=>a.correct).length;
+  document.getElementById('w1score').textContent = w1 + "/10";
+  const t2w = writeState.task2Text.trim() ? writeState.task2Text.trim().split(/\s+/).length : 0;
+  const t3w = writeState.task3Text.trim() ? writeState.task3Text.trim().split(/\s+/).length : 0;
+  document.getElementById('writingFreeSummary').textContent =
+    `Email: ${t2w} words · Academic discussion: ${t3w} words (written responses saved, not auto-graded).`;
+  showScreen('endscreen');
+}
+/* =========================================================
+   SPEAKING SECTION
+========================================================= */
+const SPEAK_PART1 = {
+  key:"p1",
+  title:"Part 1 — Listen and Repeat",
+  instructions:"You are attending an orientation session at a new technology company. Listen to the HR manager and repeat what she says. Repeat only once.",
+  image: null,
+  timerSec: 8,
+  items:[
+    {text:"Welcome to your first day at the company.", rate:0.92},
+    {text:"Your security badges are located on the front desk.", rate:0.92},
+    {text:"Please remember to wear your badge at all times in the building.", rate:1.02},
+    {text:"The staff cafeteria on the third floor opens at noon.", rate:1.02},
+    {text:"If you experience any IT issues, submit a ticket through the portal.", rate:1.14},
+    {text:"The weekly team meetings are scheduled for Thursday mornings at nine.", rate:1.14},
+    {text:"Confidential documents must be shredded before you leave the office for the day.", rate:1.26}
+  ]
+};
+
+const SPEAK_PART2 = {
+  key:"p2",
+  title:"Part 2 — Take an Interview",
+  instructions:"You are applying for a prestigious Master's Degree program at an international university. An interviewer will ask you questions. Answer the questions and be sure to say as much as you can in the time allowed. No preparation time provided.",
+  image: null,
+  timerSec: 45,
+  beep:true,
+  items:[
+    {text:"Hello. To begin, could you tell me why you chose to apply for this specific Master's program at our university?", rate:1.0},
+    {text:"Graduate studies require a significant amount of independent research. Can you describe a past project where you successfully worked independently?", rate:1.0},
+    {text:"Our campus is highly diverse, with students from over fifty different countries. How do you feel you can contribute to this multicultural environment?", rate:1.0},
+    {text:"Finally, where do you see yourself professionally five years after graduating from this program?", rate:1.0}
+  ]
+};
+
+const SPEAK_PARTS = [SPEAK_PART1, SPEAK_PART2];
+
+const speakState = {
+  partIndex:0,
+  itemIndex:0,
+  stream:null,
+  recorder:null,
+  chunks:[],
+  recordings:[[],[]], // per part: array of {url, itemNumber}
+  countdownId:null
+};
+
+/* ---- Audio helpers ---- */
+function speakOnce(text, rate, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  if(cachedVoice) utter.voice = cachedVoice;
+  utter.lang = "en-GB";
+  utter.rate = rate || 1;
+  utter.onend = onEnd;
+  utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function playBeep(onDone){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+    osc.onended = ()=>{ ctx.close(); if(onDone) onDone(); };
+  } catch(e){ if(onDone) onDone(); }
+}
+
+/* ---- Mic setup ---- */
+document.getElementById('speakStartBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('speakStartBtn');
+  btn.disabled = true; btn.textContent = "Requesting microphone access...";
+  try{
+    speakState.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    showScreen('sWrap');
+    speakState.partIndex = 0;
+    speakState.itemIndex = 0;
+    runSpeakItem();
+  } catch(err){
+    document.getElementById('micPermissionNote').innerHTML =
+      "⚠️ Microphone access was blocked or is unavailable. Please allow microphone permissions in your browser and try again.";
+    btn.disabled = false; btn.textContent = "Allow Microphone & Start Speaking Section";
+  }
+});
+
+/* ---- Core flow ---- */
+function currentSpeakPart(){ return SPEAK_PARTS[speakState.partIndex]; }
+
+function runSpeakItem(){
+  const part = currentSpeakPart();
+  const item = part.items[speakState.itemIndex];
+  const totalQNum = speakState.partIndex===0 ? (speakState.itemIndex+1) : (7 + speakState.itemIndex + 1);
+
+  document.getElementById('sPartTitle').textContent = part.title;
+  document.getElementById('sNumLabel').textContent = "Question " + totalQNum + " of 11";
+  const sImgEl = document.getElementById('sImage');
+  if(part.image){ sImgEl.src = part.image; sImgEl.style.display = ""; } else { sImgEl.style.display = "none"; }
+  document.getElementById('sInstructText').textContent = part.instructions;
+  document.getElementById('sStopMsg').style.display = "none";
+  const cd = document.getElementById('sCountdown');
+  cd.style.display = "none";
+  cd.classList.remove('low');
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec');
+  status.textContent = part.key==="p1" ? "🔊 Listen carefully..." : "🔊 Interviewer is speaking...";
+
+  speakOnce(item.text, item.rate, ()=>{
+    if(part.beep){
+      status.textContent = "Get ready to speak...";
+      playBeep(()=> startRecordingPhase(part, item, totalQNum));
+    } else {
+      startRecordingPhase(part, item, totalQNum);
+    }
+  });
+}
+
+function startRecordingPhase(part, item, totalQNum){
+  const status = document.getElementById('sStatus');
+  const cd = document.getElementById('sCountdown');
+  status.classList.add('rec');
+  status.innerHTML = '<span class="srecdot"></span>Recording your response...';
+  cd.style.display = "block";
+  let t = part.timerSec;
+  cd.textContent = t;
+
+  // --- live transcript capture (best-effort, Chrome only — Edge's cloud speech API
+  //     re-prompts for mic access on every start(), so we skip it there) ---
+  speakState.transcriptBuffer = "";
+  speakState.recognition = null;
+  const isEdge = /Edg\//.test(navigator.userAgent);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR && !isEdge){
+    try{
+      const recog = new SR();
+      recog.continuous = true;
+      recog.interimResults = false;
+      recog.lang = "en-US";
+      recog.onresult = (e)=>{
+        for(let i=e.resultIndex; i<e.results.length; i++){
+          if(e.results[i].isFinal) speakState.transcriptBuffer += " " + e.results[i][0].transcript;
+        }
+      };
+      recog.onerror = ()=>{};
+      recog.start();
+      speakState.recognition = recog;
+    } catch(e){ speakState.recognition = null; }
+  }
+
+  // --- mic recording ---
+  speakState.chunks = [];
+  speakState.pendingUrl = null;
+  try{
+    speakState.recorder = new MediaRecorder(speakState.stream);
+    speakState.recorder.ondataavailable = e=>{ if(e.data.size>0) speakState.chunks.push(e.data); };
+    speakState.recorder.onstop = ()=>{
+      const blob = new Blob(speakState.chunks, {type: speakState.chunks[0]?.type || 'audio/webm'});
+      speakState.pendingUrl = URL.createObjectURL(blob);
+    };
+    speakState.recorder.start();
+  } catch(e){ /* mic issue - continue timer regardless so the flow doesn't get stuck */ }
+
+  speakState.countdownId = setInterval(()=>{
+    t--;
+    cd.textContent = Math.max(t,0);
+    if(t<=3) cd.classList.add('low');
+    if(t<=0){
+      clearInterval(speakState.countdownId);
+      stopRecordingPhase(part, item, totalQNum);
+    }
+  }, 1000);
+}
+
+function buildFeedback(part, item, transcriptRaw, timerSec){
+  const transcript = (transcriptRaw || "").trim();
+  const supported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  if(!supported){
+    return {supported:false, notes:["Speech-to-text isn't supported in this browser, so only your recording length was tracked. Try Chrome for word-level feedback."]};
+  }
+  if(!transcript){
+    return {supported:true, wordCount:0, wpm:0, notes:["No speech was detected — try speaking louder or closer to the microphone."]};
+  }
+  const words = transcript.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const wpm = Math.round((wordCount / timerSec) * 60);
+  const notes = [];
+  if(part.key === "p1"){
+    const origWords = item.text.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const saidWords = transcript.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const matched = origWords.filter(w=>saidWords.includes(w)).length;
+    const pct = Math.round((matched / origWords.length) * 100);
+    if(pct>=80) notes.push(`Great repetition — about ${pct}% of the key words matched the original sentence.`);
+    else if(pct>=50) notes.push(`Partial match — around ${pct}% of the words matched. Listen closely and try to repeat the exact sentence.`);
+    else notes.push(`Low match (${pct}%) — try to repeat the exact sentence you heard, word for word.`);
+  } else {
+    if(wordCount<15) notes.push("Short answer — try to explain more and add extra details to fill the time.");
+    else if(wordCount<40) notes.push("Good length — you gave a reasonably developed answer.");
+    else notes.push("Great length — a thorough, well-developed answer.");
+  }
+  notes.push(`Estimated speaking rate: ~${wpm} words per minute.`);
+  return {supported:true, wordCount, wpm, transcript, notes};
+}
+
+function stopRecordingPhase(part, item, totalQNum){
+  if(speakState.recognition){
+    try{ speakState.recognition.stop(); }catch(e){}
+  }
+  if(speakState.recorder && speakState.recorder.state === "recording"){
+    speakState.recorder.stop();
+  }
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec');
+  status.textContent = "";
+  document.getElementById('sCountdown').style.display = "none";
+  document.getElementById('sStopMsg').style.display = "block";
+
+  setTimeout(()=>{
+    const feedback = buildFeedback(part, item, speakState.transcriptBuffer, part.timerSec);
+    speakState.recordings[speakState.partIndex].push({
+      url: speakState.pendingUrl, num: totalQNum, feedback
+    });
+    advanceSpeakItem();
+  }, 1800);
+}
+
+function advanceSpeakItem(){
+  const part = currentSpeakPart();
+  if(speakState.itemIndex < part.items.length - 1){
+    speakState.itemIndex++;
+    runSpeakItem();
+  } else if(speakState.partIndex === 0){
+    speakState.partIndex = 1;
+    speakState.itemIndex = 0;
+    runSpeakItem();
+  } else {
+    finishSpeaking();
+  }
+}
+
+function finishSpeaking(){
+  if(speakState.stream){
+    speakState.stream.getTracks().forEach(t=>t.stop());
+  }
+  const all = [...speakState.recordings[0], ...speakState.recordings[1]].sort((a,b)=>a.num-b.num);
+
+  const summaryBox = document.getElementById('speakSummaryBox');
+  const wpmVals = all.map(r=>r.feedback && r.feedback.wpm).filter(v=>typeof v === "number" && v>0);
+  const avgWpm = wpmVals.length ? Math.round(wpmVals.reduce((a,b)=>a+b,0)/wpmVals.length) : null;
+  const noSpeechCount = all.filter(r=>r.feedback && r.feedback.supported && r.feedback.wordCount===0).length;
+  let summaryHTML = `<b>Quick summary:</b> ${all.length} of 11 responses recorded.`;
+  if(avgWpm) summaryHTML += ` Average speaking rate: ~${avgWpm} words per minute.`;
+  if(noSpeechCount) summaryHTML += ` ${noSpeechCount} response(s) had no detected speech.`;
+  summaryHTML += ` <br><span style="font-size:11.5px;">Feedback below is rule-based (word count, speech rate, and word-match for repeat tasks) — not a certified score.</span>`;
+  summaryBox.innerHTML = summaryHTML;
+
+  const list = document.getElementById('replayList');
+  list.innerHTML = "";
+  if(all.length){
+    all.forEach(rec=>{
+      const row = document.createElement('div');
+      row.className = "replay-item";
+      const fb = rec.feedback || {};
+      const notesHTML = (fb.notes || []).map(n=>`<div>• ${n}</div>`).join("");
+      row.innerHTML = `
+        <div class="rtop">
+          <span><b>Question ${rec.num}</b></span>
+          <audio controls src="${rec.url || ''}"></audio>
+        </div>
+        <div class="rfeedback">${notesHTML || "No feedback available."}</div>
+      `;
+      list.appendChild(row);
+    });
+  } else {
+    list.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);">No recordings were captured.</div>';
+  }
+  showScreen('speakDone');
+}
+
+document.getElementById('speakingDoneBtn').addEventListener('click', ()=>{
+  finishTest();
+});
+
+function goToSpeaking(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  showScreen('speakIntro');
+}
+/* =========================================================
+   WRITING SECTION
+========================================================= */
+function T1(words, key){ return {words, key}; }
+
+const WRITE_TASK1 = {
+  timerSec: 25,
+  items:[
+    T1(["global","rapidly","are","advancing","communication","technologies"], "Global communication technologies are rapidly advancing."),
+    T1(["important","regular","is","maintaining","physical","for","exercise","health"], "Maintaining regular exercise is important for physical health."),
+    T1(["innovative","developers","software","created","user","interface","an","have"], "Software developers have created an innovative user interface."),
+    T1(["economy","affected","local","significantly","inflation","the","has"], "Inflation has significantly affected the local economy."),
+    T1(["researchers","alternative","exploring","energy","are","continuously","sources"], "Researchers are continuously exploring alternative energy sources."),
+    T1(["effective","team","requires","project","management","collaboration"], "Effective project management requires team collaboration."),
+    T1(["historical","valuable","preserve","museums","artifacts","generations","for","future"], "Museums preserve valuable historical artifacts for future generations."),
+    T1(["students","prepare","university","comprehensive","examinations","for","must"], "University students must prepare for comprehensive examinations."),
+    T1(["policies","environmental","protected","strict","natural","habitats","have"], "Strict environmental policies have protected natural habitats."),
+    T1(["successful","adapt","companies","quickly","market","to","changes"], "Successful companies adapt quickly to market changes.")
+  ]
+};
+
+const WRITE_TASK2 = {
+  timerSec: 7*60,
+  prompt: "You recently missed a connecting flight due to an unannounced delay by the airline. Because of this, you had to pay for a hotel room overnight. Write an email to the airline's customer service. Explain what happened, express your dissatisfaction, and request a full refund for your hotel expenses."
+};
+
+const WRITE_TASK3 = {
+  timerSec: 10*60,
+  professor: "In our education seminar today, we are evaluating the role of Artificial Intelligence in classrooms. Some educators argue that AI tools, like chatbots, help students learn faster by providing instant tutoring. Others believe these tools prevent students from developing critical thinking skills because the AI does the hard work for them. What is your opinion?",
+  student1: "I think AI is a dangerous crutch. If students just ask an AI to write their essays or solve math problems, they aren't actually learning anything. We should ban these tools in schools.",
+  student2: "I disagree. AI is just a modern calculator. It doesn't replace thinking; it assists it. If used correctly as a study guide, AI can explain difficult concepts to students 24/7 when a teacher isn't available."
+};
+
+const writeState = {
+  task1Index: 0,
+  task1Answers: [], // {correct:bool, given:string, key:string}
+  currentBank: [],
+  currentAnswer: [],
+  timerId: null,
+  task2Text: "",
+  task3Text: ""
+};
+
+function shuffleArr(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function fmtMMSS(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0');
+}
+
+document.getElementById('writeStartBtn').addEventListener('click', ()=>{
+  showScreen('wWrap');
+  writeState.task1Index = 0;
+  writeState.task1Answers = [];
+  runTask1Item();
+});
+
+/* ---------- TASK 1 ---------- */
+function runTask1Item(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  document.getElementById('wTitle').textContent = "Task 1 — Build a Sentence";
+  document.getElementById('wNumLabel').textContent = "Question " + (writeState.task1Index+1) + " of 10";
+  document.getElementById('wInstructText').style.display = "block";
+  document.getElementById('wInstructText').textContent = "Click the words in the correct order to build a grammatically correct, meaningful sentence.";
+  document.getElementById('wStopMsg').style.display = "none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = "";
+
+  writeState.currentBank = shuffleArr(item.words);
+  writeState.currentAnswer = [];
+  renderTask1Chips();
+
+  let t = WRITE_TASK1.timerSec;
+  const timerEl = document.getElementById('wTimer');
+  timerEl.textContent = "00:" + String(t).padStart(2,'0');
+  clearInterval(writeState.timerId);
+  writeState.timerId = setInterval(()=>{
+    t--;
+    timerEl.textContent = "00:" + String(Math.max(t,0)).padStart(2,'0');
+    if(t<=5) timerEl.classList.add('low');
+    if(t<=0){
+      clearInterval(writeState.timerId);
+      submitTask1Item(true);
+    }
+  }, 1000);
+}
+
+function renderTask1Chips(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  const area = document.getElementById('wTaskArea');
+  let html = `<div class="wanswer" id="wAnswerZone"></div>`;
+  html += `<div class="wbank" id="wBankZone"></div>`;
+  html += `<button id="wSubmitBtn">Submit Sentence</button>`;
+  area.innerHTML = html;
+
+  function draw(){
+    const ans = document.getElementById('wAnswerZone');
+    const bank = document.getElementById('wBankZone');
+    ans.innerHTML = writeState.currentAnswer.map((w,i)=>`<span class="wchip" data-i="${i}">${w}</span>`).join("") || '<span style="color:var(--ink-soft);font-size:13px;">Click words below to build your sentence…</span>';
+    bank.innerHTML = writeState.currentBank.map((w,i)=>`<span class="wchip bank" data-i="${i}">${w}</span>`).join("");
+
+    ans.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx = +el.dataset.i;
+        writeState.currentBank.push(writeState.currentAnswer[idx]);
+        writeState.currentAnswer.splice(idx,1);
+        draw();
+      });
+    });
+    bank.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx = +el.dataset.i;
+        writeState.currentAnswer.push(writeState.currentBank[idx]);
+        writeState.currentBank.splice(idx,1);
+        draw();
+      });
+    });
+  }
+  draw();
+
+  document.getElementById('wSubmitBtn').addEventListener('click', ()=> submitTask1Item(false));
+}
+
+function normalizeSentence(s){
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();
+}
+
+function submitTask1Item(timeUp){
+  clearInterval(writeState.timerId);
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  const given = writeState.currentAnswer.join(" ");
+  const correct = normalizeSentence(given) === normalizeSentence(item.key);
+  writeState.task1Answers.push({given, key:item.key, correct});
+
+  document.getElementById('wStopMsg').style.display = "block";
+  document.getElementById('wStopMsg').textContent = timeUp
+    ? "Time's up! Moving to the next sentence…"
+    : "Response submitted. Moving to the next sentence…";
+
+  setTimeout(()=>{
+    if(writeState.task1Index < WRITE_TASK1.items.length - 1){
+      writeState.task1Index++;
+      runTask1Item();
+    } else {
+      runTask2();
+    }
+  }, 1300);
+}
+
+/* ---------- TASK 2 (Email) ---------- */
+function runTask2(){
+  document.getElementById('wTitle').textContent = "Task 2 — Write an Email";
+  document.getElementById('wNumLabel').textContent = "Question 11";
+  document.getElementById('wInstructText').style.display = "none";
+  document.getElementById('wStopMsg').style.display = "none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `<div class="wprompt"><b>Prompt:</b> ${WRITE_TASK2.prompt}</div>`;
+  document.getElementById('wTaskArea').innerHTML = `
+    <textarea class="wtextarea" id="wEmailBox" placeholder="Type your email here..."></textarea>
+    <div class="wwordcount" id="wEmailCount">0 words</div>
+  `;
+  const box = document.getElementById('wEmailBox');
+  box.addEventListener('input', ()=>{
+    writeState.task2Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wEmailCount').textContent = wc + " words";
+  });
+
+  startFreeWriteTimer(WRITE_TASK2.timerSec, ()=>{
+    box.disabled = true;
+    document.getElementById('wStopMsg').style.display = "block";
+    document.getElementById('wStopMsg').textContent = "Time's up! Moving to the next task…";
+    setTimeout(runTask3, 1500);
+  });
+}
+
+/* ---------- TASK 3 (Academic Discussion) ---------- */
+function runTask3(){
+  document.getElementById('wTitle').textContent = "Task 3 — Academic Discussion";
+  document.getElementById('wNumLabel').textContent = "Question 12";
+  document.getElementById('wInstructText').style.display = "none";
+  document.getElementById('wStopMsg').style.display = "none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `
+    <div class="wpost"><b>Professor Miller:</b><br>"${WRITE_TASK3.professor}"</div>
+    <div class="wpost"><b>Student 1 (Claire):</b><br>"${WRITE_TASK3.student1}"</div>
+    <div class="wpost"><b>Student 2 (Mark):</b><br>"${WRITE_TASK3.student2}"</div>
+  `;
+  document.getElementById('wTaskArea').innerHTML = `
+    <textarea class="wtextarea" id="wDiscBox" placeholder="Write your response to the discussion here..."></textarea>
+    <div class="wwordcount" id="wDiscCount">0 words</div>
+  `;
+  const box = document.getElementById('wDiscBox');
+  box.addEventListener('input', ()=>{
+    writeState.task3Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wDiscCount').textContent = wc + " words";
+  });
+
+  startFreeWriteTimer(WRITE_TASK3.timerSec, ()=>{
+    box.disabled = true;
+    document.getElementById('wStopMsg').style.display = "block";
+    document.getElementById('wStopMsg').textContent = "Time's up!";
+    setTimeout(finishWriting, 1500);
+  });
+}
+
+function startFreeWriteTimer(totalSec, onDone){
+  let t = totalSec;
+  const timerEl = document.getElementById('wTimer');
+  timerEl.textContent = fmtMMSS(t);
+  clearInterval(writeState.timerId);
+  writeState.timerId = setInterval(()=>{
+    t--;
+    timerEl.textContent = fmtMMSS(Math.max(t,0));
+    if(t<=30) timerEl.classList.add('low');
+    if(t<=0){
+      clearInterval(writeState.timerId);
+      onDone();
+    }
+  }, 1000);
+}
+
+function finishWriting(){
+  const correctCount = writeState.task1Answers.filter(a=>a.correct).length;
+  const t2words = writeState.task2Text.trim() ? writeState.task2Text.trim().split(/\s+/).length : 0;
+  const t3words = writeState.task3Text.trim() ? writeState.task3Text.trim().split(/\s+/).length : 0;
+  document.getElementById('writeSummary').innerHTML =
+    `Task 1: ${correctCount}/10 sentences built correctly.<br>` +
+    `Task 2 (Email): ${t2words} words written.<br>` +
+    `Task 3 (Discussion): ${t3words} words written.`;
+  showScreen('writeDone');
+}
+
+document.getElementById('writeDoneBtn').addEventListener('click', ()=>{
+  goToSpeaking();
+});
+
+function goToWriting(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  showScreen('writeIntro');
+}
+function getGivenWordText(mIdx, w){
+  const saved = state.fillLetters[mIdx][w.number] || {};
+  let blankIdx = 0;
+  let out = "";
+  w.pattern.forEach(tok=>{
+    if(tok === "_"){
+      out += (saved[blankIdx] || "_");
+      blankIdx++;
+    } else {
+      out += tok;
+    }
+  });
+  return out;
+}
+
+function buildDetailedReview(){
+  const inner = document.getElementById('reviewInner');
+  let html = "";
+
+  /* ---------- READING ---------- */
+  html += `<div class="reviewSection"><h2>📖 Reading</h2>`;
+  MODULES.forEach((mod, mIdx)=>{
+    html += `<h3 style="font-size:13px;color:var(--ink-soft);margin:14px 0 8px;">Module ${mIdx+1}</h3>`;
+    mod.fillWords.forEach(w=>{
+      const given = getGivenWordText(mIdx, w);
+      const correct = isWordCorrect(mIdx, w);
+      html += `<div class="ansRow ${correct?'correct':'wrong'}">
+        <span class="qn">Q${w.number}.</span>Complete the word
+        <span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+        <div class="line"><b class="lbl">Your answer:</b>${given}</div>
+        ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${w.answer}</div>`}
+      </div>`;
+    });
+    mod.groups.forEach(g=>{
+      g.questions.forEach(q=>{
+        const given = state.answers[mIdx][q.number];
+        const correct = given === q.correct;
+        const letters = ["A","B","C","D"];
+        html += `<div class="ansRow ${correct?'correct':'wrong'}">
+          <span class="qn">Q${q.number}.</span>${q.q}
+          <span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+          <div class="line"><b class="lbl">Your answer:</b>${given!==undefined ? letters[given]+") "+q.options[given] : "No answer"}</div>
+          ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}
+        </div>`;
+      });
+    });
+  });
+  html += `</div>`;
+
+  /* ---------- LISTENING ---------- */
+  html += `<div class="reviewSection"><h2>🎧 Listening</h2>`;
+  LISTEN_MODULES.forEach((mod, mIdx)=>{
+    html += `<h3 style="font-size:13px;color:var(--ink-soft);margin:14px 0 8px;">Module ${mIdx+1}</h3>`;
+    const slots = flattenListenModule(mod);
+    slots.forEach(slot=>{
+      const q = slot.question;
+      const given = listenState.answers[mIdx][q.number];
+      const correct = given === q.correct;
+      const letters = ["A","B","C","D"];
+      const label = q.kind === "sqr" ? "Choose the best response" : q.prompt;
+      html += `<div class="ansRow ${correct?'correct':'wrong'}">
+        <span class="qn">Q${q.number}.</span>${label}
+        <span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+        <div class="line"><b class="lbl">Your answer:</b>${given!==undefined ? letters[given]+") "+q.options[given] : "No answer"}</div>
+        ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}
+      </div>`;
+    });
+  });
+  html += `</div>`;
+
+  /* ---------- WRITING TASK 1 ---------- */
+  html += `<div class="reviewSection"><h2>✍️ Writing — Build a Sentence</h2>`;
+  writeState.task1Answers.forEach((a, i)=>{
+    html += `<div class="ansRow ${a.correct?'correct':'wrong'}">
+      <span class="qn">Q${i+1}.</span>
+      <span class="tag">${a.correct?'✓ Correct':'✗ Incorrect'}</span>
+      <div class="line"><b class="lbl">Your sentence:</b>${a.given || "(no answer)"}</div>
+      ${a.correct?'':`<div class="line"><b class="lbl">Correct sentence:</b>${a.key}</div>`}
+    </div>`;
+  });
+  html += `</div>`;
+
+  inner.innerHTML = html;
+}
+
+document.getElementById('openDetailedReviewBtn').addEventListener('click', ()=>{
+  buildDetailedReview();
+  showScreen('detailedReview');
+});
+document.getElementById('closeDetailedReviewBtn').addEventListener('click', ()=>{
+  showScreen('endscreen');
+});
+</script>
+</body>
+</html>
