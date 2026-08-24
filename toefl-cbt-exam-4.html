@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktif İngilizce | TOEFL CBT Exam - 4</title>
+<style>
+  :root{
+    --ink:#16233c; --ink-soft:#4a5876; --line:#dbe2ef; --paper:#ffffff; --canvas:#f4f6fb;
+    --brand:#12448c; --brand-dark:#0c3269; --brand-soft:#e8f0fe;
+    --answered:#1f8a5f; --answered-soft:#e4f6ee; --flag:#c8790a; --danger:#c0392b;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: 'Segoe UI', Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0; font-family:var(--sans); background:var(--canvas); color:var(--ink); display:flex; flex-direction:column; min-height:100vh;}
+  #topbar{background:var(--brand-dark); color:#fff; display:flex; align-items:center; justify-content:space-between; padding:10px 22px; flex-wrap:wrap; gap:10px; box-shadow:0 2px 6px rgba(0,0,0,.15); position:sticky; top:0; z-index:50;}
+  #brand{display:flex; align-items:center; gap:10px; font-weight:700;}
+  #brand .logo{width:30px;height:30px;border-radius:8px;background:#fff;color:var(--brand-dark);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;}
+  #brand small{display:block; font-weight:400; opacity:.8; font-size:11px;}
+  #statusbar{display:flex; align-items:center; gap:18px; font-size:14px;}
+  #timerbox{background:rgba(255,255,255,.12); padding:6px 14px; border-radius:8px; font-variant-numeric:tabular-nums; font-weight:700; font-size:16px; min-width:88px; text-align:center;}
+  #timerbox.low{background:#7a1f1f; animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  #moduleTag{background:rgba(255,255,255,.15); padding:5px 12px; border-radius:20px; font-weight:600; font-size:13px;}
+  #app{flex:1; display:flex; flex-direction:column;}
+  .screen{flex:1; display:none; flex-direction:column;}
+  .screen.active{display:flex;}
+  #intro,#listenIntro,#writeIntro,#speakIntro,#speakDone,#writeDone{align-items:center; justify-content:center; padding:30px;}
+  .intro-card{background:var(--paper); max-width:680px; width:100%; padding:40px 44px; border-radius:16px; box-shadow:0 10px 40px rgba(20,40,80,.10); border:1px solid var(--line);}
+  .intro-card h1{margin:0 0 6px; font-size:26px; color:var(--brand-dark);}
+  .intro-card .sub{color:var(--ink-soft); margin-bottom:22px; font-size:14px;}
+  .directions-box{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:18px 20px; margin-bottom:22px; font-size:14.5px; line-height:1.65;}
+  .directions-box strong.warn{color:var(--danger);}
+  button.primaryBtn{background:var(--brand); color:#fff; border:none; padding:13px 28px; font-size:16px; border-radius:8px; cursor:pointer; font-weight:700;}
+  button.primaryBtn:hover{background:var(--brand-dark);}
+  #qWrap,#lWrap,#sWrap,#wWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #qHeader,#lHeader,#sHeader,#wHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;}
+  #qHeader h2,#lHeader h2,#sHeader h2,#wHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  .qnum{font-size:13px; color:var(--ink-soft);}
+  #split{flex:1; display:flex; overflow:hidden;}
+  #passagePane{flex:1; max-width:50%; overflow-y:auto; padding:28px 30px; background:var(--paper); border-right:1px solid var(--line); font-family:var(--serif); font-size:16px; line-height:1.75;}
+  #passagePane h3{font-family:var(--sans); color:var(--brand-dark); font-size:14px; text-transform:uppercase; letter-spacing:.6px; margin-top:0;}
+  #passagePane p{margin:0 0 14px;}
+  #questionPane{flex:1; overflow-y:auto; padding:30px 34px; background:var(--canvas);}
+  #questionPane.full{max-width:900px; margin:0 auto; width:100%;}
+  .qtext{font-size:16.5px; font-weight:600; margin-bottom:18px; line-height:1.5;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{display:flex; align-items:flex-start; gap:12px; background:var(--paper); border:1.5px solid var(--line); border-radius:10px; padding:13px 16px; cursor:pointer; transition:.15s; font-size:15px; line-height:1.5;}
+  .opt:hover{border-color:var(--brand); background:#f8fbff;}
+  .opt.selected{border-color:var(--brand); background:var(--brand-soft); box-shadow:0 0 0 1px var(--brand) inset;}
+  .opt .letter{flex:0 0 auto; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+  .opt.selected .letter{background:var(--brand); border-color:var(--brand); color:#fff;}
+  .fillpassage{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:26px 30px; font-family:var(--serif); font-size:18px; line-height:2.4;}
+  .letterbox{display:inline-flex; align-items:center; justify-content:center; width:22px; height:28px; border-bottom:2px solid var(--ink-soft); font-family:var(--sans); font-size:15px; font-weight:700; text-align:center; margin:0 1px; color:var(--ink);}
+  .blankinput{width:22px; height:28px; text-align:center; border:none; border-bottom:2px solid var(--brand); font-family:var(--sans); font-size:15px; font-weight:700; background:transparent; color:var(--brand-dark); text-transform:lowercase; margin:0 1px; padding:0;}
+  .blankinput:focus{outline:none; background:var(--brand-soft); border-radius:3px 3px 0 0;}
+  #navbar,#lNavbar{background:var(--paper); border-top:1px solid var(--line); padding:14px 26px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .navbtn{padding:11px 22px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); font-size:14.5px; font-weight:700; cursor:pointer; color:var(--ink); transition:.15s;}
+  .navbtn:hover:not(:disabled){border-color:var(--brand); color:var(--brand);}
+  .navbtn:disabled{opacity:.35; cursor:not-allowed;}
+  .navbtn.primary{background:var(--brand); color:#fff; border-color:var(--brand);}
+  .navbtn.primary:hover{background:var(--brand-dark);}
+  .navbtn.review{background:var(--brand-soft); border-color:#c8dcfb; color:var(--brand-dark);}
+  #review{padding:30px; overflow-y:auto;}
+  .review-inner{max-width:820px; margin:0 auto; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:30px 34px;}
+  .review-inner h2{margin-top:0; color:var(--brand-dark);}
+  .review-legend{display:flex; gap:18px; font-size:13px; margin-bottom:20px; color:var(--ink-soft);}
+  .legend-dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px;}
+  .grid20{display:grid; grid-template-columns:repeat(8,1fr); gap:8px; margin-bottom:26px;}
+  .revcell{border:1.5px solid var(--line); border-radius:8px; padding:10px 4px; text-align:center; cursor:pointer; font-weight:700; font-size:13px; background:var(--paper); transition:.15s;}
+  .revcell:hover{border-color:var(--brand);}
+  .revcell.answered{background:var(--answered-soft); border-color:var(--answered); color:var(--answered);}
+  .revcell.unanswered{background:#fdf1e8; border-color:var(--flag); color:var(--flag);}
+  .revcell small{display:block; font-weight:400; font-size:9px; margin-top:2px;}
+  #endscreen{align-items:center; justify-content:center; padding:30px;}
+  .end-card{background:var(--paper); max-width:700px; width:100%; border-radius:16px; padding:44px; text-align:center; box-shadow:0 10px 40px rgba(20,40,80,.1); border:1px solid var(--line);}
+  .end-card h1{color:var(--brand-dark); margin-top:0;}
+  .score-big{font-size:52px; font-weight:800; color:var(--brand); margin:14px 0;}
+  .score-sub{color:var(--ink-soft); margin-bottom:14px; font-size:14px;}
+  .breakdown{display:flex; gap:16px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;}
+  .breakdown div{background:var(--canvas); border-radius:10px; padding:14px 18px; min-width:120px;}
+  .breakdown div b{display:block; font-size:20px; color:var(--brand-dark);}
+  .breakdown div span{font-size:11.5px; color:var(--ink-soft);}
+  #social{background:var(--brand-dark); color:#fff; padding:14px 26px; display:flex; align-items:center; justify-content:center; gap:22px; font-size:13.5px; flex-wrap:wrap;}
+  #social a{color:#fff; text-decoration:none; display:flex; align-items:center; gap:7px; opacity:.92; font-weight:600;}
+  #social a:hover{opacity:1; text-decoration:underline;}
+  #sBody{flex:1; overflow-y:auto; padding:26px 24px; display:flex; justify-content:center;}
+  .scard{max-width:640px; width:100%; text-align:center;}
+  .sinstruct{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:14px 18px; font-size:13.5px; line-height:1.6; margin-bottom:20px; text-align:left; color:var(--ink);}
+  .sstatus{font-size:15px; font-weight:700; color:var(--brand-dark); min-height:24px; margin-bottom:14px;}
+  .sstatus.rec{color:var(--danger);}
+  .scountdown{font-size:64px; font-weight:800; color:var(--brand); font-variant-numeric:tabular-nums; margin:10px 0 18px; transition:.2s;}
+  .scountdown.low{color:var(--danger); transform:scale(1.08);}
+  .srecdot{display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--danger); margin-right:8px; animation:recpulse 1s infinite;}
+  @keyframes recpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .sstopmsg{background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:16px 20px; font-size:14px; font-weight:600; line-height:1.6; margin-top:6px;}
+  .replay-list{display:flex; flex-direction:column; gap:10px; margin:18px 0; text-align:left;}
+  .replay-item{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; font-size:13.5px;}
+  .replay-item .rtop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .replay-item audio{height:32px; max-width:220px;}
+  .rfeedback{background:var(--brand-soft); border-radius:8px; padding:8px 12px; font-size:12.5px; color:var(--brand-dark); line-height:1.5;}
+  .summary-box{background:var(--canvas); border-radius:10px; padding:14px 18px; margin-bottom:14px; font-size:13px; color:var(--ink-soft); text-align:left;}
+  #wBody{flex:1; overflow-y:auto; padding:28px 24px; display:flex; justify-content:center;}
+  .wcard{max-width:720px; width:100%;}
+  .wtimerbig{font-size:46px; font-weight:800; color:var(--brand); text-align:center; font-variant-numeric:tabular-nums; margin-bottom:8px;}
+  .wtimerbig.low{color:var(--danger);}
+  .wprompt{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:16px 20px; font-size:14px; line-height:1.65; margin-bottom:18px;}
+  .wpost{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:14px; line-height:1.6;}
+  .wpost b{color:var(--brand-dark);}
+  .wbank{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:22px; min-height:44px; padding:14px; background:var(--paper); border:1px dashed var(--line); border-radius:10px;}
+  .wanswer{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; min-height:56px; padding:14px; background:var(--canvas); border:2px solid var(--brand); border-radius:10px; margin-bottom:22px;}
+  .wchip{background:var(--brand); color:#fff; padding:9px 16px; border-radius:8px; font-size:14.5px; font-weight:600; cursor:pointer; user-select:none; transition:.12s;}
+  .wchip:hover{background:var(--brand-dark);}
+  .wchip.bank{background:var(--paper); color:var(--ink); border:1.5px solid var(--line);}
+  .wchip.bank:hover{border-color:var(--brand); color:var(--brand);}
+  .wstopmsg{background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:14px 18px; font-size:14px; font-weight:600; text-align:center; margin-bottom:16px;}
+  #wSubmitBtn{background:var(--brand); color:#fff; border:none; padding:11px 24px; border-radius:8px; font-weight:700; font-size:14.5px; cursor:pointer; display:block; margin:0 auto;}
+  #wSubmitBtn:hover{background:var(--brand-dark);}
+  .wtextarea{width:100%; min-height:260px; border:1.5px solid var(--line); border-radius:10px; padding:16px 18px; font-family:var(--sans); font-size:15px; line-height:1.6; resize:vertical;}
+  .wtextarea:focus{outline:none; border-color:var(--brand);}
+  .wwordcount{text-align:right; font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+  #detailedReview{flex:1; flex-direction:column; overflow:hidden;}
+  #reviewHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
+  #reviewContent{flex:1; overflow-y:auto; padding:24px; display:flex; justify-content:center;}
+  .reviewInner{max-width:820px; width:100%;}
+  .reviewSection{margin-bottom:30px;}
+  .reviewSection h2{color:var(--brand-dark); font-size:17px; border-bottom:2px solid var(--brand-soft); padding-bottom:8px; margin-bottom:14px;}
+  .ansRow{border-radius:10px; padding:12px 16px; margin-bottom:8px; font-size:13.5px; line-height:1.6; border:1.5px solid var(--line);}
+  .ansRow.correct{background:var(--answered-soft); border-color:var(--answered);}
+  .ansRow.wrong{background:#fdecec; border-color:var(--danger);}
+  .ansRow .qn{font-weight:700; margin-right:6px;}
+  .ansRow .tag{font-weight:800; float:right;}
+  .ansRow.correct .tag{color:var(--answered);}
+  .ansRow.wrong .tag{color:var(--danger);}
+  .ansRow .line{margin-top:4px;}
+  .ansRow b.lbl{color:var(--ink-soft); font-weight:700; margin-right:4px;}
+  @media(max-width:820px){
+    #split{flex-direction:column; overflow-y:auto;}
+    #passagePane{max-width:100%; border-right:none; border-bottom:1px solid var(--line); max-height:38vh;}
+    #questionPane{overflow:visible;}
+    .grid20{grid-template-columns:repeat(5,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="brand">
+    <div class="logo">Aİ</div>
+    <div>Aktif İngilizce <small>TOEFL CBT Exam - 4</small></div>
+  </div>
+  <div id="statusbar">
+    <span id="moduleTag">Directions</span>
+    <span id="timerbox">Untimed</span>
+  </div>
+</div>
+
+<div id="app">
+
+  <div class="screen active" id="listenIntro">
+    <div class="intro-card">
+      <h1>Listening Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this test, you will answer 34 questions to demonstrate how well you understand spoken English. There are three types of tasks.<br><br>
+        You <strong class="warn">WILL NOT</strong> be able to return to previous questions.
+      </div>
+      <button class="primaryBtn" id="startListenBtn">Start Listening Section</button>
+    </div>
+  </div>
+
+  <div class="screen" id="lWrap">
+    <div id="lHeader">
+      <h2 id="lGroupTitle">—</h2>
+      <span class="qnum" id="lNumLabel">Question 1</span>
+    </div>
+    <div id="lBody" style="flex:1;overflow-y:auto;padding:30px 24px;display:flex;justify-content:center;">
+      <div class="lcard" style="max-width:640px;width:100%;">
+        <div class="audiocard" style="background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:26px 28px;text-align:center;margin-bottom:26px;">
+          <div class="hint" id="lAudioHint" style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Press play and listen carefully. The transcript will not be shown.</div>
+          <button id="playBtn" style="background:var(--brand);color:#fff;border:none;border-radius:50px;padding:14px 30px;font-size:15.5px;font-weight:700;cursor:pointer;">▶ Play Audio</button>
+          <div id="playStatus" style="margin-top:12px;font-size:13px;color:var(--brand-dark);font-weight:600;min-height:16px;"></div>
+        </div>
+        <div id="lQuestionArea"></div>
+      </div>
+    </div>
+    <div id="lNavbar">
+      <div style="margin-right:auto;font-size:12px;color:var(--danger);">⚠ You cannot go back once you click Next.</div>
+      <button class="navbtn primary" id="lNextBtn">Next →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="intro">
+    <div class="intro-card">
+      <h1>Reading Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this section, you will complete three types of reading tasks: completing words, reading short everyday texts, and reading longer academic passages.<br><br>
+        You will be able to use <b>Next</b> and <b>Back</b> to move freely between questions, and use <b>Review</b> to see which questions you have answered.
+      </div>
+      <button class="primaryBtn" id="startBtn">Start Reading Section — 35:00</button>
+    </div>
+  </div>
+
+  <div class="screen" id="qWrap">
+    <div id="qHeader">
+      <h2 id="qGroupTitle">—</h2>
+      <span class="qnum" id="qNumLabel">Question 1 of 50</span>
+    </div>
+    <div id="split">
+      <div id="passagePane" style="display:none;"></div>
+      <div id="questionPane"></div>
+    </div>
+    <div id="navbar">
+      <button class="navbtn" id="backBtn">← Back</button>
+      <button class="navbtn review" id="reviewBtn">📋 Review</button>
+      <button class="navbtn primary" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="review">
+    <div class="review-inner">
+      <h2>Review — Reading Section</h2>
+      <div class="review-legend">
+        <span><span class="legend-dot" style="background:var(--answered)"></span>Answered</span>
+        <span><span class="legend-dot" style="background:var(--flag)"></span>Unanswered</span>
+      </div>
+      <div class="grid20" id="reviewGrid"></div>
+      <button class="navbtn primary" id="closeReviewBtn">Back to Question</button>
+    </div>
+  </div>
+
+  <div class="screen" id="writeIntro">
+    <div class="intro-card">
+      <h1>Writing Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this section, you will complete three writing tasks: unscrambling words to build correct sentences, writing a professional email, and contributing to an academic discussion post. Manage your time carefully — each task has its own timer.
+      </div>
+      <button class="primaryBtn" id="writeStartBtn">Start Writing Section</button>
+    </div>
+  </div>
+
+  <div class="screen" id="wWrap">
+    <div id="wHeader">
+      <h2 id="wTitle">—</h2>
+      <span class="qnum" id="wNumLabel">Question 1</span>
+    </div>
+    <div id="wBody">
+      <div class="wcard">
+        <div class="wtimerbig" id="wTimer">00:25</div>
+        <div class="wstopmsg" id="wStopMsg" style="display:none;"></div>
+        <div id="wInstructText" class="wprompt" style="display:none;"></div>
+        <div id="wPromptArea"></div>
+        <div id="wTaskArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="writeDone">
+    <div class="intro-card">
+      <h1>The end of writing test.</h1>
+      <div class="sub" id="writeSummary"></div>
+      <button class="primaryBtn" id="writeDoneBtn">Continue →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="speakIntro">
+    <div class="intro-card">
+      <h1>Speaking Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        In the speaking section, you will answer 11 questions to demonstrate how well you can speak English. There are two types of tasks.
+      </div>
+      <div class="directions-box" id="micPermissionNote">
+        🎙️ This section needs microphone access to record your answers. Click below to allow it and begin.
+      </div>
+      <button class="primaryBtn" id="speakStartBtn">Allow Microphone &amp; Start Speaking Section</button>
+    </div>
+  </div>
+
+  <div class="screen" id="sWrap">
+    <div id="sHeader">
+      <h2 id="sPartTitle">—</h2>
+      <span class="qnum" id="sNumLabel">Question 1</span>
+    </div>
+    <div id="sBody">
+      <div class="scard">
+        <div class="sinstruct" id="sInstructText"></div>
+        <div class="sstatus" id="sStatus">Get ready...</div>
+        <div class="scountdown" id="sCountdown" style="display:none;">8</div>
+        <div class="sstopmsg" id="sStopMsg" style="display:none;">
+          Stop Speaking. Response time has ended. Please wait. We are currently saving your response.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="speakDone">
+    <div class="intro-card">
+      <h1>Speaking test is over.</h1>
+      <div class="sub">Thanks for completing all 11 speaking questions.</div>
+      <div class="summary-box" id="speakSummaryBox"></div>
+      <div class="replay-list" id="replayList"></div>
+      <button class="primaryBtn" id="speakingDoneBtn">Finish Exam →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="detailedReview">
+    <div id="reviewHeader">
+      <h2 style="margin:0;font-size:15px;color:var(--brand-dark);font-weight:700;">Detailed Answer Review</h2>
+      <button class="navbtn" id="closeDetailedReviewBtn">← Back to Results</button>
+    </div>
+    <div id="reviewContent">
+      <div class="reviewInner" id="reviewInner"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="endscreen">
+    <div class="end-card">
+      <h1 id="endTitle">Test Complete</h1>
+      <div class="score-big" id="scoreBig">0/107</div>
+      <div class="score-sub">Total correct answers (Reading + Listening + Writing sentences)</div>
+      <div class="breakdown">
+        <div><b id="rscore">0/50</b><span>Reading</span></div>
+        <div><b id="lscore">0/34</b><span>Listening</span></div>
+        <div><b id="w1score">0/10</b><span>Writing · Sentences</span></div>
+      </div>
+      <div class="score-sub" id="writingFreeSummary"></div>
+      <div class="score-sub">Speaking responses were recorded — you can play them back on the previous screen.</div>
+      <button class="primaryBtn" id="openDetailedReviewBtn" style="margin-top:10px;">See Detailed Answers →</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="social">
+  <a href="https://youtube.com/@aktifingilizce?si=yr61jiAYpsrpKcKV" target="_blank" rel="noopener">▶ YouTube</a>
+  <a href="https://www.instagram.com/idealingilizce?igsh=N2t5NnU2NTc4a3R0" target="_blank" rel="noopener">📷 Instagram</a>
+  <a href="https://www.tiktok.com/@aktif.ingilizce" target="_blank" rel="noopener">🎵 TikTok @aktif.ingilizce</a>
+</div>
+
+<script>
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function fmtMMSS(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0'); }
+
+let cachedVoice = null;
+function pickVoice(){
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  if(!voices.length) return null;
+  return voices.find(v=>v.name==="Google UK English Female")
+      || voices.find(v=>v.lang==="en-GB")
+      || voices.find(v=>v.lang && v.lang.startsWith("en"))
+      || voices[0];
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = ()=>{ cachedVoice = pickVoice(); };
+  cachedVoice = pickVoice();
+}
+function speakOnce(text, rate, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  if(cachedVoice) utter.voice = cachedVoice;
+  utter.lang = "en-GB"; utter.rate = rate || 1;
+  utter.onend = onEnd; utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function SQ(number, text, options, correct){ return {number, audio:[{speaker:null, text}], options, correct, kind:"sqr"}; }
+function L(number, prompt, options, correct){ return {number, prompt, options, correct, kind:"comp"}; }
+function sqrBlock(contextLabel, q){ return {context:contextLabel, audioLines:[{speaker:null, text:q.audio[0].text}], questions:[q]}; }
+function convBlock(contextLabel, lines, questions){ return {context:contextLabel, audioLines:lines, questions}; }
+
+const listen_sqr = [
+  SQ(1, "Did you manage to reserve a seat for the workshop?", ["The workshop is in Building C.","The seat is near the window.","It was reserved for students.","Yes, I registered yesterday."], 3),
+  SQ(2, "Would you mind closing the window?", ["It was opened this morning.","The window faces the courtyard.","No problem.","I saw it yesterday."], 2),
+  SQ(3, "When does the library close tonight?", ["At nine o'clock.","It's next to the laboratory.","I borrowed two books.","The library is quiet."], 0),
+  SQ(4, "Why didn't you attend the seminar?", ["The seminar lasted two hours.","It was held upstairs.","I had another appointment.","I attended one last semester."], 2),
+  SQ(5, "Could you send me the revised schedule?", ["Sure, I'll send it this afternoon.","It was revised by the committee.","The schedule changed last week.","The afternoon class is full."], 0),
+  SQ(6, "Are you planning to take Professor Lewis's course?", ["The professor is in Room 302.","The course has twenty students.","Yes, if it fits my schedule.","I took the exam yesterday."], 2),
+  SQ(7, "How long does the presentation have to be?", ["I presented it yesterday.","It has several sections.","The presentation room is upstairs.","About ten minutes."], 3),
+  SQ(8, "Have you seen my notebook anywhere?", ["The notebook is very useful.","I think you left it in the study room.","I bought it last month.","I wrote three pages."], 1)
+];
+
+const listen_blocks = [
+  ...listen_sqr.map(q=>sqrBlock(null,q)),
+  convBlock("Conversation: Student and Academic Adviser",
+    [{speaker:"Student",text:"Hi, Professor Green. Do you have a minute? I'm trying to finalize my courses for next semester."},
+     {speaker:"Adviser",text:"Of course. What's the problem?"},
+     {speaker:"Student",text:"I want to take the environmental policy course, but it conflicts with my statistics class."},
+     {speaker:"Adviser",text:"Is statistics required for your major?"},
+     {speaker:"Student",text:"Yes, unfortunately."},
+     {speaker:"Adviser",text:"Then you should probably keep statistics. Have you considered taking environmental policy next year?"},
+     {speaker:"Student",text:"I could, but I was hoping to use it for my research project this semester."},
+     {speaker:"Adviser",text:"In that case, there may be another option. The department offers an evening section of environmental policy."},
+     {speaker:"Student",text:"Really? I didn't see it in the course catalog."},
+     {speaker:"Adviser",text:"It was added after the catalog was published."},
+     {speaker:"Student",text:"That would solve the problem. Do I need special permission?"},
+     {speaker:"Adviser",text:"No, but enrollment is limited. I'd register as soon as possible."}],
+    [
+     L(9, "Why does the student visit the adviser?", ["To request a research position","To complain about the course catalog","To discuss a course conflict","To change his major"], 2),
+     L(10, "Why does the adviser recommend keeping statistics?", ["The professor recommends it.","It is required for the student's major.","It is offered only in the evening.","It is easier than environmental policy."], 1),
+     L(11, "Why did the student want environmental policy?", ["He has already completed it.","He needs it for a research project.","It is required for graduation.","His friend recommended it."], 1),
+     L(12, "What solution does the adviser suggest?", ["Taking an evening section","Changing the student's major","Taking statistics next year","Dropping the research project"], 0),
+     L(13, "What does the adviser recommend?", ["Asking another student for permission","Registering quickly","Waiting until next semester","Repeating the statistics course"], 1)
+    ]),
+  convBlock("Announcement: Engineering Building",
+    [{speaker:"Announcer",text:"The Engineering Building's second floor will be closed from Tuesday through Thursday because new laboratory equipment is being installed. Students who normally use the study area on that floor should use the first-floor reading room instead. The computer laboratory will remain open, but access will be through the west entrance rather than the usual eastern entrance."}],
+    [
+     L(14, "Why will the second floor be closed?", ["For cleaning","For an examination","For a student conference","For equipment installation"], 3),
+     L(15, "Where should students study during the closure?", ["Outside the building","In the west entrance","In the computer laboratory","In the first-floor reading room"], 3),
+     L(16, "What will remain open?", ["The second-floor study area","The computer laboratory","The laboratory equipment room","The eastern entrance"], 1),
+     L(17, "How should students enter the computer laboratory?", ["Through the west entrance","Through the second floor","Through the eastern entrance","Through the reading room"], 0),
+     L(18, "How long will the second floor be closed?", ["One day","Two days","Three days","One week"], 2)
+    ]),
+  convBlock("Academic Talk: The Economics of Repair",
+    [{speaker:"Professor",text:"When economists discuss consumer behavior, they often focus on buying and replacing products. But another important decision is whether to repair something that has stopped working."},
+     {speaker:"Professor",text:"Historically, many household products were designed with repair in mind. Consumers could replace individual components rather than purchasing an entirely new product. Today, however, some products are difficult or expensive to repair because their components are integrated or because specialized tools are required."},
+     {speaker:"Professor",text:"The decision to repair also depends on perceived value. If a repair costs almost as much as a replacement, consumers may decide that buying a new product makes more economic sense."},
+     {speaker:"Professor",text:"There is also an environmental dimension. Extending the life of a product can reduce the demand for raw materials and decrease the amount of waste sent to landfills. As a result, some governments and organizations are promoting policies that make repairs easier."},
+     {speaker:"Professor",text:"One such approach is known as the right to repair, which aims to give consumers and independent technicians greater access to replacement parts, manuals, and diagnostic information."}],
+    [
+     L(19, "What is the lecture mainly about?", ["How economists calculate product prices","Why consumers prefer expensive products","The history of household appliances","Factors influencing decisions about repairing or replacing products"], 3),
+     L(20, "Why were some older products easier to repair?", ["They were always cheaper to manufacture.","They contained more electronic parts.","They required no tools.","They were designed with replaceable components."], 3),
+     L(21, "What may cause consumers to replace a product instead of repairing it?", ["The product has sentimental value.","The repair cost is close to the replacement cost.","Replacement parts are always available.","The product has been used for less than a week."], 1),
+     L(22, "What environmental benefit can repairs provide?", ["They can reduce waste and demand for raw materials.","They eliminate the need for recycling.","They make products consume more energy.","They increase the production of new products."], 0),
+     L(23, "What is the \"right to repair\"?", ["A policy approach designed to improve access to repair resources","A law requiring consumers to repair everything","A method for reducing product prices","A system for replacing damaged products"], 0),
+     L(24, "Why does the professor mention diagnostic information?", ["It is used only by manufacturers.","It determines how much a product originally cost.","It is required to purchase a new product.","It is one type of information that repairers may need access to."], 3),
+     L(25, "What can be inferred about modern products?", ["Consumers generally prefer repairing them.","Modern products never require specialized tools.","Some may be more difficult to repair than older products.","All modern products are designed to be repaired easily."], 2),
+     L(26, "What does the professor imply about repair decisions?", ["They have little relationship to consumer behavior.","They are determined only by governments.","They are based entirely on environmental concerns.","They involve both economic and environmental considerations."], 3)
+    ]),
+  convBlock("Academic Talk: Why Rivers Change Their Courses",
+    [{speaker:"Professor",text:"Rivers may appear to follow permanent paths across landscapes, but river channels can change considerably over time. One reason is sediment. Rivers carry particles such as sand, gravel, and mud. When the flow slows, some of these particles are deposited along the riverbed."},
+     {speaker:"Professor",text:"Over many years, repeated deposition can alter the shape of a channel. A river may gradually curve more strongly, creating what is called a meander. Eventually, a sharp bend can become unstable, and the river may cut through a narrower route."},
+     {speaker:"Professor",text:"Floods can accelerate these changes. During unusually high water levels, rivers possess greater energy and can transport much larger quantities of sediment. Floodwaters may therefore reshape riverbanks and alter the channel more quickly than normal flows."},
+     {speaker:"Professor",text:"Human activity can also influence river systems. Dams, for example, can change the amount of sediment moving downstream. Urban development may increase the speed at which rainwater reaches rivers, potentially affecting flood patterns."},
+     {speaker:"Professor",text:"Understanding river dynamics is important for communities located near waterways because changes in river channels can affect agriculture, infrastructure, and flood risk."}],
+    [
+     L(27, "What is the lecture mainly about?", ["How dams generate electricity","Why rivers contain fresh water","How communities build bridges","Why river channels can change over time"], 3),
+     L(28, "What happens when river flow slows?", ["Some sediment may be deposited.","All sediment disappears.","The river becomes deeper immediately.","Flooding becomes impossible."], 0),
+     L(29, "What is a meander?", ["A type of dam","A pronounced curve in a river","A method of measuring rainfall","A layer of underground water"], 1),
+     L(30, "Why can floods change rivers quickly?", ["They eliminate riverbanks.","They reduce the river's energy.","They stop water from moving.","They can carry greater amounts of sediment."], 3),
+     L(31, "How can dams affect rivers?", ["They prevent all flooding.","They always increase sediment movement.","They make rivers flow uphill.","They can alter sediment movement downstream."], 3),
+     L(32, "What does the professor say about urban development?", ["It can affect how quickly rainwater reaches rivers.","It eliminates the need for flood planning.","It always reduces river flow.","It prevents sediment deposition."], 0),
+     L(33, "Why is understanding river dynamics important?", ["Changes in rivers can affect communities and infrastructure.","River channels never change naturally.","Most communities are built inside rivers.","Rivers are the primary source of electricity."], 0),
+     L(34, "What can be inferred about floods?", ["They always permanently destroy rivers.","They prevent meanders from forming.","They occur only because of dams.","They can sometimes accelerate natural changes in river channels."], 3)
+    ])
+];
+
+function flattenListen(){
+  const slots = [];
+  listen_blocks.forEach(b=>{ b.questions.forEach(q=> slots.push({block:b, question:q})); });
+  return slots;
+}
+const LISTEN_SLOTS = flattenListen();
+const listenState = { slotIndex:0, answers:{}, lastPlayedBlock:null };
+
+function speakBlockAudio(lines, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  if(!cachedVoice) cachedVoice = pickVoice();
+  let i=0;
+  function next(){
+    if(i>=lines.length){ updatePlayUI(false); if(onEnd) onEnd(); return; }
+    const line = lines[i++];
+    const text = (line.speaker ? line.speaker+". " : "") + line.text;
+    const utter = new SpeechSynthesisUtterance(text);
+    if(cachedVoice) utter.voice = cachedVoice;
+    utter.lang="en-GB"; utter.rate=0.98;
+    utter.onend=next; utter.onerror=next;
+    window.speechSynthesis.speak(utter);
+  }
+  updatePlayUI(true);
+  next();
+}
+function updatePlayUI(playing){
+  const btn = document.getElementById('playBtn');
+  const status = document.getElementById('playStatus');
+  if(!btn) return;
+  if(playing){ btn.textContent="🔊 Playing..."; btn.disabled=true; status.textContent="Listening in progress — please wait."; }
+  else{ btn.textContent="🔁 Replay Audio"; btn.disabled=false; status.textContent=""; }
+}
+function renderListenSlot(){
+  const slot = LISTEN_SLOTS[listenState.slotIndex];
+  const q = slot.question, b = slot.block;
+  document.getElementById('moduleTag').textContent = "Listening Section";
+  document.getElementById('lGroupTitle').textContent = q.kind==="sqr" ? "Short Question-Response" : (b.context || "Listening Comprehension");
+  document.getElementById('lNumLabel').textContent = "Question "+q.number+" of "+LISTEN_SLOTS.length;
+  document.getElementById('lAudioHint').textContent = b.context || "Press play and listen carefully. The transcript will not be shown.";
+  updatePlayUI(false);
+  const isFirstQOfBlock = b.questions[0].number === q.number;
+  document.getElementById('playBtn').textContent = isFirstQOfBlock ? "▶ Play Audio" : "🔁 Replay Audio";
+  document.getElementById('playBtn').onclick = ()=> speakBlockAudio(b.audioLines, ()=>{});
+
+  const area = document.getElementById('lQuestionArea');
+  let html = "";
+  if(q.kind==="comp") html += `<div class="qtext">${q.number}. ${q.prompt}</div>`;
+  else html += `<div class="qtext" style="font-weight:600;color:var(--ink-soft);font-size:13.5px;">Choose the best response:</div>`;
+  html += `<div class="options">`;
+  const letters=["A","B","C","D"];
+  const saved = listenState.answers[q.number];
+  q.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}"><span class="letter">${letters[i]}</span><span>${opt}</span></div>`;
+  });
+  html += `</div>`;
+  area.innerHTML = html;
+  area.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      listenState.answers[q.number] = +el.dataset.choice;
+      area.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+  if(listenState.lastPlayedBlock !== b){
+    listenState.lastPlayedBlock = b;
+    speakBlockAudio(b.audioLines, ()=>{});
+  }
+}
+document.getElementById('startListenBtn').addEventListener('click', ()=>{
+  listenState.slotIndex=0; listenState.lastPlayedBlock=null;
+  showScreen('lWrap'); renderListenSlot();
+});
+document.getElementById('lNextBtn').addEventListener('click', ()=>{
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  if(listenState.slotIndex < LISTEN_SLOTS.length-1){ listenState.slotIndex++; renderListenSlot(); }
+  else { goToReading(); }
+});
+function scoreListening(){
+  let c=0; LISTEN_SLOTS.forEach(s=>{ if(listenState.answers[s.question.number]===s.question.correct) c++; });
+  return c;
+}
+function FW(number, prefix, pattern, suffix, answer){ return {number, prefix, pattern:pattern.split(''), suffix, answer}; }
+function MC(number, q, options, correct){ return {number, q, options, correct}; }
+
+const READING_FILL = [
+  FW(1,"One particularly important group consists of fungi that form close ","ass_ci_tions"," with plant roots.","associations"),
+  FW(2,"In return, the fungi receive ","c_rb_h_dr_tes"," produced by the plants through photosynthesis.","carbohydrates"),
+  FW(3,"Soil organisms also play a major role in ","d_c_mp_s_ng"," dead organic material.","decomposing"),
+  FW(4,"It constantly generates ","pr_d_ct_ons"," about what is likely to happen next.","predictions"),
+  FW(5,"Previous ","exp_r__nc_s"," allow the brain to anticipate where objects are likely to be and what sounds or movements may occur.","experiences"),
+  FW(6,"The brain combines incoming signals with prior ","kn_wl_dge"," to construct the most likely interpretation.","knowledge"),
+  FW(7,"Perception is not simply a reflection of the external world but an active process of ","int_rpr_t_t_on",".","interpretation"),
+  FW(8,"The brain may interpret ","amb_gu__s"," sensory information according to that expectation.","ambiguous"),
+  FW(9,"This predictive process is particularly important when ","s_ns_ry"," information is incomplete or noisy.","sensory"),
+  FW(10,"This approach has influenced research into ","att_nt_on",", memory, language, and even decision-making.","attention")
+];
+
+const READING_GROUPS = [
+  { id:"notice", title:"University Research Participant Notice", type:"inline",
+    passageHTML:`<h4>University Research Participant Notice</h4><p>The Department of Human Communication is recruiting undergraduate students for a study examining how people process information while completing several tasks at the same time. Participants will complete two short computer-based activities and answer a questionnaire. The entire session will take approximately 35 minutes. Participants must be at least 18 years old and must have normal or corrected-to-normal vision. Sessions will take place in Room 214 of the Social Sciences Building between September 8 and September 19.</p>`,
+    questions:[
+      MC(11, "What is the main purpose of the notice?", ["To explain a department examination","To announce a new university course","To recruit students for a research study","To advertise computer equipment"], 2),
+      MC(12, "How long will each session approximately last?", ["25 minutes","50 minutes","15 minutes","35 minutes"], 3),
+      MC(13, "What must participants be able to do?", ["See normally or with correction","Speak two languages","Use advanced statistical software","Have previous research experience"], 0)
+    ]},
+  { id:"board", title:"Student Message Board", type:"inline",
+    passageHTML:`<h4>Student Message Board</h4><p><b>Liam:</b> Has anyone taken Professor Chen's statistics course? I'm trying to decide whether to take it next semester. I've completed the introductory course, but I'm worried that the workload might be too heavy because I'm also doing an internship.</p><p><b>Nora:</b> I took it last year. The weekly assignments weren't especially long, but the final project required quite a bit of preparation. I'd say it's manageable if you don't leave everything until the last week.</p>`,
+    questions:[
+      MC(14, "Why does Liam post the message?", ["To find a partner for a project","To ask about a statistics course","To request an extension","To complain about an internship"], 1),
+      MC(15, "What does Nora imply about the course?", ["Students should avoid taking the final project.","Good time management is important.","It is impossible to complete while working.","It has no major assignments."], 1)
+    ]},
+  { id:"animal", title:"Reading Passage — The Evolution of Animal Communication", type:"split",
+    passageHTML:`<h3>The Evolution of Animal Communication</h3>
+    <p>Animals communicate in remarkably diverse ways. Some use sounds, while others rely on visual displays, chemical signals, physical movements, or combinations of several methods. Although human language is unusually complex, communication itself is not unique to humans. Across the animal kingdom, individuals exchange information that can influence behavior and survival.</p>
+    <p>One important function of communication is warning others about danger. Certain social animals produce specific calls when predators approach. In some species, different calls appear to correspond to different types of threats. Such signals can cause nearby individuals to hide, flee, or change their behavior in other ways.</p>
+    <p>Communication can also influence relationships within a group. Many social species use signals to establish dominance, attract partners, or maintain social bonds. These signals may be especially important in species that live in stable groups where individuals interact repeatedly.</p>
+    <p>However, animal communication is not necessarily fixed. Researchers have found evidence that some species modify their signals depending on their surroundings or social experiences. Young individuals may also learn certain communication patterns by observing older members of their group.</p>
+    <p>The study of animal communication therefore provides insight not only into animal behavior but also into the evolution of information-sharing systems. By examining how signals develop, change, and influence behavior, scientists can better understand the pressures that shaped communication across different species.</p>`,
+    questions:[
+      MC(16, "What is the main purpose of the passage?", ["To explain the functions and development of animal communication","To demonstrate that animals communicate exactly like humans","To describe how predators locate their prey","To compare the intelligence of different animal species"], 0),
+      MC(17, "According to paragraph 2, warning signals can cause animals to:", ["change their behavior","search for food","establish dominance","leave their social group permanently"], 0),
+      MC(18, "Why does the author mention different types of predator calls?", ["To show that some signals may convey different information","To prove that predators understand animal languages","To explain why animals live in groups","To compare predators from different habitats"], 0),
+      MC(19, "The word \"stable\" in paragraph 3 is closest in meaning to:", ["large and crowded","temporary and changing","dangerous and unpredictable","permanent and relatively consistent"], 3),
+      MC(20, "What can be inferred about animals that live in stable social groups?", ["They depend entirely on chemical signals.","They rarely communicate with one another.","They cannot learn new signals.","Communication may help maintain relationships among group members."], 3),
+      MC(21, "According to paragraph 4, what can young animals sometimes do?", ["Change the signals used by predators","Create completely new species","Avoid all social interactions","Learn communication patterns from older individuals"], 3),
+      MC(22, "The word \"modify\" in paragraph 4 is closest in meaning to:", ["change","eliminate","simplify","repeat"], 0),
+      MC(23, "Why does the author mention environmental and social experiences?", ["To show that communication can be influenced by experience","To explain why animals migrate","To demonstrate that all communication is genetic","To explain why predators change habitats"], 0),
+      MC(24, "What does the passage suggest about animal communication?", ["It has little influence on animal behavior.","It is completely determined at birth.","It exists only in highly intelligent animals.","It may have evolved under pressures related to survival and social interaction."], 3),
+      MC(25, "Which statement best summarizes the passage?", ["Human language developed directly from the communication systems of one animal species.","Animal communication is mainly used to establish dominance within social groups.","Animal communication involves diverse signals that serve survival and social functions and can sometimes be shaped by experience.","Most animal communication consists of warning calls used against predators."], 2)
+    ]},
+  { id:"clocks", title:"Reading Passage — The Rise of Public Clocks", type:"split",
+    passageHTML:`<h3>The Rise of Public Clocks</h3>
+    <p>Before mechanical clocks became widespread, communities relied on a variety of methods to measure the passage of time. Sundials, water clocks, and other devices could provide useful estimates, but their accuracy depended on environmental conditions and the skill of the people operating them.</p>
+    <p>The development of mechanical clocks changed this situation. Once clocks could operate without direct dependence on sunlight or flowing water, they became increasingly useful in public spaces. Towns began installing large clocks in prominent locations where many people could see or hear them.</p>
+    <p>Public clocks had an important social function. They provided a shared reference point for activities such as trade, religious ceremonies, and transportation. Rather than relying entirely on individual estimates of time, members of a community could coordinate their activities according to a common signal.</p>
+    <p>The spread of public clocks also changed people's relationship with time. Regular signals encouraged greater attention to punctuality and scheduling. As commercial and industrial activities became more organized, precise timekeeping became increasingly valuable.</p>
+    <p>Nevertheless, public clocks did not immediately make personal timekeeping unnecessary. Smaller clocks and watches remained expensive for many people for a long period. Consequently, public clocks continued to serve as important communal timekeepers even after portable devices became available.</p>`,
+    questions:[
+      MC(26, "What is the passage mainly about?", ["Why religious ceremonies disappeared","How watches became inexpensive","Why sundials were more accurate than mechanical clocks","How public clocks influenced the organization of society"], 3),
+      MC(27, "Why were earlier methods of measuring time sometimes unreliable?", ["They were too expensive for communities.","They could be used only indoors.","They required electricity.","They depended partly on environmental conditions."], 3),
+      MC(28, "What advantage did mechanical clocks have?", ["They could operate without direct dependence on sunlight or flowing water.","They were immediately affordable to everyone.","They were smaller than modern watches.","They required no maintenance."], 0),
+      MC(29, "Why were clocks installed in prominent public locations?", ["So they could be protected from sunlight","So many people could observe or hear them","So religious leaders could control transportation","So watchmakers could sell more watches"], 1),
+      MC(30, "The phrase \"shared reference point\" in paragraph 3 refers to:", ["a religious building","a method of calculating distance","a public transportation station","a common way of determining the time"], 3),
+      MC(31, "According to the passage, public clocks helped people:", ["eliminate religious ceremonies","avoid commercial activities","stop using calendars","coordinate their activities"], 3),
+      MC(32, "What change in behavior is associated with public clocks?", ["Greater attention to punctuality and scheduling","Less interest in commercial activity","Reduced use of transportation","Greater dependence on sunlight"], 0),
+      MC(33, "Why does the author mention that watches remained expensive?", ["To explain why public clocks continued to be important","To explain why public clocks were removed","To show that watches were more accurate","To argue that mechanical clocks were unsuccessful"], 0),
+      MC(34, "What can be inferred about timekeeping before portable clocks became common?", ["People had no way to measure time.","Only religious institutions measured time.","Communities completely ignored schedules.","Public signals could play an important role in coordinating daily activities."], 3),
+      MC(35, "Which statement best summarizes the passage?", ["Mechanical clocks immediately eliminated older methods of measuring time.","Public clocks were primarily designed to replace religious ceremonies.","Mechanical public clocks provided communities with shared time references and contributed to increasingly scheduled social and economic life.","Portable watches became widespread before public clocks were introduced."], 2)
+    ]},
+  { id:"memory", title:"Reading Passage — Why Some Memories Become Stronger", type:"split",
+    passageHTML:`<h3>Why Some Memories Become Stronger</h3>
+    <p>Human memory is not a perfect recording of past events. Instead, remembering involves reconstructing information using traces stored in the brain together with knowledge and expectations. This helps explain why two people can remember the same event differently.</p>
+    <p>One factor that can influence memory is emotional significance. Events associated with strong emotions are often remembered more vividly than ordinary experiences. However, vividness does not necessarily mean accuracy. A person may remember the general emotional atmosphere of an event clearly while misremembering particular details.</p>
+    <p>Another important factor is repetition. When information is encountered repeatedly, it can become easier to retrieve. Repetition is especially effective when it involves active engagement rather than simple exposure. For example, attempting to recall information from memory can strengthen later retrieval more effectively than merely reading the same material several times.</p>
+    <p>Sleep also plays an important role. Researchers have found that certain forms of memory consolidation occur during sleep. During this process, newly acquired information may become more stable and integrated with existing knowledge.</p>
+    <p>Memory can therefore be strengthened through several mechanisms, but these mechanisms do not guarantee perfect recall. In fact, remembering is influenced by context, emotion, prior knowledge, and subsequent experiences. A memory may become easier to retrieve while some of its details gradually change.</p>
+    <p>Understanding this distinction is particularly important in education. Effective learning does not simply involve exposing students to information repeatedly. Activities that require retrieval, meaningful connections, and sufficient rest may help students retain information more successfully.</p>`,
+    questions:[
+      MC(36, "What is the main purpose of the passage?", ["To prove that human memory is completely unreliable","To explain several factors that influence memory and learning","To compare memory in humans and animals","To describe the history of memory research"], 1),
+      MC(37, "Why can two people remember the same event differently?", ["Only one person can remember an event accurately.","Memory is unrelated to prior knowledge.","People always forget emotional events.","Memory involves reconstruction rather than exact recording."], 3),
+      MC(38, "What does emotional significance often do?", ["It prevents later recall.","It guarantees accurate memories.","It eliminates irrelevant details.","It can make memories more vivid."], 3),
+      MC(39, "Why does the author say vividness does not necessarily mean accuracy?", ["Accurate memories are never emotional.","Vivid memories cannot be retrieved.","A person may remember the emotion clearly while misremembering details.","Emotional events are always forgotten quickly."], 2),
+      MC(40, "What type of repetition is described as especially effective?", ["Reading the same page without interruption","Copying information repeatedly","Active attempts to recall information","Hearing information only once"], 2),
+      MC(41, "The word \"retrieval\" in paragraph 3 is closest in meaning to:", ["removing information from memory","permanently storing information","bringing stored information back to mind","changing information into images"], 2),
+      MC(42, "According to the passage, what happens during memory consolidation?", ["Emotional responses disappear.","Prior knowledge is permanently replaced.","Newly acquired information may become more stable.","All inaccurate memories are automatically removed."], 2),
+      MC(43, "Why does the author mention sleep?", ["To explain another process that may strengthen memory","To explain why people forget their dreams","To show that students should study only at night","To argue that sleep is more important than learning"], 0),
+      MC(44, "What can be inferred about simple rereading?", ["It may be less effective than actively trying to recall information.","It prevents memory consolidation.","It is unrelated to learning.","It always produces permanent memories."], 0),
+      MC(45, "The word \"mechanisms\" in paragraph 5 is closest in meaning to:", ["locations","mistakes","emotions","processes"], 3),
+      MC(46, "Which of the following is NOT mentioned as influencing memory?", ["Context","Emotion","Prior knowledge","Blood type"], 3),
+      MC(47, "Why is the distinction between vividness and accuracy important?", ["Emotional experiences cannot be studied scientifically.","Accurate memories are never emotional.","Vivid memories are always false.","A strong memory can still contain incorrect details."], 3),
+      MC(48, "What does the author suggest about effective learning?", ["It should focus only on memorizing isolated facts.","It should include retrieval activities and meaningful connections.","It should depend entirely on repeated reading.","It should avoid sleep after studying."], 1),
+      MC(49, "What can be inferred about subsequent experiences?", ["They have no relationship to memory.","They always make memories more accurate.","They can influence how a memory is later recalled.","They prevent information from being stored."], 2),
+      MC(50, "Which statement best summarizes the passage?", ["Memory can be strengthened by emotion, repetition, retrieval, and sleep, but stronger memories are not necessarily perfectly accurate.","Emotional experiences are the only memories that people can retain for long periods.","Sleep prevents memories from changing after they are formed.","Repeated reading is the most reliable way to create permanent memories."], 0)
+    ]}
+];
+
+function buildReadingSlots(){
+  const slots = READING_FILL.map(it=>({kind:"fill", item:it}));
+  READING_GROUPS.forEach(g=> g.questions.forEach(q=> slots.push({kind:"mc", group:g, question:q})));
+  return slots;
+}
+const READING_SLOTS = buildReadingSlots();
+const rState = { qIndex:0, answers:{}, fillLetters:{}, timeLeft:35*60, timerId:null, started:false };
+
+function renderFillTokens(item){
+  const saved = rState.fillLetters[item.number] || {};
+  let blankIdx=0, out="";
+  item.pattern.forEach(ch=>{
+    if(ch==="_"){
+      const val = saved[blankIdx] || "";
+      out += `<input class="blankinput" maxlength="1" data-word="${item.number}" data-blank="${blankIdx}" value="${val}">`;
+      blankIdx++;
+    } else {
+      out += `<span class="letterbox">${ch}</span>`;
+    }
+  });
+  return out;
+}
+function renderFillItem(item){
+  return `<h3>Complete the Word</h3><div class="fillpassage">${item.prefix}${renderFillTokens(item)}${item.suffix}</div>`;
+}
+function attachFillListeners(){
+  document.querySelectorAll('.blankinput').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const wn=+e.target.dataset.word, bi=+e.target.dataset.blank;
+      e.target.value = e.target.value.replace(/[^a-zA-Z]/g,'').slice(0,1).toLowerCase();
+      if(!rState.fillLetters[wn]) rState.fillLetters[wn]={};
+      rState.fillLetters[wn][bi] = e.target.value;
+      if(e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>-1 && idx<inputs.length-1) inputs[idx+1].focus();
+      }
+    });
+    inp.addEventListener('keydown', e=>{
+      if(e.key==="Backspace" && !e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>0) inputs[idx-1].focus();
+      }
+    });
+  });
+}
+function isWordComplete(item){
+  const saved = rState.fillLetters[item.number] || {};
+  const blanks = item.pattern.filter(c=>c==="_").length;
+  for(let i=0;i<blanks;i++){ if(!saved[i]) return false; }
+  return true;
+}
+function isWordCorrect(item){
+  const saved = rState.fillLetters[item.number] || {};
+  let blankIdx=0, ansIdx=0;
+  for(const ch of item.pattern){
+    if(ch==="_"){
+      const letter = item.answer[ansIdx];
+      if((saved[blankIdx]||"").toLowerCase() !== letter.toLowerCase()) return false;
+      blankIdx++;
+    }
+    ansIdx++;
+  }
+  return true;
+}
+function getGivenWordText(item){
+  const saved = rState.fillLetters[item.number] || {};
+  let blankIdx=0, out="";
+  item.pattern.forEach(ch=>{
+    if(ch==="_"){ out += (saved[blankIdx]||"_"); blankIdx++; } else out += ch;
+  });
+  return out;
+}
+function renderMCReading(group, question){
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+  if(group.type==="split"){ passagePane.style.display="block"; passagePane.innerHTML=group.passageHTML; questionPane.classList.remove('full'); }
+  else { passagePane.style.display="none"; questionPane.classList.add('full'); }
+  let html = "";
+  if(group.type==="inline") html += group.passageHTML;
+  html += `<div class="qtext">${question.number}. ${question.q}</div><div class="options">`;
+  const letters=["A","B","C","D"];
+  const saved = rState.answers[question.number];
+  question.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}"><span class="letter">${letters[i]}</span><span>${opt}</span></div>`;
+  });
+  html += `</div>`;
+  questionPane.innerHTML = html;
+  questionPane.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      rState.answers[question.number] = +el.dataset.choice;
+      questionPane.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+}
+function renderReadingSlot(){
+  const slot = READING_SLOTS[rState.qIndex];
+  document.getElementById('moduleTag').textContent = "Reading Section";
+  document.getElementById('qNumLabel').textContent = "Question "+(rState.qIndex+1)+" of "+READING_SLOTS.length;
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+  if(slot.kind==="fill"){
+    document.getElementById('qGroupTitle').textContent = "Part 1 — Complete the Word";
+    passagePane.style.display="none"; questionPane.classList.add('full');
+    questionPane.innerHTML = renderFillItem(slot.item);
+    attachFillListeners();
+  } else {
+    document.getElementById('qGroupTitle').textContent = slot.group.title;
+    renderMCReading(slot.group, slot.question);
+  }
+  document.getElementById('backBtn').disabled = (rState.qIndex===0);
+  const isLast = rState.qIndex === READING_SLOTS.length-1;
+  document.getElementById('nextBtn').textContent = isLast ? "Finish Reading Section →" : "Next →";
+}
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  if(rState.qIndex>0){ rState.qIndex--; renderReadingSlot(); }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  if(rState.qIndex < READING_SLOTS.length-1){ rState.qIndex++; renderReadingSlot(); }
+  else { if(rState.timerId) clearInterval(rState.timerId); document.getElementById('timerbox').textContent="Untimed"; goToWriting(); }
+});
+document.getElementById('reviewBtn').addEventListener('click', ()=>{
+  const grid = document.getElementById('reviewGrid');
+  grid.innerHTML = "";
+  READING_SLOTS.forEach((slot,i)=>{
+    let answered = slot.kind==="fill" ? isWordComplete(slot.item) : rState.answers[slot.question.number]!==undefined;
+    const cell = document.createElement('div');
+    cell.className = "revcell "+(answered?"answered":"unanswered");
+    cell.innerHTML = (i+1)+"<small>"+(answered?"Answered":"Blank")+"</small>";
+    cell.addEventListener('click', ()=>{ rState.qIndex=i; showScreen('qWrap'); renderReadingSlot(); });
+    grid.appendChild(cell);
+  });
+  showScreen('review');
+});
+document.getElementById('closeReviewBtn').addEventListener('click', ()=> showScreen('qWrap'));
+function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0'); }
+function startReadingTimer(){
+  document.getElementById('timerbox').textContent = formatTime(rState.timeLeft);
+  rState.timerId = setInterval(()=>{
+    rState.timeLeft--;
+    const box = document.getElementById('timerbox');
+    box.textContent = formatTime(rState.timeLeft);
+    if(rState.timeLeft<=300) box.classList.add('low');
+    if(rState.timeLeft<=0){ clearInterval(rState.timerId); goToWriting(); }
+  }, 1000);
+}
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  rState.started=true; showScreen('qWrap'); renderReadingSlot(); startReadingTimer();
+});
+function scoreReading(){
+  let c=0;
+  READING_SLOTS.forEach(slot=>{
+    if(slot.kind==="fill"){ if(isWordCorrect(slot.item)) c++; }
+    else { if(rState.answers[slot.question.number]===slot.question.correct) c++; }
+  });
+  return c;
+}
+function goToReading(){
+  document.getElementById('moduleTag').textContent="Directions";
+  document.getElementById('timerbox').textContent="35:00";
+  showScreen('intro');
+}
+function T1(chunks, key){ return {chunks, key}; }
+const WRITE_TASK1 = {
+  timerSec: 25,
+  items:[
+    T1(["the researchers","collected","additional data","before","publishing","their findings"], "The researchers collected additional data before publishing their findings."),
+    T1(["students","are expected","to complete","the assignment","independently"], "Students are expected to complete the assignment independently."),
+    T1(["the university","has recently","expanded","its international programs"], "The university has recently expanded its international programs."),
+    T1(["because","the weather","was unfavorable","the fieldwork","was postponed"], "Because the weather was unfavorable, the fieldwork was postponed."),
+    T1(["the committee","will announce","its decision","after","reviewing","the applications"], "The committee will announce its decision after reviewing the applications."),
+    T1(["many experts","believe","that","technology","can influence","human behavior"], "Many experts believe that technology can influence human behavior."),
+    T1(["the professor","asked","whether","the students","had understood","the argument"], "The professor asked whether the students had understood the argument."),
+    T1(["although","the initial results","were promising","further research","was necessary"], "Although the initial results were promising, further research was necessary."),
+    T1(["the students","discussed","several possible solutions","during","the seminar"], "The students discussed several possible solutions during the seminar."),
+    T1(["once","the equipment","has been tested","the laboratory","will reopen"], "Once the equipment has been tested, the laboratory will reopen.")
+  ]
+};
+
+const WRITE_TASK2 = {
+  timerSec: 7*60,
+  prompt: "You recently attended a university workshop, but the certificate of participation that you were promised has not been sent to you. Write an email to the workshop coordinator. In your email: explain when you attended the workshop, explain that you have not received the certificate, explain why you need it, ask the coordinator to send it to you."
+};
+
+const WRITE_TASK3 = {
+  timerSec: 10*60,
+  professor: "Some universities are considering allowing students to record all lectures and watch them later instead of attending classes in person. Supporters believe this gives students flexibility, while critics argue that attending lectures directly encourages participation and concentration.",
+  student1: "I support recorded lectures because students can review difficult material several times and organize their study schedules more effectively.",
+  student2: "I don't think recordings should replace attendance. Students learn from asking questions and interacting with the professor, and that experience is difficult to reproduce in a recording."
+};
+
+const writeState = { task1Index:0, task1Answers:[], currentBank:[], currentAnswer:[], timerId:null, task2Text:"", task3Text:"" };
+function shuffleArr(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+document.getElementById('writeStartBtn').addEventListener('click', ()=>{
+  showScreen('wWrap'); writeState.task1Index=0; writeState.task1Answers=[]; runTask1Item();
+});
+function runTask1Item(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  document.getElementById('wTitle').textContent = "Task 1 — Build a Sentence";
+  document.getElementById('wNumLabel').textContent = "Question "+(writeState.task1Index+1)+" of 10";
+  document.getElementById('wInstructText').style.display="block";
+  document.getElementById('wInstructText').textContent = "Click the words/phrases in the correct order to build a grammatically correct, meaningful sentence.";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = "";
+  writeState.currentBank = shuffleArr(item.chunks);
+  writeState.currentAnswer = [];
+  renderTask1Chips();
+  let t = WRITE_TASK1.timerSec;
+  const timerEl = document.getElementById('wTimer');
+  timerEl.textContent = "00:"+String(t).padStart(2,'0');
+  clearInterval(writeState.timerId);
+  writeState.timerId = setInterval(()=>{
+    t--; timerEl.textContent="00:"+String(Math.max(t,0)).padStart(2,'0');
+    if(t<=5) timerEl.classList.add('low');
+    if(t<=0){ clearInterval(writeState.timerId); submitTask1Item(true); }
+  }, 1000);
+}
+function renderTask1Chips(){
+  const area = document.getElementById('wTaskArea');
+  area.innerHTML = `<div class="wanswer" id="wAnswerZone"></div><div class="wbank" id="wBankZone"></div><button id="wSubmitBtn">Submit Sentence</button>`;
+  function draw(){
+    const ans = document.getElementById('wAnswerZone');
+    const bank = document.getElementById('wBankZone');
+    ans.innerHTML = writeState.currentAnswer.map((w,i)=>`<span class="wchip" data-i="${i}">${w}</span>`).join("") || '<span style="color:var(--ink-soft);font-size:13px;">Click chunks below to build your sentence…</span>';
+    bank.innerHTML = writeState.currentBank.map((w,i)=>`<span class="wchip bank" data-i="${i}">${w}</span>`).join("");
+    ans.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx=+el.dataset.i;
+        writeState.currentBank.push(writeState.currentAnswer[idx]);
+        writeState.currentAnswer.splice(idx,1);
+        draw();
+      });
+    });
+    bank.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx=+el.dataset.i;
+        writeState.currentAnswer.push(writeState.currentBank[idx]);
+        writeState.currentBank.splice(idx,1);
+        draw();
+      });
+    });
+  }
+  draw();
+  document.getElementById('wSubmitBtn').addEventListener('click', ()=> submitTask1Item(false));
+}
+function normalizeSentence(s){ return s.toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim(); }
+function submitTask1Item(timeUp){
+  clearInterval(writeState.timerId);
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  const given = writeState.currentAnswer.join(" ");
+  const correct = normalizeSentence(given) === normalizeSentence(item.key);
+  writeState.task1Answers.push({given, key:item.key, correct});
+  document.getElementById('wStopMsg').style.display="block";
+  document.getElementById('wStopMsg').textContent = timeUp ? "Time's up! Moving to the next sentence…" : "Response submitted. Moving to the next sentence…";
+  setTimeout(()=>{
+    if(writeState.task1Index < WRITE_TASK1.items.length-1){ writeState.task1Index++; runTask1Item(); }
+    else { runTask2(); }
+  }, 1300);
+}
+function runTask2(){
+  document.getElementById('wTitle').textContent="Task 2 — Write an Email";
+  document.getElementById('wNumLabel').textContent="Question 11";
+  document.getElementById('wInstructText').style.display="none";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `<div class="wprompt"><b>Prompt:</b> ${WRITE_TASK2.prompt}</div>`;
+  document.getElementById('wTaskArea').innerHTML = `<textarea class="wtextarea" id="wEmailBox" placeholder="Type your email here..."></textarea><div class="wwordcount" id="wEmailCount">0 words</div>`;
+  const box = document.getElementById('wEmailBox');
+  box.addEventListener('input', ()=>{
+    writeState.task2Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wEmailCount').textContent = wc+" words";
+  });
+  startFreeWriteTimer(WRITE_TASK2.timerSec, ()=>{
+    box.disabled=true;
+    document.getElementById('wStopMsg').style.display="block";
+    document.getElementById('wStopMsg').textContent="Time's up! Moving to the next task…";
+    setTimeout(runTask3, 1500);
+  });
+}
+function runTask3(){
+  document.getElementById('wTitle').textContent="Task 3 — Academic Discussion";
+  document.getElementById('wNumLabel').textContent="Question 12";
+  document.getElementById('wInstructText').style.display="none";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `
+    <div class="wpost"><b>Professor Rivera:</b><br>"${WRITE_TASK3.professor}"</div>
+    <div class="wpost"><b>Emma:</b><br>"${WRITE_TASK3.student1}"</div>
+    <div class="wpost"><b>Lucas:</b><br>"${WRITE_TASK3.student2}"</div>`;
+  document.getElementById('wTaskArea').innerHTML = `<textarea class="wtextarea" id="wDiscBox" placeholder="Write your response to the discussion here..."></textarea><div class="wwordcount" id="wDiscCount">0 words</div>`;
+  const box = document.getElementById('wDiscBox');
+  box.addEventListener('input', ()=>{
+    writeState.task3Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wDiscCount').textContent = wc+" words";
+  });
+  startFreeWriteTimer(WRITE_TASK3.timerSec, ()=>{
+    box.disabled=true;
+    document.getElementById('wStopMsg').style.display="block";
+    document.getElementById('wStopMsg').textContent="Time's up!";
+    setTimeout(finishWriting, 1500);
+  });
+}
+function startFreeWriteTimer(totalSec, onDone){
+  let t = totalSec;
+  const timerEl = document.getElementById('wTimer');
+  timerEl.textContent = fmtMMSS(t);
+  clearInterval(writeState.timerId);
+  writeState.timerId = setInterval(()=>{
+    t--; timerEl.textContent = fmtMMSS(Math.max(t,0));
+    if(t<=30) timerEl.classList.add('low');
+    if(t<=0){ clearInterval(writeState.timerId); onDone(); }
+  }, 1000);
+}
+function finishWriting(){
+  const correctCount = writeState.task1Answers.filter(a=>a.correct).length;
+  const t2w = writeState.task2Text.trim()? writeState.task2Text.trim().split(/\s+/).length : 0;
+  const t3w = writeState.task3Text.trim()? writeState.task3Text.trim().split(/\s+/).length : 0;
+  document.getElementById('writeSummary').innerHTML =
+    `Task 1: ${correctCount}/10 sentences built correctly.<br>Task 2 (Email): ${t2w} words written.<br>Task 3 (Discussion): ${t3w} words written.`;
+  showScreen('writeDone');
+}
+document.getElementById('writeDoneBtn').addEventListener('click', ()=> goToSpeaking());
+function goToWriting(){ window.speechSynthesis && window.speechSynthesis.cancel(); showScreen('writeIntro'); }
+const SPEAK_PART1 = {
+  key:"p1", title:"Part 1 — Listen and Repeat",
+  instructions:"You will hear each sentence once. Repeat it as accurately as possible.",
+  items:[
+    {text:"The university has introduced a new system for registering independent research projects.", rate:0.95, timerSec:9},
+    {text:"Students who wish to participate must submit their applications before the end of the month.", rate:0.98, timerSec:10},
+    {text:"The conference will bring together researchers from several universities across the country.", rate:1.0, timerSec:9},
+    {text:"Although the original experiment produced unexpected results, the researchers decided to conduct a second trial.", rate:1.05, timerSec:11},
+    {text:"Students are encouraged to discuss their research questions with their advisers before collecting data.", rate:1.1, timerSec:10},
+    {text:"The new scholarship program is intended to support students who want to participate in international academic projects.", rate:1.15, timerSec:12},
+    {text:"Because the research involves several different departments, participants will need to coordinate their schedules carefully.", rate:1.2, timerSec:11}
+  ]
+};
+const SPEAK_PART2 = {
+  key:"p2", title:"Part 2 — Take an Interview",
+  instructions:"Answer each question clearly and support your response with reasons and examples.",
+  timerSec:45, beep:true,
+  items:[
+    {text:"Some universities are considering replacing some traditional examinations with long-term projects. Do you think this would improve student learning? Why or why not?", rate:1.0},
+    {text:"Imagine your university gives students one opportunity to spend a semester studying something outside their major. What subject would you choose and why?", rate:1.0},
+    {text:"Some students prefer studying alone, while others believe they learn more effectively in groups. Which do you prefer? Explain your reasons.", rate:1.0},
+    {text:"Your university wants to encourage students to read more. What is one practical policy the university could introduce to achieve this goal?", rate:1.0}
+  ]
+};
+const SPEAK_PARTS = [SPEAK_PART1, SPEAK_PART2];
+const speakState = { partIndex:0, itemIndex:0, stream:null, recorder:null, chunks:[], recordings:[[],[]], countdownId:null, transcriptBuffer:"", recognition:null, pendingUrl:null };
+
+function playBeep(onDone){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type="sine"; osc.frequency.value=880;
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.35);
+    osc.connect(gain).connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime+0.35);
+    osc.onended=()=>{ ctx.close(); if(onDone) onDone(); };
+  } catch(e){ if(onDone) onDone(); }
+}
+document.getElementById('speakStartBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('speakStartBtn');
+  btn.disabled=true; btn.textContent="Requesting microphone access...";
+  try{
+    speakState.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    showScreen('sWrap'); speakState.partIndex=0; speakState.itemIndex=0; runSpeakItem();
+  } catch(err){
+    document.getElementById('micPermissionNote').innerHTML = "⚠️ Microphone access was blocked or unavailable. Please allow microphone permissions and try again.";
+    btn.disabled=false; btn.textContent="Allow Microphone & Start Speaking Section";
+  }
+});
+function currentSpeakPart(){ return SPEAK_PARTS[speakState.partIndex]; }
+function runSpeakItem(){
+  const part = currentSpeakPart();
+  const item = part.items[speakState.itemIndex];
+  const totalQNum = speakState.partIndex===0 ? (speakState.itemIndex+1) : (7+speakState.itemIndex+1);
+  document.getElementById('sPartTitle').textContent = part.title;
+  document.getElementById('sNumLabel').textContent = "Question "+totalQNum+" of 11";
+  document.getElementById('sInstructText').textContent = part.instructions;
+  document.getElementById('sStopMsg').style.display="none";
+  const cd = document.getElementById('sCountdown');
+  cd.style.display="none"; cd.classList.remove('low');
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec');
+  status.textContent = part.key==="p1" ? "🔊 Listen carefully..." : "🔊 Question is being read...";
+  speakOnce(item.text, item.rate, ()=>{
+    if(part.beep){ status.textContent="Get ready to speak..."; playBeep(()=> startRecordingPhase(part, item, totalQNum)); }
+    else startRecordingPhase(part, item, totalQNum);
+  });
+}
+function buildFeedback(part, item, transcriptRaw, timerSec){
+  const transcript = (transcriptRaw||"").trim();
+  const supported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  if(!supported) return {supported:false, notes:["Speech-to-text isn't supported in this browser — only recording length was tracked. Try Chrome for word-level feedback."]};
+  if(!transcript) return {supported:true, wordCount:0, wpm:0, notes:["No speech was detected — try speaking louder or closer to the microphone."]};
+  const words = transcript.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const wpm = Math.round((wordCount/timerSec)*60);
+  const notes = [];
+  if(part.key==="p1"){
+    const origWords = item.text.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const saidWords = transcript.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const matched = origWords.filter(w=>saidWords.includes(w)).length;
+    const pct = Math.round((matched/origWords.length)*100);
+    if(pct>=80) notes.push(`Great repetition — about ${pct}% of the key words matched the original sentence.`);
+    else if(pct>=50) notes.push(`Partial match — around ${pct}% of the words matched. Listen closely and try to repeat the exact sentence.`);
+    else notes.push(`Low match (${pct}%) — try to repeat the exact sentence you heard, word for word.`);
+  } else {
+    if(wordCount<15) notes.push("Short answer — try to explain more and add extra details to fill the time.");
+    else if(wordCount<40) notes.push("Good length — you gave a reasonably developed answer.");
+    else notes.push("Great length — a thorough, well-developed answer.");
+  }
+  notes.push(`Estimated speaking rate: ~${wpm} words per minute.`);
+  return {supported:true, wordCount, wpm, transcript, notes};
+}
+function startRecordingPhase(part, item, totalQNum){
+  const status = document.getElementById('sStatus');
+  const cd = document.getElementById('sCountdown');
+  status.classList.add('rec'); status.innerHTML = '<span class="srecdot"></span>Recording your response...';
+  cd.style.display="block";
+  const timerSec = item.timerSec || part.timerSec;
+  let t = timerSec; cd.textContent = t;
+
+  speakState.transcriptBuffer=""; speakState.recognition=null;
+  const isEdge = /Edg\//.test(navigator.userAgent);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR && !isEdge){
+    try{
+      const recog = new SR();
+      recog.continuous=true; recog.interimResults=false; recog.lang="en-US";
+      recog.onresult = (e)=>{ for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) speakState.transcriptBuffer += " "+e.results[i][0].transcript; } };
+      recog.onerror=()=>{}; recog.start();
+      speakState.recognition = recog;
+    } catch(e){ speakState.recognition=null; }
+  }
+  speakState.chunks=[]; speakState.pendingUrl=null;
+  try{
+    speakState.recorder = new MediaRecorder(speakState.stream);
+    speakState.recorder.ondataavailable = e=>{ if(e.data.size>0) speakState.chunks.push(e.data); };
+    speakState.recorder.onstop = ()=>{
+      const blob = new Blob(speakState.chunks, {type: speakState.chunks[0]?.type || 'audio/webm'});
+      speakState.pendingUrl = URL.createObjectURL(blob);
+    };
+    speakState.recorder.start();
+  } catch(e){}
+  speakState.countdownId = setInterval(()=>{
+    t--; cd.textContent = Math.max(t,0);
+    if(t<=3) cd.classList.add('low');
+    if(t<=0){ clearInterval(speakState.countdownId); stopRecordingPhase(part, item, totalQNum, timerSec); }
+  }, 1000);
+}
+function stopRecordingPhase(part, item, totalQNum, timerSec){
+  if(speakState.recognition){ try{ speakState.recognition.stop(); }catch(e){} }
+  if(speakState.recorder && speakState.recorder.state==="recording") speakState.recorder.stop();
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec'); status.textContent="";
+  document.getElementById('sCountdown').style.display="none";
+  document.getElementById('sStopMsg').style.display="block";
+  setTimeout(()=>{
+    const feedback = buildFeedback(part, item, speakState.transcriptBuffer, timerSec);
+    speakState.recordings[speakState.partIndex].push({url:speakState.pendingUrl, num:totalQNum, feedback});
+    advanceSpeakItem();
+  }, 1800);
+}
+function advanceSpeakItem(){
+  const part = currentSpeakPart();
+  if(speakState.itemIndex < part.items.length-1){ speakState.itemIndex++; runSpeakItem(); }
+  else if(speakState.partIndex===0){ speakState.partIndex=1; speakState.itemIndex=0; runSpeakItem(); }
+  else finishSpeaking();
+}
+function finishSpeaking(){
+  if(speakState.stream) speakState.stream.getTracks().forEach(t=>t.stop());
+  const all = [...speakState.recordings[0], ...speakState.recordings[1]].sort((a,b)=>a.num-b.num);
+  const summaryBox = document.getElementById('speakSummaryBox');
+  const wpmVals = all.map(r=>r.feedback && r.feedback.wpm).filter(v=>typeof v==="number" && v>0);
+  const avgWpm = wpmVals.length ? Math.round(wpmVals.reduce((a,b)=>a+b,0)/wpmVals.length) : null;
+  let summaryHTML = `<b>Quick summary:</b> ${all.length} of 11 responses recorded.`;
+  if(avgWpm) summaryHTML += ` Average speaking rate: ~${avgWpm} words per minute.`;
+  summaryHTML += ` <br><span style="font-size:11.5px;">Feedback below is rule-based (word count, speech rate, and word-match for repeat tasks) — not a certified score.</span>`;
+  summaryBox.innerHTML = summaryHTML;
+  const list = document.getElementById('replayList');
+  list.innerHTML = "";
+  if(all.length){
+    all.forEach(rec=>{
+      const row = document.createElement('div'); row.className="replay-item";
+      const fb = rec.feedback||{};
+      const notesHTML = (fb.notes||[]).map(n=>`<div>• ${n}</div>`).join("");
+      row.innerHTML = `<div class="rtop"><span><b>Question ${rec.num}</b></span><audio controls src="${rec.url||''}"></audio></div><div class="rfeedback">${notesHTML||"No feedback available."}</div>`;
+      list.appendChild(row);
+    });
+  } else list.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);">No recordings were captured.</div>';
+  showScreen('speakDone');
+}
+document.getElementById('speakingDoneBtn').addEventListener('click', ()=> finishTest());
+function goToSpeaking(){ window.speechSynthesis && window.speechSynthesis.cancel(); showScreen('speakIntro'); }
+
+function finishTest(){
+  const r = scoreReading();
+  const l = scoreListening();
+  const w1 = writeState.task1Answers.filter(a=>a.correct).length;
+  const total = r+l+w1;
+  document.getElementById('endTitle').textContent = "Test Complete";
+  document.getElementById('scoreBig').textContent = total+"/"+(50+34+10);
+  document.getElementById('rscore').textContent = r+"/50";
+  document.getElementById('lscore').textContent = l+"/34";
+  document.getElementById('w1score').textContent = w1+"/10";
+  const t2w = writeState.task2Text.trim()? writeState.task2Text.trim().split(/\s+/).length:0;
+  const t3w = writeState.task3Text.trim()? writeState.task3Text.trim().split(/\s+/).length:0;
+  document.getElementById('writingFreeSummary').textContent = `Email: ${t2w} words · Academic discussion: ${t3w} words (written responses saved, not auto-graded).`;
+  showScreen('endscreen');
+}
+function buildDetailedReview(){
+  const inner = document.getElementById('reviewInner');
+  let html = "";
+  html += `<div class="reviewSection"><h2>📖 Reading</h2>`;
+  READING_SLOTS.forEach(slot=>{
+    if(slot.kind==="fill"){
+      const item = slot.item;
+      const given = getGivenWordText(item);
+      const correct = isWordCorrect(item);
+      html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">Q${item.number}.</span>Complete the word<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+        <div class="line"><b class="lbl">Your answer:</b>${given}</div>${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${item.answer}</div>`}</div>`;
+    } else {
+      const q = slot.question;
+      const given = rState.answers[q.number];
+      const correct = given===q.correct;
+      const letters=["A","B","C","D"];
+      html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">Q${q.number}.</span>${q.q}<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+        <div class="line"><b class="lbl">Your answer:</b>${given!==undefined?letters[given]+") "+q.options[given]:"No answer"}</div>
+        ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}</div>`;
+    }
+  });
+  html += `</div><div class="reviewSection"><h2>🎧 Listening</h2>`;
+  LISTEN_SLOTS.forEach(slot=>{
+    const q = slot.question;
+    const given = listenState.answers[q.number];
+    const correct = given===q.correct;
+    const letters=["A","B","C","D"];
+    const label = q.kind==="sqr" ? "Choose the best response" : q.prompt;
+    html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">Q${q.number}.</span>${label}<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+      <div class="line"><b class="lbl">Your answer:</b>${given!==undefined?letters[given]+") "+q.options[given]:"No answer"}</div>
+      ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}</div>`;
+  });
+  html += `</div><div class="reviewSection"><h2>✍️ Writing — Build a Sentence</h2>`;
+  writeState.task1Answers.forEach((a,i)=>{
+    html += `<div class="ansRow ${a.correct?'correct':'wrong'}"><span class="qn">Q${i+1}.</span><span class="tag">${a.correct?'✓ Correct':'✗ Incorrect'}</span>
+      <div class="line"><b class="lbl">Your sentence:</b>${a.given||"(no answer)"}</div>${a.correct?'':`<div class="line"><b class="lbl">Correct sentence:</b>${a.key}</div>`}</div>`;
+  });
+  html += `</div>`;
+  inner.innerHTML = html;
+}
+document.getElementById('openDetailedReviewBtn').addEventListener('click', ()=>{ buildDetailedReview(); showScreen('detailedReview'); });
+document.getElementById('closeDetailedReviewBtn').addEventListener('click', ()=> showScreen('endscreen'));
+</script>
+</body>
+</html>
