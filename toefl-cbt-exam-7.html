@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktif İngilizce | TOEFL CBT Exam - 7</title>
+<style>
+  :root{
+    --ink:#16233c; --ink-soft:#4a5876; --line:#dbe2ef; --paper:#ffffff; --canvas:#f4f6fb;
+    --brand:#12448c; --brand-dark:#0c3269; --brand-soft:#e8f0fe;
+    --answered:#1f8a5f; --answered-soft:#e4f6ee; --flag:#c8790a; --danger:#c0392b;
+    --gauge:#7c7ff0; --gauge-bg:#e3e3f7;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: 'Segoe UI', Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0; font-family:var(--sans); background:var(--canvas); color:var(--ink); display:flex; flex-direction:column; min-height:100vh;}
+  #topbar{background:var(--brand-dark); color:#fff; display:flex; align-items:center; justify-content:space-between; padding:10px 22px; flex-wrap:wrap; gap:10px; box-shadow:0 2px 6px rgba(0,0,0,.15); position:sticky; top:0; z-index:50;}
+  #brand{display:flex; align-items:center; gap:10px; font-weight:700;}
+  #brand .logo{width:30px;height:30px;border-radius:8px;background:#fff;color:var(--brand-dark);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;}
+  #brand small{display:block; font-weight:400; opacity:.8; font-size:11px;}
+  #statusbar{display:flex; align-items:center; gap:18px; font-size:14px;}
+  #timerbox{background:rgba(255,255,255,.12); padding:6px 14px; border-radius:8px; font-variant-numeric:tabular-nums; font-weight:700; font-size:16px; min-width:88px; text-align:center;}
+  #timerbox.low{background:#7a1f1f; animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  #moduleTag{background:rgba(255,255,255,.15); padding:5px 12px; border-radius:20px; font-weight:600; font-size:13px;}
+  #app{flex:1; display:flex; flex-direction:column;}
+  .screen{flex:1; display:none; flex-direction:column;}
+  .screen.active{display:flex;}
+  #intro,#listenIntro,#writeIntro,#speakIntro,#speakDone,#writeDone{align-items:center; justify-content:center; padding:30px;}
+  .intro-card{background:var(--paper); max-width:680px; width:100%; padding:40px 44px; border-radius:16px; box-shadow:0 10px 40px rgba(20,40,80,.10); border:1px solid var(--line); text-align:center;}
+  .intro-card h1{margin:0 0 6px; font-size:26px; color:var(--brand-dark);}
+  .intro-card .sub{color:var(--ink-soft); margin-bottom:22px; font-size:14px;}
+  .directions-box{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:18px 20px; margin-bottom:22px; font-size:14.5px; line-height:1.65; text-align:left;}
+  .directions-box strong.warn{color:var(--danger);}
+  button.primaryBtn{background:var(--brand); color:#fff; border:none; padding:13px 28px; font-size:16px; border-radius:8px; cursor:pointer; font-weight:700;}
+  button.primaryBtn:hover{background:var(--brand-dark);}
+  button.skipBtn{background:transparent; color:var(--ink-soft); border:none; font-size:13.5px; cursor:pointer; text-decoration:underline; padding:6px 10px; margin-top:14px;}
+  button.skipBtn:hover{color:var(--brand);}
+  #qWrap,#lWrap,#sWrap,#wWrap{flex:1; flex-direction:column; overflow:hidden;}
+  #qHeader,#lHeader,#sHeader,#wHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;}
+  #qHeader h2,#lHeader h2,#sHeader h2,#wHeader h2{margin:0; font-size:15px; color:var(--brand-dark); font-weight:700;}
+  .qnum{font-size:13px; color:var(--ink-soft);}
+  #split{flex:1; display:flex; overflow:hidden;}
+  #passagePane{flex:1; max-width:50%; overflow-y:auto; padding:28px 30px; background:var(--paper); border-right:1px solid var(--line); font-family:var(--serif); font-size:16px; line-height:1.75;}
+  #passagePane h3{font-family:var(--sans); color:var(--brand-dark); font-size:14px; text-transform:uppercase; letter-spacing:.6px; margin-top:0;}
+  #passagePane p{margin:0 0 14px;}
+  mark.vocabhl{background:#fff59d; padding:0 3px; border-radius:3px; font-weight:700; color:inherit;}
+  #questionPane{flex:1; overflow-y:auto; padding:30px 34px; background:var(--canvas);}
+  #questionPane.full{max-width:900px; margin:0 auto; width:100%;}
+  .qtext{font-size:16.5px; font-weight:600; margin-bottom:18px; line-height:1.5;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{display:flex; align-items:flex-start; gap:12px; background:var(--paper); border:1.5px solid var(--line); border-radius:10px; padding:13px 16px; cursor:pointer; transition:.15s; font-size:15px; line-height:1.5;}
+  .opt:hover{border-color:var(--brand); background:#f8fbff;}
+  .opt.selected{border-color:var(--brand); background:var(--brand-soft); box-shadow:0 0 0 1px var(--brand) inset;}
+  .opt .letter{flex:0 0 auto; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+  .opt.selected .letter{background:var(--brand); border-color:var(--brand); color:#fff;}
+  .fillpassage{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:26px 30px; font-family:var(--serif); font-size:18px; line-height:2.4;}
+  .letterbox{display:inline-flex; align-items:center; justify-content:center; width:22px; height:28px; border-bottom:2px solid var(--ink-soft); font-family:var(--sans); font-size:15px; font-weight:700; text-align:center; margin:0 1px; color:var(--ink);}
+  .blankinput{width:22px; height:28px; text-align:center; border:none; border-bottom:2px solid var(--brand); font-family:var(--sans); font-size:15px; font-weight:700; background:transparent; color:var(--brand-dark); text-transform:lowercase; margin:0 1px; padding:0;}
+  .blankinput:focus{outline:none; background:var(--brand-soft); border-radius:3px 3px 0 0;}
+  #navbar,#lNavbar{background:var(--paper); border-top:1px solid var(--line); padding:14px 26px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .navbtn{padding:11px 22px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); font-size:14.5px; font-weight:700; cursor:pointer; color:var(--ink); transition:.15s;}
+  .navbtn:hover:not(:disabled){border-color:var(--brand); color:var(--brand);}
+  .navbtn:disabled{opacity:.35; cursor:not-allowed;}
+  .navbtn.primary{background:var(--brand); color:#fff; border-color:var(--brand);}
+  .navbtn.primary:hover{background:var(--brand-dark);}
+  .navbtn.review{background:var(--brand-soft); border-color:#c8dcfb; color:var(--brand-dark);}
+  #review{padding:30px; overflow-y:auto;}
+  .review-inner{max-width:820px; margin:0 auto; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:30px 34px;}
+  .review-inner h2{margin-top:0; color:var(--brand-dark);}
+  .review-legend{display:flex; gap:18px; font-size:13px; margin-bottom:20px; color:var(--ink-soft);}
+  .legend-dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px;}
+  .grid20{display:grid; grid-template-columns:repeat(8,1fr); gap:8px; margin-bottom:26px;}
+  .revcell{border:1.5px solid var(--line); border-radius:8px; padding:10px 4px; text-align:center; cursor:pointer; font-weight:700; font-size:13px; background:var(--paper); transition:.15s;}
+  .revcell:hover{border-color:var(--brand);}
+  .revcell.answered{background:var(--answered-soft); border-color:var(--answered); color:var(--answered);}
+  .revcell.unanswered{background:#fdf1e8; border-color:var(--flag); color:var(--flag);}
+  .revcell small{display:block; font-weight:400; font-size:9px; margin-top:2px;}
+  #endscreen{align-items:center; justify-content:center; padding:24px;}
+  .end-card{background:var(--paper); max-width:520px; width:100%; border-radius:16px; padding:34px 36px; box-shadow:0 10px 40px rgba(20,40,80,.1); border:1px solid var(--line);}
+  .end-card h1{color:var(--brand-dark); margin:0 0 4px; font-size:20px;}
+  .end-sub{color:var(--ink-soft); font-size:13px; margin-bottom:18px;}
+  .gauge-wrap{text-align:center; margin-bottom:10px;}
+  .gauge-label{font-size:13px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;}
+  .gauge-score{font-size:34px; font-weight:800; color:var(--ink);}
+  .gauge-sub1{font-size:15px; color:var(--ink-soft); margin-top:2px;}
+  .gauge-sub2{font-size:14px; color:var(--ink-soft); margin-top:6px; font-weight:600;}
+  .score-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0 8px;}
+  .score-card{background:var(--brand-soft); border-radius:12px; padding:16px; text-align:center;}
+  .score-card .sc-icon{font-size:20px; margin-bottom:4px;}
+  .score-card .sc-label{font-size:13px; color:var(--ink-soft); font-weight:700; margin-bottom:6px;}
+  .score-card .sc-val{font-size:22px; font-weight:800; color:var(--brand-dark);}
+  .score-card .sc-raw{font-size:11.5px; color:var(--ink-soft); margin-top:4px;}
+  .score-sub{color:var(--ink-soft); margin:10px 0; font-size:13px; text-align:center;}
+  #social{background:var(--brand-dark); color:#fff; padding:14px 26px; display:flex; align-items:center; justify-content:center; gap:22px; font-size:13.5px; flex-wrap:wrap;}
+  #social a{color:#fff; text-decoration:none; display:flex; align-items:center; gap:7px; opacity:.92; font-weight:600;}
+  #social a:hover{opacity:1; text-decoration:underline;}
+  /* SPEAKING */
+  #sBody{flex:1; overflow-y:auto; padding:26px 24px; display:flex; justify-content:center;}
+  .scard{max-width:640px; width:100%; text-align:center;}
+  .sinstruct{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:14px 18px; font-size:13.5px; line-height:1.6; margin-bottom:20px; text-align:left; color:var(--ink);}
+  .sstatus{font-size:15px; font-weight:700; color:var(--brand-dark); min-height:24px; margin-bottom:14px;}
+  .sstatus.rec{color:var(--danger);}
+  .scountdown{font-size:64px; font-weight:800; color:var(--brand); font-variant-numeric:tabular-nums; margin:10px 0 18px; transition:.2s;}
+  .scountdown.low{color:var(--danger); transform:scale(1.08);}
+  .srecdot{display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--danger); margin-right:8px; animation:recpulse 1s infinite;}
+  @keyframes recpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .sstopmsg{background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:16px 20px; font-size:14px; font-weight:600; line-height:1.6; margin-top:6px;}
+  .replay-list{display:flex; flex-direction:column; gap:10px; margin:18px 0; text-align:left;}
+  .replay-item{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; font-size:13.5px;}
+  .replay-item .rtop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .replay-item audio{height:32px; max-width:220px;}
+  .rfeedback{background:var(--brand-soft); border-radius:8px; padding:8px 12px; font-size:12.5px; color:var(--brand-dark); line-height:1.5;}
+  .summary-box{background:var(--canvas); border-radius:10px; padding:14px 18px; margin-bottom:14px; font-size:13px; color:var(--ink-soft); text-align:left;}
+  /* LISTENING */
+  .lcountdown{font-size:40px; font-weight:800; color:var(--brand); font-variant-numeric:tabular-nums; margin-top:12px; display:none;}
+  .lcountdown.low{color:var(--danger);}
+  .lcountdown-label{font-size:12px; color:var(--ink-soft); margin-top:4px; display:none;}
+  /* WRITING */
+  #wBody{flex:1; overflow-y:auto; padding:28px 24px; display:flex; justify-content:center;}
+  .wcard{max-width:720px; width:100%;}
+  .wtimerbig{font-size:46px; font-weight:800; color:var(--brand); text-align:center; font-variant-numeric:tabular-nums; margin-bottom:8px;}
+  .wtimerbig.low{color:var(--danger);}
+  .wprompt{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:16px 20px; font-size:14px; line-height:1.65; margin-bottom:18px;}
+  .wpost{background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:14px; line-height:1.6;}
+  .wpost b{color:var(--brand-dark);}
+  .wbank{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:22px; min-height:44px; padding:14px; background:var(--paper); border:1px dashed var(--line); border-radius:10px;}
+  .wanswer{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; min-height:56px; padding:14px; background:var(--canvas); border:2px solid var(--brand); border-radius:10px; margin-bottom:22px;}
+  .wchip{background:var(--brand); color:#fff; padding:9px 16px; border-radius:8px; font-size:14.5px; font-weight:600; cursor:pointer; user-select:none; transition:.12s;}
+  .wchip:hover{background:var(--brand-dark);}
+  .wchip.bank{background:var(--paper); color:var(--ink); border:1.5px solid var(--line);}
+  .wchip.bank:hover{border-color:var(--brand); color:var(--brand);}
+  .wstopmsg{background:#fdf1e8; border:1px solid var(--flag); color:#8a4a06; border-radius:10px; padding:14px 18px; font-size:14px; font-weight:600; text-align:center; margin-bottom:16px;}
+  #wSubmitBtn{background:var(--brand); color:#fff; border:none; padding:11px 24px; border-radius:8px; font-weight:700; font-size:14.5px; cursor:pointer; display:block; margin:0 auto;}
+  #wSubmitBtn:hover{background:var(--brand-dark);}
+  .wtextarea{width:100%; min-height:260px; border:1.5px solid var(--line); border-radius:10px; padding:16px 18px; font-family:var(--sans); font-size:15px; line-height:1.6; resize:vertical;}
+  .wtextarea:focus{outline:none; border-color:var(--brand);}
+  .wwordcount{text-align:right; font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+  .wscorebox{background:var(--brand-soft); border:1px solid #c8dcfb; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13.5px; line-height:1.6; text-align:left;}
+  .wscorebox b.wsc-title{color:var(--brand-dark); font-size:15px; display:block; margin-bottom:6px;}
+  /* DETAILED REVIEW */
+  #detailedReview{flex:1; flex-direction:column; overflow:hidden;}
+  #reviewHeader{padding:14px 26px; background:var(--paper); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
+  #reviewContent{flex:1; overflow-y:auto; padding:24px; display:flex; justify-content:center;}
+  .reviewInner{max-width:820px; width:100%;}
+  .reviewSection{margin-bottom:30px;}
+  .reviewSection h2{color:var(--brand-dark); font-size:17px; border-bottom:2px solid var(--brand-soft); padding-bottom:8px; margin-bottom:14px;}
+  .ansRow{border-radius:10px; padding:12px 16px; margin-bottom:8px; font-size:13.5px; line-height:1.6; border:1.5px solid var(--line);}
+  .ansRow.correct{background:var(--answered-soft); border-color:var(--answered);}
+  .ansRow.wrong{background:#fdecec; border-color:var(--danger);}
+  .ansRow .qn{font-weight:700; margin-right:6px;}
+  .ansRow .tag{font-weight:800; float:right;}
+  .ansRow.correct .tag{color:var(--answered);}
+  .ansRow.wrong .tag{color:var(--danger);}
+  .ansRow .line{margin-top:4px;}
+  .ansRow b.lbl{color:var(--ink-soft); font-weight:700; margin-right:4px;}
+  @media(max-width:820px){
+    #split{flex-direction:column; overflow-y:auto;}
+    #passagePane{max-width:100%; border-right:none; border-bottom:1px solid var(--line); max-height:38vh;}
+    #questionPane{overflow:visible;}
+    .grid20{grid-template-columns:repeat(5,1fr);}
+    .score-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="brand">
+    <div class="logo">Aİ</div>
+    <div>Aktif İngilizce <small>TOEFL CBT Exam - 7</small></div>
+  </div>
+  <div id="statusbar">
+    <span id="moduleTag">Directions</span>
+    <span id="timerbox">Untimed</span>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- LISTENING DIRECTIONS -->
+  <div class="screen active" id="listenIntro">
+    <div class="intro-card">
+      <h1>Listening Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this test, you will answer 34 questions to demonstrate how well you understand spoken English. There are three types of tasks.<br><br>
+        You <strong class="warn">WILL NOT</strong> be able to return to previous questions.
+      </div>
+      <button class="primaryBtn" id="startListenBtn">Start Listening Section</button><br>
+      <button class="skipBtn" id="skipListenBtn">Skip this section →</button>
+    </div>
+  </div>
+
+  <!-- LISTENING QUESTION SCREEN -->
+  <div class="screen" id="lWrap">
+    <div id="lHeader">
+      <h2 id="lGroupTitle">—</h2>
+      <span class="qnum" id="lNumLabel">Question 1</span>
+    </div>
+    <div id="lBody" style="flex:1;overflow-y:auto;padding:30px 24px;display:flex;justify-content:center;">
+      <div class="lcard" style="max-width:640px;width:100%;">
+        <div class="audiocard" style="background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:26px 28px;text-align:center;margin-bottom:26px;">
+          <div class="hint" id="lAudioHint" style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Press play and listen carefully. The transcript will not be shown.</div>
+          <button id="playBtn" style="background:var(--brand);color:#fff;border:none;border-radius:50px;padding:14px 30px;font-size:15.5px;font-weight:700;cursor:pointer;">▶ Play Audio</button>
+          <div id="playStatus" style="margin-top:12px;font-size:13px;color:var(--brand-dark);font-weight:600;min-height:16px;"></div>
+          <div class="lcountdown" id="lCountdown">20</div>
+          <div class="lcountdown-label" id="lCountdownLabel">Time to answer</div>
+        </div>
+        <div id="lQuestionArea"></div>
+      </div>
+    </div>
+    <div id="lNavbar">
+      <div style="margin-right:auto;font-size:12px;color:var(--danger);">⚠ You cannot go back once you click Next.</div>
+      <button class="navbtn primary" id="lNextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- READING DIRECTIONS -->
+  <div class="screen" id="intro">
+    <div class="intro-card">
+      <h1>Reading Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this test, you will answer 40 reading questions to demonstrate how well you understand academic and non-academic texts in English. There are three types of tasks.<br><br>
+        You will be able to use <b>Next</b> and <b>Back</b> to move freely between questions within a module, and use <b>Review</b> to see which questions you have answered.
+      </div>
+      <button class="primaryBtn" id="startBtn">Start Reading Section — 35:00</button><br>
+      <button class="skipBtn" id="skipReadingBtn">Skip this section →</button>
+    </div>
+  </div>
+
+  <!-- READING QUESTION SCREEN -->
+  <div class="screen" id="qWrap">
+    <div id="qHeader">
+      <h2 id="qGroupTitle">—</h2>
+      <span class="qnum" id="qNumLabel">Question 1 of 20</span>
+    </div>
+    <div id="split">
+      <div id="passagePane" style="display:none;"></div>
+      <div id="questionPane"></div>
+    </div>
+    <div id="navbar">
+      <button class="navbtn" id="backBtn">← Back</button>
+      <button class="navbtn review" id="reviewBtn">📋 Review</button>
+      <button class="navbtn primary" id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <!-- REVIEW SCREEN -->
+  <div class="screen" id="review">
+    <div class="review-inner">
+      <h2>Review — Current Module</h2>
+      <div class="review-legend">
+        <span><span class="legend-dot" style="background:var(--answered)"></span>Answered</span>
+        <span><span class="legend-dot" style="background:var(--flag)"></span>Unanswered</span>
+      </div>
+      <div class="grid20" id="reviewGrid"></div>
+      <button class="navbtn primary" id="closeReviewBtn">Back to Question</button>
+    </div>
+  </div>
+
+  <!-- WRITING DIRECTIONS -->
+  <div class="screen" id="writeIntro">
+    <div class="intro-card">
+      <h1>Writing Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        <b>Directions</b><br><br>
+        In this section, you will complete three writing tasks: unscrambling words to build correct sentences, writing a professional email, and contributing to an academic discussion post. Manage your time carefully — each task has its own timer.
+      </div>
+      <button class="primaryBtn" id="writeStartBtn">Start Writing Section</button><br>
+      <button class="skipBtn" id="skipWriteBtn">Skip this section →</button>
+    </div>
+  </div>
+
+  <!-- WRITING TASK SCREEN -->
+  <div class="screen" id="wWrap">
+    <div id="wHeader">
+      <h2 id="wTitle">—</h2>
+      <span class="qnum" id="wNumLabel">Question 1</span>
+    </div>
+    <div id="wBody">
+      <div class="wcard">
+        <div class="wtimerbig" id="wTimer">10:00</div>
+        <div class="wstopmsg" id="wStopMsg" style="display:none;"></div>
+        <div id="wInstructText" class="wprompt" style="display:none;"></div>
+        <div id="wPromptArea"></div>
+        <div id="wTaskArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING DONE -->
+  <div class="screen" id="writeDone">
+    <div class="intro-card">
+      <h1>The end of writing test.</h1>
+      <div class="sub" id="writeSummary"></div>
+      <button class="primaryBtn" id="writeDoneBtn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SPEAKING DIRECTIONS -->
+  <div class="screen" id="speakIntro">
+    <div class="intro-card">
+      <h1>Speaking Section</h1>
+      <div class="sub">Computer-based practice test · Aktif İngilizce</div>
+      <div class="directions-box">
+        In the speaking section, you will answer 11 questions to demonstrate how well you can speak English. There are two types of tasks.
+      </div>
+      <div class="directions-box" id="micPermissionNote">
+        🎙️ This section needs microphone access to record your answers. Click below to allow it and begin.
+      </div>
+      <button class="primaryBtn" id="speakStartBtn">Allow Microphone &amp; Start Speaking Section</button><br>
+      <button class="skipBtn" id="skipSpeakBtn">Skip this section →</button>
+    </div>
+  </div>
+
+  <!-- SPEAKING QUESTION SCREEN -->
+  <div class="screen" id="sWrap">
+    <div id="sHeader">
+      <h2 id="sPartTitle">—</h2>
+      <span class="qnum" id="sNumLabel">Question 1</span>
+    </div>
+    <div id="sBody">
+      <div class="scard">
+        <div class="sinstruct" id="sInstructText"></div>
+        <div class="sstatus" id="sStatus">Get ready...</div>
+        <div class="scountdown" id="sCountdown" style="display:none;">8</div>
+        <div class="sstopmsg" id="sStopMsg" style="display:none;">
+          Stop Speaking. Response time has ended. Please wait. We are currently saving your response.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEAKING DONE -->
+  <div class="screen" id="speakDone">
+    <div class="intro-card">
+      <h1>Speaking test is over.</h1>
+      <div class="sub">Thanks for completing all 11 speaking questions.</div>
+      <div class="summary-box" id="speakSummaryBox"></div>
+      <div class="replay-list" id="replayList"></div>
+      <button class="primaryBtn" id="speakingDoneBtn">Finish Exam →</button>
+    </div>
+  </div>
+
+  <!-- DETAILED REVIEW -->
+  <div class="screen" id="detailedReview">
+    <div id="reviewHeader">
+      <h2 style="margin:0;font-size:15px;color:var(--brand-dark);font-weight:700;">Detailed Answer Review</h2>
+      <button class="navbtn" id="closeDetailedReviewBtn">← Back to Results</button>
+    </div>
+    <div id="reviewContent">
+      <div class="reviewInner" id="reviewInner"></div>
+    </div>
+  </div>
+
+  <!-- END SCREEN (real-TOEFL-style score report) -->
+  <div class="screen" id="endscreen">
+    <div class="end-card">
+      <h1>Test Complete</h1>
+      <div class="end-sub">Aktif İngilizce · TOEFL CBT Practice Score Report</div>
+
+      <div class="gauge-wrap">
+        <div class="gauge-label">Overall Score</div>
+        <svg id="gaugeSvg" viewBox="0 0 220 130" width="220" height="130">
+          <path id="gaugeBg" d="M20,120 A90,90 0 0 1 200,120" fill="none" stroke="var(--gauge-bg)" stroke-width="26" stroke-linecap="round"/>
+          <path id="gaugeFill" d="M20,120 A90,90 0 0 1 200,120" fill="none" stroke="var(--gauge)" stroke-width="26" stroke-linecap="round"/>
+        </svg>
+        <div class="gauge-score" id="gaugeScoreText">0.0 of 6</div>
+        <div class="gauge-sub1" id="gaugeTotalText">0 of 120</div>
+        <div class="gauge-sub2" id="gaugeCefrText">CEFR: —</div>
+      </div>
+
+      <div class="score-grid">
+        <div class="score-card"><div class="sc-icon">📖</div><div class="sc-label">Reading</div><div class="sc-val" id="rscore6">0.0 of 6</div><div class="sc-raw" id="rscoreRaw"></div></div>
+        <div class="score-card"><div class="sc-icon">🎧</div><div class="sc-label">Listening</div><div class="sc-val" id="lscore6">0.0 of 6</div><div class="sc-raw" id="lscoreRaw"></div></div>
+        <div class="score-card"><div class="sc-icon">✏️</div><div class="sc-label">Writing</div><div class="sc-val" id="wscore6">0.0 of 6</div><div class="sc-raw" id="wscoreRaw"></div></div>
+        <div class="score-card"><div class="sc-icon">🎤</div><div class="sc-label">Speaking</div><div class="sc-val" id="sscore6">0.0 of 6</div><div class="sc-raw" id="sscoreRaw"></div></div>
+      </div>
+
+      <div class="score-sub">Speaking &amp; Writing scores are AI/rule-based estimates, not certified ETS scores.</div>
+      <button class="primaryBtn" id="openDetailedReviewBtn" style="width:100%;margin-top:8px;">See Detailed Answers →</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="social">
+  <a href="https://youtube.com/@aktifingilizce?si=yr61jiAYpsrpKcKV" target="_blank" rel="noopener">▶ YouTube</a>
+  <a href="https://www.instagram.com/idealingilizce?igsh=N2t5NnU2NTc4a3R0" target="_blank" rel="noopener">📷 Instagram</a>
+  <a href="https://www.tiktok.com/@aktif.ingilizce" target="_blank" rel="noopener">🎵 TikTok @aktif.ingilizce</a>
+</div>
+
+<script>
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function fmtMMSS(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0'); }
+
+let cachedVoice = null;
+function pickVoice(){
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  if(!voices.length) return null;
+  return voices.find(v=>v.name==="Google UK English Female")
+      || voices.find(v=>v.lang==="en-GB")
+      || voices.find(v=>v.lang && v.lang.startsWith("en"))
+      || voices[0];
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = ()=>{ cachedVoice = pickVoice(); };
+  cachedVoice = pickVoice();
+}
+function speakOnce(text, rate, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  if(cachedVoice) utter.voice = cachedVoice;
+  utter.lang = "en-GB"; utter.rate = rate || 1;
+  utter.onend = onEnd; utter.onerror = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+function W(number, answer, pattern){ return {number, answer, pattern}; }
+function SQ(number, text, options, correct){ return {number, audio:[{speaker:null, text}], options, correct, kind:"sqr"}; }
+function L(number, prompt, options, correct){ return {number, prompt, options, correct, kind:"comp"}; }
+function sqrBlock(contextLabel, q){ return {context:contextLabel, audioLines:[{speaker:null, text:q.audio[0].text}], questions:[q]}; }
+function convBlock(contextLabel, lines, questions){ return {context:contextLabel, audioLines:lines, questions}; }
+
+const M1_SQR_CTX = "Theme: Hotel Check-In · Listen to each question, then choose the best response.";
+const listen1_sqr = [
+  SQ(1, "Welcome to the Grand Hotel. Do you have a reservation with us today?", ["Yes, it's under the name Smith.","The weather is very grand.","I ordered a coffee.","The restaurant is on the roof."], 0),
+  SQ(2, "May I see your passport and a credit card for the security deposit, please?", ["Here you go.","Security guards wear uniforms.","The airport is an hour away.","I don't like playing cards."], 0),
+  SQ(3, "Would you prefer a room with a view of the city or a view of the ocean?", ["The room is very dark.","I prefer to watch television.","The ocean view sounds wonderful, thank you.","The city is very old."], 2),
+  SQ(4, "Breakfast is served in the lobby from 6:30 AM to 10:00 AM every morning.", ["I will eat lunch later.","Great, I'll be down around 8:00 AM.","The morning is very quiet.","I don't know how to cook."], 1),
+  SQ(5, "Could I get a wake-up call at 5:00 AM tomorrow?", ["The alarm is loud.","You should sleep early.","Certainly, we will call your room at 5:00 AM sharp.","I'm sorry, my phone is broken."], 2),
+  SQ(6, "Do you need any help taking your luggage up to your room?", ["No thank you, my bags are very light.","The room is on the third floor.","I lost my ticket.","The elevator is broken."], 0),
+  SQ(7, "What time is checkout on my final day?", ["The store is closed.","You have a final exam.","I am checking the time.","Checkout is at 11:00 AM."], 3),
+  SQ(8, "If you need extra towels, just call the front desk from your room phone.", ["I want to swim in the pool.","Thank you, I will keep that in mind.","The desk is made of wood.","Towels are made of cotton."], 1)
+];
+
+const listen1_blocks = [
+  ...listen1_sqr.map(q=>sqrBlock(M1_SQR_CTX,q)),
+  convBlock("Listen to a conversation at a library front desk.",
+    [{speaker:"Man",text:"Hi, I'm returning this book, Modern Architecture, but I noticed it was due three days ago."},
+     {speaker:"Woman",text:"Let me scan that for you. Yes, it is late, so there is a fine of fifty cents per day. That brings the total fine to one dollar and fifty cents."},
+     {speaker:"Man",text:"Okay, no problem. I can pay that with cash right now."}],
+    [
+     L(9, "Where does this conversation most likely take place?", ["At a bank.","At a library front desk.","In a bookstore.","In an architecture office."], 1),
+     L(10, "How much does the man have to pay in total?", ["50 cents.","$3.00.","He doesn't have to pay.","$1.50."], 3)
+    ]),
+  convBlock("Listen to a conversation with tech support.",
+    [{speaker:"Woman",text:"Tech support, this is Lisa. How can I help you today?"},
+     {speaker:"Man",text:"Hi Lisa, I've been trying to log into the company portal all morning, but it keeps saying my password has expired."},
+     {speaker:"Woman",text:"I can fix that for you. I'm sending a temporary reset link to your employee email right now. Just click it and create a new password."}],
+    [
+     L(11, "What is the man's problem?", ["He cannot log in because his password expired.","He cannot find the tech support number.","He forgot his email address.","His computer screen is broken."], 0),
+     L(12, "How is the woman solving the issue?", ["By sending a temporary reset link to his email.","By telling him to buy a new computer.","By coming to his office to fix the computer.","By giving him her password."], 0)
+    ]),
+  convBlock("Listen to an airport gate announcement.",
+    [{speaker:"Announcer",text:"Attention passengers flying on Delta Airlines flight 402 to Chicago. There has been a gate change. This flight will now be departing from Gate B12, not Gate A4. Please make your way to Gate B12 at this time. We will begin the boarding process in approximately twenty minutes, starting with first-class passengers and those needing special assistance."}],
+    [
+     L(13, "What important information is being announced?", ["The airport is closing in twenty minutes.","The airline is offering free food.","The flight's departure gate has changed from A4 to B12.","The flight to Chicago is canceled."], 2),
+     L(14, "Who will be asked to board the plane first?", ["Passengers traveling with pets.","Passengers with window seats.","First-class passengers and those needing assistance.","Passengers sitting in the back of the plane."], 2)
+    ]),
+  convBlock("Listen to a short excerpt from a botany class.",
+    [{speaker:"Professor",text:"When we think of plants, we usually think of passive organisms that get all their energy from the sun and soil. But the Venus flytrap is an incredible exception. Native only to a small region in North and South Carolina, this carnivorous plant lives in soil that is very poor in nutrients, specifically nitrogen. To survive, it has evolved leaves that act like a jaw. When an insect lands on the leaf and touches the tiny sensory hairs on the inside twice within twenty seconds, the trap snaps shut in less than a second! The plant then secretes digestive enzymes to break down the insect and absorb the nutrients it couldn't get from the soil."}],
+    [
+     L(15, "What is the main subject of the lecture?", ["The life cycle of common insects.","How to grow vegetables in poor soil.","The unique characteristics of the Venus flytrap.","Weather patterns in North Carolina."], 2),
+     L(16, "Why did the Venus flytrap evolve to eat insects?", ["Because it is angry at the insects.","Because the soil it lives in lacks essential nutrients like nitrogen.","Because insects are naturally attracted to its leaves.","Because the sun does not shine in its habitat."], 1),
+     L(17, "What triggers the leaf trap to snap shut?", ["The wind blowing against the leaf.","The sun setting in the evening.","Rain falling on the plant.","An insect touching the sensory hairs twice within twenty seconds."], 3),
+     L(18, "What happens after the trap closes around an insect?", ["The plant turns brown and dies.","The plant secretes enzymes to digest the insect.","The plant releases the insect the next day.","The plant moves to a new location."], 1)
+    ])
+];
+
+const M2_SQR_CTX = "Theme: Doctor's Clinic · Listen to each question, then choose the best response.";
+const listen2_sqr = [
+  SQ(1, "What seems to be the problem today?", ["The problem is very difficult to solve.","I've had a terrible sore throat and a fever since yesterday.","I like watching medical shows on TV.","The weather is very cold outside."], 1),
+  SQ(2, "Have you taken any medication for your headache yet?", ["My head is very heavy.","The medicine is in the cabinet.","Yes, I took some ibuprofen a few hours ago.","I bought a new hat."], 2),
+  SQ(3, "The doctor can see you at 2:30 PM, does that work for you?", ["The doctor is very tall.","I am seeing a movie at 2:30.","That time is perfect, thank you.","The clock is broken."], 2),
+  SQ(4, "Are you currently allergic to any antibiotics?", ["Allergies are annoying in the spring.","No, I don't have any drug allergies that I know of.","Antibiotics fight bacteria.","I like eating peanuts."], 1),
+  SQ(5, "Please step on the scale so I can take your weight.", ["The stepping stones are wet.","The scale of the map is 1 to 100.","I am waiting for the bus.","Okay, I will take off my shoes first."], 3),
+  SQ(6, "The doctor wrote you a prescription; you can pick it up at any local pharmacy.", ["The pharmacy sells shampoo.","I want to write a letter.","The doctor has nice handwriting.","Thank you, I'll go to the one near my house."], 3),
+  SQ(7, "You should drink plenty of fluids and get a lot of rest for the next three days.", ["Three days is a long weekend.","Water is a fluid.","I am going to a party tonight.","I will make sure to sleep and drink water."], 3),
+  SQ(8, "Do you need a medical note for your employer to excuse your absence?", ["I don't like taking notes in class.","The note is written on blue paper.","My employer is a nice person.","Yes, please, my boss requires a doctor's note."], 3)
+];
+
+const listen2_blocks = [
+  ...listen2_sqr.map(q=>sqrBlock(M2_SQR_CTX,q)),
+  convBlock("Listen to a conversation between two coworkers.",
+    [{speaker:"Man",text:"Hey Claire, about our project meeting on Tuesday afternoon... I double-booked myself. Can we reschedule?"},
+     {speaker:"Woman",text:"No problem. I'm free on Thursday morning before 11 AM if that works for you?"},
+     {speaker:"Man",text:"Thursday at 10 AM works perfectly. I'll update the calendar."}],
+    [
+     L(9, "Why does the man want to reschedule the meeting?", ["He quit his job.","He double-booked his schedule on Tuesday.","He is sick.","He doesn't like Claire."], 1),
+     L(10, "When will they have the new meeting?", ["Tuesday morning.","Friday afternoon.","Thursday at noon.","Thursday at 10 AM."], 3)
+    ]),
+  convBlock("Listen to a store closing announcement.",
+    [{speaker:"Announcer",text:"Attention shoppers, the time is now 9:45 PM and the store will be closing in exactly fifteen minutes. Please make your final selections and proceed to the checkout registers at the front of the store. We will reopen tomorrow morning at 7:00 AM. Thank you for shopping with Fresh Foods Market, and have a wonderful evening."}],
+    [
+     L(11, "What time does the store close tonight?", ["7:00 AM","9:30 PM","10:00 PM","9:45 PM"], 2),
+     L(12, "What are shoppers asked to do?", ["Leave their items on the floor.","Wait until 7:00 AM.","Finish shopping and go to the checkout registers.","Go to the back of the store."], 2)
+    ]),
+  convBlock("Listen to a short excerpt from an art history class.",
+    [{speaker:"Professor",text:"Moving into the late 19th century, we see a radical shift in the art world with the birth of Impressionism. Before this, painters spent weeks in studios striving for perfect realism and smooth brushstrokes. But painters like Claude Monet wanted to capture something different: they wanted to capture the immediate, fleeting effect of light on a subject. Because light changes so quickly, they had to paint fast. This resulted in the visible, choppy brushstrokes that define the Impressionist style. They also took their canvases outside, a practice called en plein air, to paint landscapes exactly as they saw them at that exact moment in time."}],
+    [
+     L(13, "What is the main subject of the lecture?", ["The life of a museum curator.","The birth and characteristics of the Impressionist art movement.","The architectural style of the 19th century.","How to mix oil paints."], 1),
+     L(14, "What were painters trying to capture during the Impressionist movement?", ["Perfect realism and smooth details.","The immediate, fleeting effect of light.","Historical battles and kings.","Dark indoor spaces."], 1),
+     L(15, "Why do Impressionist paintings often have visible, choppy brushstrokes?", ["They did not know how to paint smoothly.","The painters used cheap brushes.","They had to paint quickly before the light changed.","The paint took too long to dry."], 2),
+     L(16, "What does the term 'en plein air' refer to in this context?", ["Taking canvases outside to paint in the open air.","Painting airplanes.","Painting using only blue colors.","Painting entirely inside a dark studio."], 0)
+    ])
+];
+
+const LISTEN_MODULES = [
+  {title:"Listening · Module 1", blocks: listen1_blocks},
+  {title:"Listening · Module 2", blocks: listen2_blocks}
+];
+
+/* Flatten blocks into slots: each slot = {block, question} */
+function flattenListenModule(mod){
+  const slots = [];
+  mod.blocks.forEach(b=>{ b.questions.forEach(q=> slots.push({block:b, question:q})); });
+  return slots;
+}
+const listenState = { moduleIndex:0, slotIndex:0, answers:{}, lastPlayedBlock:null, sqrTimerId:null };
+
+function speakBlockAudio(lines, onEnd){
+  if(!window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  if(!cachedVoice) cachedVoice = pickVoice();
+  let i=0;
+  function next(){
+    if(i>=lines.length){ updatePlayUI(false); if(onEnd) onEnd(); return; }
+    const line = lines[i++];
+    const text = (line.speaker ? line.speaker+". " : "") + line.text;
+    const utter = new SpeechSynthesisUtterance(text);
+    if(cachedVoice) utter.voice = cachedVoice;
+    utter.lang="en-GB"; utter.rate=0.98;
+    utter.onend=next; utter.onerror=next;
+    window.speechSynthesis.speak(utter);
+  }
+  updatePlayUI(true);
+  next();
+}
+function updatePlayUI(playing){
+  const btn = document.getElementById('playBtn');
+  const status = document.getElementById('playStatus');
+  if(!btn) return;
+  if(playing){ btn.textContent="🔊 Playing..."; btn.disabled=true; status.textContent="Listening in progress — please wait."; }
+  else{ btn.textContent="🔁 Replay Audio"; btn.disabled=false; status.textContent=""; }
+}
+function clearSqrTimer(){
+  if(listenState.sqrTimerId){ clearInterval(listenState.sqrTimerId); listenState.sqrTimerId=null; }
+  const cd = document.getElementById('lCountdown');
+  const lbl = document.getElementById('lCountdownLabel');
+  cd.style.display="none"; lbl.style.display="none"; cd.classList.remove('low');
+}
+function startSqrAnswerTimer(){
+  const cd = document.getElementById('lCountdown');
+  const lbl = document.getElementById('lCountdownLabel');
+  cd.style.display="block"; lbl.style.display="block";
+  let t = 20;
+  cd.textContent = t;
+  listenState.sqrTimerId = setInterval(()=>{
+    t--; cd.textContent = Math.max(t,0);
+    if(t<=5) cd.classList.add('low');
+    if(t<=0){ clearInterval(listenState.sqrTimerId); listenState.sqrTimerId=null; advanceListen(); }
+  }, 1000);
+}
+function currentModule(){ return LISTEN_MODULES[listenState.moduleIndex]; }
+function currentSlots(){ return flattenListenModule(currentModule()); }
+function renderListenSlot(){
+  const slots = currentSlots();
+  const slot = slots[listenState.slotIndex];
+  const q = slot.question, b = slot.block;
+  document.getElementById('moduleTag').textContent = currentModule().title;
+  document.getElementById('lGroupTitle').textContent = q.kind==="sqr" ? "Short Question-Response" : (b.context || "Listening Comprehension");
+  document.getElementById('lNumLabel').textContent = "Question "+q.number+" of "+slots.length;
+  document.getElementById('lAudioHint').textContent = b.context || "Press play and listen carefully. The transcript will not be shown.";
+  clearSqrTimer();
+  updatePlayUI(false);
+
+  const playBtn = document.getElementById('playBtn');
+  const isFirstQOfBlock = b.questions[0].number === q.number;
+  if(q.kind==="sqr"){
+    playBtn.style.display="none"; // no replay for short single-sentence questions
+  } else {
+    playBtn.style.display="inline-block";
+    playBtn.textContent = isFirstQOfBlock ? "▶ Play Audio" : "🔁 Replay Audio";
+    playBtn.onclick = ()=> speakBlockAudio(b.audioLines, ()=>{});
+  }
+
+  const area = document.getElementById('lQuestionArea');
+  let html = "";
+  if(q.kind==="comp") html += `<div class="qtext">${q.number}. ${q.prompt}</div>`;
+  else html += `<div class="qtext" style="font-weight:600;color:var(--ink-soft);font-size:13.5px;">Choose the best response:</div>`;
+  html += `<div class="options">`;
+  const letters=["A","B","C","D"];
+  const saved = listenState.answers[q.number];
+  q.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}"><span class="letter">${letters[i]}</span><span>${opt}</span></div>`;
+  });
+  html += `</div>`;
+  area.innerHTML = html;
+  area.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      listenState.answers[q.number] = +el.dataset.choice;
+      area.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+
+  const lNextBtn = document.getElementById('lNextBtn');
+  if(listenState.lastPlayedBlock !== b){
+    listenState.lastPlayedBlock = b;
+    if(q.kind==="sqr") lNextBtn.disabled = true;
+    speakBlockAudio(b.audioLines, ()=>{
+      if(q.kind==="sqr"){ startSqrAnswerTimer(); lNextBtn.disabled = false; }
+    });
+  } else {
+    lNextBtn.disabled = false;
+  }
+}
+document.getElementById('startListenBtn').addEventListener('click', ()=>{
+  listenState.moduleIndex=0; listenState.slotIndex=0; listenState.lastPlayedBlock=null;
+  showScreen('lWrap'); renderListenSlot();
+});
+document.getElementById('skipListenBtn').addEventListener('click', ()=>{ window.speechSynthesis && window.speechSynthesis.cancel(); clearSqrTimer(); goToReading(); });
+function advanceListen(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  clearSqrTimer();
+  const slots = currentSlots();
+  if(listenState.slotIndex < slots.length-1){ listenState.slotIndex++; renderListenSlot(); }
+  else if(listenState.moduleIndex===0){ listenState.moduleIndex=1; listenState.slotIndex=0; listenState.lastPlayedBlock=null; renderListenSlot(); }
+  else { goToReading(); }
+}
+document.getElementById('lNextBtn').addEventListener('click', advanceListen);
+function scoreListenModule(mIdx){
+  let c=0;
+  flattenListenModule(LISTEN_MODULES[mIdx]).forEach(s=>{ if(listenState.answers[s.question.number]===s.question.correct) c++; });
+  return c;
+}
+function scoreListening(){ return scoreListenModule(0) + scoreListenModule(1); }
+function totalListeningCount(){ return flattenListenModule(LISTEN_MODULES[0]).length + flattenListenModule(LISTEN_MODULES[1]).length; }
+function MC(number, q, options, correct, highlightWord){ return {number, type:"mc", q, options, correct, highlightWord: highlightWord||null}; }
+
+const FILL_M1_TEXT = [
+"The study of living organisms and their vital processes is called ",1,". A group of similar individuals capable of exchanging genes or interbreeding is known as a ",2,". The natural environment where a particular plant or animal lives is its ",3,". The study of heredity and the variation of inherited characteristics is ",4,". Over millions of years, species undergo ",5," to adapt to their surroundings.",
+"An animal that naturally preys on others is called a ",6,". When an entire species dies out, it faces ",7,". A biological community of interacting organisms and their physical environment forms an ",8,". Long-term changes in temperature and weather patterns refer to the global ",9,". Every single plant, animal, or single-celled life form is an ",10,"."
+];
+
+const FILL_M1_WORDS = [
+  W(1,"biology","b _ _ l _ _ y"),
+  W(2,"species","s _ _ c _ _ s"),
+  W(3,"habitat","h _ _ i _ _ t"),
+  W(4,"genetics","g _ _ e _ _ c s"),
+  W(5,"evolution","e _ _ l _ _ _ _ n"),
+  W(6,"predator","p _ _ d _ _ _ r"),
+  W(7,"extinction","e _ _ i _ _ t _ _ n"),
+  W(8,"ecosystem","e _ _ s _ _ _ _ m"),
+  W(9,"climate","c _ _ m _ _ e"),
+  W(10,"organism","o _ _ a _ _ _ m")
+];
+
+const FILL_M2_TEXT = [
+"Psychologists study human ",1," to understand why we act the way we do. The brain's ability to store and recall information is called ",2,". A strong feeling deriving from one's circumstances or mood is an ",3,". A feeling of worry, nervousness, or unease is known as ",4,". The mental action of acquiring knowledge through thought and experience is ",5,".",
+"A thing or event that evokes a specific functional reaction in an organ or tissue is a ",6,". An extreme or irrational fear of something is a ",7,". Talking to a professional can be an effective form of psychological ",8,". Early experiences during ",9," heavily shape adult personalities. The qualities and beliefs that make a person who they are form their ",10,"."
+];
+
+const FILL_M2_WORDS = [
+  W(1,"behavior","b _ _ a _ _ _ r"),
+  W(2,"memory","m _ _ o _ y"),
+  W(3,"emotion","e _ _ t _ _ n"),
+  W(4,"anxiety","a _ _ i _ _ y"),
+  W(5,"cognition","c _ _ n _ _ _ _ n"),
+  W(6,"stimulus","s _ _ m _ _ _ s"),
+  W(7,"phobia","p _ _ b _ a"),
+  W(8,"therapy","t _ _ r _ _ y"),
+  W(9,"childhood","c _ _ l _ _ _ _ d"),
+  W(10,"identity","i _ _ n _ _ _ y")
+];
+
+const MODULE1 = {
+  fillText: FILL_M1_TEXT, fillWords: FILL_M1_WORDS,
+  groups: [
+    {
+      id:"notice", title:"Notice — Central Library Renovation", type:"passage-inline",
+      passageHTML:`<h4>Notice: Central Library Renovation</h4><p>To all library patrons: Starting Monday, March 15th, the second floor of the Central Library will be closed for a major two-month renovation. We are installing new, energy-efficient lighting and replacing the outdated carpeting in the quiet study areas. During this time, all history and geography collections usually housed on the second floor will be temporarily moved to the basement reading room. The main floor, including the computer lab and the children's section, will remain open during regular hours. Noise levels may be higher than usual during the daytime. We apologize for any inconvenience this may cause and thank you for your patience as we improve our facilities.</p>`,
+      questions:[
+      MC(11, "What is the main reason for the second floor closing?", ["The history books are being thrown away.","A new computer lab is being built.","Upgrades to the lighting and flooring are being made.","The library is shutting down permanently."], 2),
+      MC(12, "Where can patrons find the history books during the renovation?", ["On the second floor.","At a different library branch.","In the basement reading room.","In the children's section."], 2)
+      ]
+    },
+    {
+      id:"itmaint", title:"Announcement — Scheduled Server Maintenance", type:"passage-inline",
+      passageHTML:`<h4>Attention IT Department</h4><p>This is a reminder that scheduled server maintenance will take place this Saturday night from 11:00 PM to 4:00 AM on Sunday. During this five-hour window, the company's internal network, employee email servers, and the shared cloud storage will be completely offline. Employees working remote shifts over the weekend must download any necessary files to their local hard drives before 11:00 PM on Saturday. The external customer-facing website will not be affected by this maintenance and will remain fully operational. Please contact the Help Desk by Friday afternoon if you have any urgent concerns.</p>`,
+      questions:[
+      MC(13, "Which service will REMAIN operational during the maintenance?", ["The external customer-facing website.","The internal network.","The company's shared cloud storage.","Employee email servers."], 0),
+      MC(14, "What must remote employees do before the maintenance begins?", ["Download needed files to their own computers.","Come into the office to work.","Call the customers to apologize.","Update their email passwords."], 0)
+      ]
+    },
+    {
+      id:"coral", title:"Reading Passage — Coral Reefs", type:"passage-split",
+      passageHTML:`<h3>Reading Passage</h3>
+      <p><b>Paragraph 1:</b> Coral reefs are often referred to as the "rainforests of the sea." Although they cover less than 1% of the ocean floor, they support an estimated 25% of all marine life. These complex underwater ecosystems are built by tiny animals called coral polyps. As these polyps die, they leave behind hard, limestone skeletons. Over thousands of years, these skeletons build up to form the massive reef structures we see today, providing shelter, food, and breeding grounds for thousands of species of fish, crabs, and sea turtles.</p>
+      <p><b>Paragraph 2:</b> The brilliant colors of coral reefs actually come from a unique symbiotic relationship. Inside the tissues of the coral polyps live microscopic algae known as zooxanthellae. The coral provides the algae with a protected environment and the compounds they need for photosynthesis. In return, the algae produce oxygen and supply the coral with organic products that the polyps use to grow and build their calcium carbonate skeletons.</p>
+      <p><b>Paragraph 3:</b> Unfortunately, coral reefs are incredibly sensitive to environmental changes. When ocean temperatures rise due to global warming, the coral becomes stressed and expels the colorful algae living in its tissues. This process is known as "coral bleaching." Without the algae, the coral loses its major source of food and turns completely white. While bleached coral is not strictly dead, it is highly vulnerable to disease and starvation. If water temperatures do not return to normal quickly, entire reef systems can collapse, threatening the marine life that relies on them.</p>`,
+      questions:[
+      MC(15, "What is the primary purpose of the passage?", ["To describe the different types of fish that live in the ocean.","To argue that coral reefs are dangerous to ships.","To explain what coral reefs are, how they function, and the threats they face.","To prove that global warming is not affecting the oceans."], 2),
+      MC(16, "According to the passage, what builds the hard limestone structure of a coral reef?", ["Sand moving across the ocean floor","Sea turtles and crabs","Microscopic algae","The skeletons of dead coral polyps"], 3),
+      MC(17, "What do the zooxanthellae (algae) provide to the coral?", ["A hard, limestone skeleton.","Cooler water temperatures.","Protection from ocean predators.","Oxygen and food produced through photosynthesis."], 3),
+      MC(18, "Why does \"coral bleaching\" occur?", ["Rising ocean temperatures cause the coral to stress and expel its algae.","The coral eats too much algae.","The coral is painted white by ocean scientists.","Fish consume all the coral polyps on the reef."], 0),
+      MC(19, "The word \"symbiotic\" in Paragraph 2 most likely describes a relationship that is:", ["Mutually beneficial to both parties.","Harmful and toxic.","Unpredictable and dangerous.","One-sided, where only one survives."], 0, "symbiotic"),
+      MC(20, "What happens to coral immediately after it undergoes bleaching?", ["It moves to a colder part of the ocean.","It dies instantly.","It grows much faster to replace the algae.","It turns white and becomes highly vulnerable to disease."], 3)
+      ]
+    }
+  ]
+};
+
+const MODULE2 = {
+  fillText: FILL_M2_TEXT, fillWords: FILL_M2_WORDS,
+  groups: [
+    {
+      id:"review", title:"Customer Review", type:"passage-inline",
+      passageHTML:`<h4>Electronics Website Customer Review</h4><p><b>User: AudioGeek99 — Rating: 4/5 Stars</b></p><p>I've been using the new Sonic-Pro Wireless Earbuds for a week while commuting on the train. The noise-cancellation feature is absolutely fantastic; it blocks out almost all the background engine noise, which is exactly what I wanted. The battery life is also impressive—I haven't had to charge the case once yet. My only complaint, and the reason I took off a star, is the fit. After about an hour of wearing them, my right ear starts to ache. They come with different rubber tips, but none of them seem to fit my ear perfectly. Overall, great technology, but comfort could be improved.</p>`,
+      questions:[
+      MC(11, "What feature of the earbuds is the reviewer most impressed with?", ["The colorful design of the charging case.","The comfortable fit in their ears.","The noise-cancellation blocking out background sound.","Their low price and fast shipping."], 2),
+      MC(12, "Why did the reviewer give 4 stars instead of 5?", ["The battery dies too quickly.","The music quality is terrible.","They are uncomfortable to wear for long periods.","The left earbud stopped working."], 2)
+      ]
+    },
+    {
+      id:"messages", title:"Group Messages — Retirement Event", type:"passage-inline",
+      passageHTML:`<h4>Coworkers — Messaging App</h4>
+      <p class="msgline"><b>Mark (09:15 AM):</b> Hey team, as you know, Brenda is retiring at the end of this month. We need to plan a farewell lunch for her on the 28th.</p>
+      <p class="msgline"><b>Sarah (09:20 AM):</b> I think an Italian restaurant would be great. Brenda loves pasta. Should I call Luigi's and reserve a table for 15 people?</p>
+      <p class="msgline"><b>Jason (09:25 AM):</b> Luigi's is a great idea. While you do that, I will go around the office and collect money for her farewell gift. We are getting her that gardening toolkit she wanted.</p>
+      <p class="msgline"><b>Mark (09:30 AM):</b> Perfect. Once Sarah confirms the reservation, I'll send out the official calendar invite to the whole department.</p>`,
+      questions:[
+      MC(13, "What is Sarah going to do?", ["Collect money from everyone in the office.","Make a restaurant reservation for 15 people.","Send out a calendar invitation to the team.","Buy a gardening toolkit for Brenda."], 1),
+      MC(14, "What kind of gift are they getting for Brenda?", ["A gardening toolkit.","A gift card to Luigi's restaurant.","A new office chair.","A watch."], 0)
+      ]
+    },
+    {
+      id:"silkroad", title:"Reading Passage — The Silk Road", type:"passage-split",
+      passageHTML:`<h3>Reading Passage</h3>
+      <p>For over 1,500 years, the Silk Road was one of the most important networks of trade routes in human history. Stretching over 4,000 miles, it connected the East and the West, linking the ancient civilizations of China, India, Persia, and the Roman Empire. The name "Silk Road" was coined in the 19th century by a German geographer, named after the lucrative Chinese silk trade that flowed along its paths.</p>
+      <p>However, the Silk Road was not a single, paved highway. It was a complex, shifting web of caravan tracks winding through dangerous deserts and towering mountain ranges. Furthermore, it wasn't just silk that was traded. Merchants carried spices, tea, porcelain, and paper from the East, while gold, silver, glassware, and horses traveled from the West.</p>
+      <p>Perhaps more significant than the trade of physical goods was the exchange of ideas, technologies, and cultures. Religions such as Buddhism, Christianity, and Islam spread rapidly along the routes, carried by traveling monks and missionaries. The concept of papermaking, invented in China, reached Europe via the Silk Road, forever changing the way knowledge was recorded. The era of the Silk Road eventually declined in the 15th century when European explorers discovered faster and safer maritime routes to Asia, shifting the focus of global trade from land to the sea.</p>`,
+      questions:[
+      MC(15, "What is the best summary of the passage?", ["The Silk Road was only used for trading silk and was destroyed by European explorers.","The Silk Road was a paved highway built by the Roman Empire to buy Chinese tea.","The Silk Road was a vital trade network that facilitated the exchange of goods and ideas between East and West.","The Silk Road was a short route connecting India and Persia for religious purposes."], 2),
+      MC(16, "Who created the term \"Silk Road\"?", ["A German geographer in the 19th century.","An ancient Chinese merchant.","Traveling Buddhist monks.","A Roman emperor."], 0),
+      MC(17, "According to the passage, what goods traveled from the West to the East?", ["Silk, tea, and porcelain.","Only religious texts.","Gold, silver, glassware, and horses.","Paper and spices."], 2),
+      MC(18, "Why was the Silk Road considered culturally significant?", ["It forced all merchants to learn the Chinese language.","It prevented different cultures from interacting with each other.","It allowed for the spread of religions, ideas, and technologies like papermaking.","It was the only place where people could practice art."], 2),
+      MC(19, "What caused the decline of the Silk Road in the 15th century?", ["A massive war between China and Rome.","The complete depletion of silk resources in China.","The invention of airplanes.","The discovery of faster and safer sea routes to Asia by European explorers."], 3),
+      MC(20, "Which of the following words best describes the geography of the Silk Road?", ["Entirely underground.","Simple and straight.","Oceanic and wet.","Complex, shifting, and dangerous."], 3)
+      ]
+    }
+  ]
+};
+
+const MODULES = [MODULE1, MODULE2];
+
+const rState = { moduleIndex:0, qIndex:0, answers:{}, fillLetters:{}, timeLeft:35*60, timerId:null, started:false };
+
+function getModuleData(mIdx){ return MODULES[mIdx]; }
+function getSlotInfo(mIdx, slotIdx){
+  const mod = getModuleData(mIdx);
+  const fillCount = mod.fillWords.length;
+  if(slotIdx < fillCount) return {kind:"fill", item: mod.fillWords[slotIdx]};
+  let idx = slotIdx - fillCount;
+  for(const g of mod.groups){
+    if(idx < g.questions.length) return {kind:"mc", group:g, question:g.questions[idx]};
+    idx -= g.questions.length;
+  }
+  return null;
+}
+function moduleSlotCount(mIdx){
+  const mod = getModuleData(mIdx);
+  return mod.fillWords.length + mod.groups.reduce((a,g)=>a+g.questions.length,0);
+}
+
+function renderFillTokens(item){
+  const key = rState.moduleIndex+"_"+item.number;
+  const saved = rState.fillLetters[key] || {};
+  const patternArr = item.pattern.replace(/\s+/g,'').split('');
+  let blankIdx=0, out="";
+  patternArr.forEach(ch=>{
+    if(ch==="_"){
+      const val = saved[blankIdx] || "";
+      out += `<input class="blankinput" maxlength="1" data-word="${item.number}" data-blank="${blankIdx}" value="${val}">`;
+      blankIdx++;
+    } else {
+      out += `<span class="letterbox">${ch}</span>`;
+    }
+  });
+  return out;
+}
+function renderFillParagraph(mIdx, wordNumber){
+  const mod = getModuleData(mIdx);
+  const item = mod.fillWords.find(w=>w.number===wordNumber);
+  const textParts = mod.fillText;
+  let html = `<h3>Complete the Word</h3><div class="fillpassage">`;
+  textParts.forEach(part=>{
+    if(typeof part === "number"){
+      const w = mod.fillWords.find(x=>x.number===part);
+      if(part === wordNumber) html += renderFillTokens(w);
+      else html += `<b style="color:var(--ink-soft);">[${part}]</b>`;
+    } else html += part;
+  });
+  html += `</div>`;
+  return html;
+}
+function attachFillListeners(){
+  document.querySelectorAll('.blankinput').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const wn=+e.target.dataset.word, bi=+e.target.dataset.blank;
+      e.target.value = e.target.value.replace(/[^a-zA-Z]/g,'').slice(0,1).toLowerCase();
+      const key = rState.moduleIndex+"_"+wn;
+      if(!rState.fillLetters[key]) rState.fillLetters[key]={};
+      rState.fillLetters[key][bi] = e.target.value;
+      if(e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>-1 && idx<inputs.length-1) inputs[idx+1].focus();
+      }
+    });
+    inp.addEventListener('keydown', e=>{
+      if(e.key==="Backspace" && !e.target.value){
+        const inputs = Array.from(document.querySelectorAll('.blankinput'));
+        const idx = inputs.indexOf(e.target);
+        if(idx>0) inputs[idx-1].focus();
+      }
+    });
+  });
+}
+function isWordComplete(mIdx, item){
+  const key = mIdx+"_"+item.number;
+  const saved = rState.fillLetters[key] || {};
+  const blanks = (item.pattern.match(/_/g)||[]).length;
+  for(let i=0;i<blanks;i++){ if(!saved[i]) return false; }
+  return true;
+}
+function isWordCorrect(mIdx, item){
+  const key = mIdx+"_"+item.number;
+  const saved = rState.fillLetters[key] || {};
+  const patternArr = item.pattern.replace(/\s+/g,'').split('');
+  let blankIdx=0, ansIdx=0;
+  for(const ch of patternArr){
+    if(ch==="_"){
+      const letter = item.answer[ansIdx];
+      if((saved[blankIdx]||"").toLowerCase() !== letter.toLowerCase()) return false;
+      blankIdx++;
+    }
+    ansIdx++;
+  }
+  return true;
+}
+function getGivenWordText(mIdx, item){
+  const key = mIdx+"_"+item.number;
+  const saved = rState.fillLetters[key] || {};
+  const patternArr = item.pattern.replace(/\s+/g,'').split('');
+  let blankIdx=0, out="";
+  patternArr.forEach(ch=>{
+    if(ch==="_"){ out += (saved[blankIdx]||"_"); blankIdx++; } else out += ch;
+  });
+  return out;
+}
+function highlightWordInHTML(html, word){
+  if(!word) return html;
+  const esc = word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const re = new RegExp('\\b('+esc+')\\b','gi');
+  return html.replace(re, '<mark class="vocabhl">$1</mark>');
+}
+function renderMCReading(group, question){
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+  const displayHTML = highlightWordInHTML(group.passageHTML, question.highlightWord);
+  if(group.type==="passage-split"){ passagePane.style.display="block"; passagePane.innerHTML=displayHTML; questionPane.classList.remove('full'); }
+  else { passagePane.style.display="none"; questionPane.classList.add('full'); }
+  let html = "";
+  if(group.type==="passage-inline") html += displayHTML;
+  html += `<div class="qtext">${question.number}. ${question.q}</div><div class="options">`;
+  const letters=["A","B","C","D"];
+  const savedKey = rState.moduleIndex+"_"+question.number;
+  const saved = rState.answers[savedKey];
+  question.options.forEach((opt,i)=>{
+    html += `<div class="opt ${saved===i?'selected':''}" data-choice="${i}"><span class="letter">${letters[i]}</span><span>${opt}</span></div>`;
+  });
+  html += `</div>`;
+  questionPane.innerHTML = html;
+  questionPane.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      rState.answers[savedKey] = +el.dataset.choice;
+      questionPane.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+  });
+}
+function renderReadingSlot(){
+  const total = moduleSlotCount(rState.moduleIndex);
+  const slot = getSlotInfo(rState.moduleIndex, rState.qIndex);
+  document.getElementById('moduleTag').textContent = "Reading · Module "+(rState.moduleIndex+1);
+  document.getElementById('qNumLabel').textContent = "Question "+(rState.qIndex+1)+" of "+total;
+  const passagePane = document.getElementById('passagePane');
+  const questionPane = document.getElementById('questionPane');
+  if(slot.kind==="fill"){
+    document.getElementById('qGroupTitle').textContent = "Part 1 — Complete the Word";
+    passagePane.style.display="none"; questionPane.classList.add('full');
+    questionPane.innerHTML = renderFillParagraph(rState.moduleIndex, slot.item.number);
+    attachFillListeners();
+  } else {
+    document.getElementById('qGroupTitle').textContent = slot.group.title;
+    renderMCReading(slot.group, slot.question);
+  }
+  document.getElementById('backBtn').disabled = (rState.qIndex===0);
+  const isLast = rState.qIndex === total-1;
+  const isLastModule = rState.moduleIndex === MODULES.length-1;
+  document.getElementById('nextBtn').textContent = isLast ? (isLastModule ? "Finish Reading Section →" : "Next Module →") : "Next →";
+}
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  if(rState.qIndex>0){ rState.qIndex--; renderReadingSlot(); }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  const total = moduleSlotCount(rState.moduleIndex);
+  if(rState.qIndex < total-1){ rState.qIndex++; renderReadingSlot(); }
+  else if(rState.moduleIndex < MODULES.length-1){ rState.moduleIndex++; rState.qIndex=0; renderReadingSlot(); }
+  else { if(rState.timerId) clearInterval(rState.timerId); document.getElementById('timerbox').textContent="Untimed"; goToWriting(); }
+});
+document.getElementById('reviewBtn').addEventListener('click', ()=>{
+  const grid = document.getElementById('reviewGrid');
+  grid.innerHTML = "";
+  const total = moduleSlotCount(rState.moduleIndex);
+  for(let i=0;i<total;i++){
+    const slot = getSlotInfo(rState.moduleIndex, i);
+    let answered = slot.kind==="fill" ? isWordComplete(rState.moduleIndex, slot.item) : rState.answers[rState.moduleIndex+"_"+slot.question.number]!==undefined;
+    const cell = document.createElement('div');
+    cell.className = "revcell "+(answered?"answered":"unanswered");
+    cell.innerHTML = (i+1)+"<small>"+(answered?"Answered":"Blank")+"</small>";
+    cell.addEventListener('click', ()=>{ rState.qIndex=i; showScreen('qWrap'); renderReadingSlot(); });
+    grid.appendChild(cell);
+  }
+  showScreen('review');
+});
+document.getElementById('closeReviewBtn').addEventListener('click', ()=> showScreen('qWrap'));
+function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0'); }
+function startReadingTimer(){
+  document.getElementById('timerbox').textContent = formatTime(rState.timeLeft);
+  rState.timerId = setInterval(()=>{
+    rState.timeLeft--;
+    const box = document.getElementById('timerbox');
+    box.textContent = formatTime(rState.timeLeft);
+    if(rState.timeLeft<=300) box.classList.add('low');
+    if(rState.timeLeft<=0){ clearInterval(rState.timerId); goToWriting(); }
+  }, 1000);
+}
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  rState.started=true; rState.moduleIndex=0; rState.qIndex=0; showScreen('qWrap'); renderReadingSlot(); startReadingTimer();
+});
+document.getElementById('skipReadingBtn').addEventListener('click', ()=>{ if(rState.timerId) clearInterval(rState.timerId); goToWriting(); });
+function scoreReadingModule(mIdx){
+  let c=0;
+  const total = moduleSlotCount(mIdx);
+  for(let i=0;i<total;i++){
+    const slot = getSlotInfo(mIdx, i);
+    if(slot.kind==="fill"){ if(isWordCorrect(mIdx, slot.item)) c++; }
+    else { if(rState.answers[mIdx+"_"+slot.question.number]===slot.question.correct) c++; }
+  }
+  return c;
+}
+function scoreReading(){ return scoreReadingModule(0) + scoreReadingModule(1); }
+function totalReadingCount(){ return moduleSlotCount(0) + moduleSlotCount(1); }
+function goToReading(){
+  document.getElementById('moduleTag').textContent="Directions";
+  document.getElementById('timerbox').textContent="35:00";
+  showScreen('intro');
+}
+function T1(chunks, key){ return {chunks, key}; }
+const WRITE_TASK1 = {
+  totalTimerSec: 10*60,
+  items:[
+    T1(["she","made","herself","a","cup","of","tea"], "She made herself a cup of tea."),
+    T1(["he","gave","them","his","keys","to","the","car"], "He gave them his keys to the car."),
+    T1(["we","prepared","ourselves","for","the","final","match"], "We prepared ourselves for the final match."),
+    T1(["they","brought","their","children","with","them"], "They brought their children with them."),
+    T1(["I","taught","myself","how","to","play","the","guitar"], "I taught myself how to play the guitar."),
+    T1(["you","must","ask","him","about","his","new","job"], "You must ask him about his new job."),
+    T1(["it","washed","its","face","with","its","paws"], "It washed its face with its paws."),
+    T1(["she","promised","me","that","she","would","help","us"], "She promised me that she would help us."),
+    T1(["we","saw","her","standing","by","herself","outside"], "We saw her standing by herself outside."),
+    T1(["he","sent","you","a","package","from","his","office"], "He sent you a package from his office.")
+  ]
+};
+
+const WRITE_TASK2 = {
+  timerSec: 7*60,
+  prompt: "It is the middle of winter, and the heating system in your rented apartment has suddenly stopped working. Write an email to your landlord (Mr. Davis). Inform him about the broken heater, explain how this is affecting you, and politely request that he send a repair person as soon as possible.",
+  idealWords: 60,
+  elements: [
+    {label:"Informs about the broken heater", keywords:["heater","heating","heat is","furnace","no heat"]},
+    {label:"Explains how it's affecting them", keywords:["cold","freezing","uncomfortable","cannot sleep","difficult","suffering","struggling"]},
+    {label:"Politely requests a repair", keywords:["repair","fix","send someone","technician","please","as soon as possible","urgently"]},
+    {label:"Uses appropriate email tone (greeting/closing)", keywords:["dear","mr. davis","sincerely","regards","best,","thank you"]}
+  ]
+};
+
+const WRITE_TASK3 = {
+  timerSec: 10*60,
+  professor: "Today in our sociology seminar, we are discussing the impact of digital media. While printed books have been the primary method of sharing knowledge for centuries, e-books and digital reading devices are becoming incredibly popular. Do you believe that digital books will eventually replace printed books entirely, or will physical books always have a place in our society?",
+  student1: "I think printed books will eventually disappear. E-books are just too convenient. You can carry thousands of books on a single lightweight device. Plus, producing digital books is much better for the environment because it saves trees and reduces the pollution caused by shipping heavy boxes of paper.",
+  student2: "I completely disagree with Michael. Physical books will never disappear. People have an emotional connection to printed books—the feel of the paper, the smell of the ink, and the ability to display them on a shelf. Also, looking at a screen for too long causes eye strain, so many people still prefer reading physical paper to relax.",
+  idealWords: 100,
+  elements: [
+    {label:"States a clear opinion", keywords:["i think","i believe","in my opinion","i agree","i disagree"]},
+    {label:"Gives at least one supporting reason", keywords:["because","since","due to","as a result","for example","for instance"]},
+    {label:"Engages with the classmates' points", keywords:["michael","elena","however","although","on the other hand","similarly"]},
+    {label:"Reasonably developed response", keywords:["also","in addition","furthermore","moreover","overall"]}
+  ]
+};
+
+function scoreWritingTask(text, opts){
+  const trimmed = (text||"").trim();
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const lower = trimmed.toLowerCase();
+  let score = 0;
+  const feedback = [];
+
+  if(wordCount >= opts.idealWords){ score += 2; feedback.push("Good length — you developed your response with sufficient detail."); }
+  else if(wordCount >= opts.idealWords*0.55){ score += 1; feedback.push("Reasonable length, but adding more supporting detail would strengthen your response."); }
+  else feedback.push("Your response is quite short for this task — try to write more to fully develop your ideas.");
+
+  let covered = 0;
+  opts.elements.forEach(el=>{ if(el.keywords.some(k=>lower.includes(k))) covered++; });
+  const coverageScore = Math.round((covered/opts.elements.length)*2*2)/2;
+  score += coverageScore;
+  if(covered===opts.elements.length) feedback.push("You addressed all the key points expected for this task.");
+  else feedback.push("You addressed "+covered+" of "+opts.elements.length+" key points expected — review the prompt and make sure every part is covered.");
+
+  const sentenceCount = (trimmed.match(/[.!?]+/g)||[]).length;
+  const connectors = ["because","however","therefore","in addition","for example","also","furthermore","although","since","moreover","on the other hand"];
+  const hasConnector = connectors.some(c=>lower.includes(c));
+  if(sentenceCount>=3 && hasConnector){ score+=1; feedback.push("Your response is well organized and uses linking words to connect ideas."); }
+  else feedback.push("Try using more linking words (e.g. \"because\", \"however\", \"in addition\") to connect your ideas more clearly.");
+
+  const startsCap = /^[A-Z]/.test(trimmed);
+  const endsPunct = /[.!?]$/.test(trimmed);
+  const hasLongCaps = /[A-Z]{15,}/.test(trimmed);
+  if(startsCap && endsPunct && !hasLongCaps && trimmed.length>0){ score+=1; feedback.push("Good control of basic writing mechanics (capitalization and punctuation)."); }
+  else if(trimmed.length>0) feedback.push("Check your capitalization and punctuation carefully.");
+
+  score = Math.max(0, Math.min(6, Math.round(score*2)/2));
+  return {score, wordCount, feedback};
+}
+
+const writeState = { task1Index:0, task1Answers:[], currentBank:[], currentAnswer:[], task1TimerId:null, task1TimeLeft:WRITE_TASK1.totalTimerSec, freeTimerId:null, task2Text:"", task3Text:"", task2Result:null, task3Result:null };
+function shuffleArr(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+document.getElementById('writeStartBtn').addEventListener('click', ()=>{
+  showScreen('wWrap');
+  writeState.task1Index=0; writeState.task1Answers=[]; writeState.task1TimeLeft=WRITE_TASK1.totalTimerSec;
+  runTask1Item();
+  startTask1Timer();
+});
+document.getElementById('skipWriteBtn').addEventListener('click', ()=>{ clearInterval(writeState.task1TimerId); clearInterval(writeState.freeTimerId); goToSpeaking(); });
+
+function startTask1Timer(){
+  const timerEl = document.getElementById('wTimer');
+  timerEl.classList.remove('low');
+  timerEl.textContent = fmtMMSS(writeState.task1TimeLeft);
+  clearInterval(writeState.task1TimerId);
+  writeState.task1TimerId = setInterval(()=>{
+    writeState.task1TimeLeft--;
+    timerEl.textContent = fmtMMSS(Math.max(writeState.task1TimeLeft,0));
+    if(writeState.task1TimeLeft<=60) timerEl.classList.add('low');
+    if(writeState.task1TimeLeft<=0){ clearInterval(writeState.task1TimerId); finalizeTask1OnTimeout(); }
+  }, 1000);
+}
+function finalizeTask1OnTimeout(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  const given = writeState.currentAnswer.join(" ");
+  const correct = normalizeSentence(given) === normalizeSentence(item.key);
+  writeState.task1Answers.push({given, key:item.key, correct});
+  for(let i=writeState.task1Index+1;i<WRITE_TASK1.items.length;i++){
+    writeState.task1Answers.push({given:"", key:WRITE_TASK1.items[i].key, correct:false});
+  }
+  document.getElementById('wStopMsg').style.display="block";
+  document.getElementById('wStopMsg').textContent="Time's up for Task 1! Moving to the next task…";
+  setTimeout(runTask2, 1500);
+}
+function runTask1Item(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  document.getElementById('wTitle').textContent = "Task 1 — Build a Sentence";
+  document.getElementById('wNumLabel').textContent = "Question "+(writeState.task1Index+1)+" of "+WRITE_TASK1.items.length+" · Total time remaining for Task 1";
+  document.getElementById('wInstructText').style.display="block";
+  document.getElementById('wInstructText').textContent = "Click the words in the correct order to build a grammatically correct, meaningful sentence. You have one shared timer for all 10 sentences.";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wPromptArea').innerHTML = "";
+  writeState.currentBank = shuffleArr(item.chunks);
+  writeState.currentAnswer = [];
+  renderTask1Chips();
+}
+function renderTask1Chips(){
+  const area = document.getElementById('wTaskArea');
+  area.innerHTML = `<div class="wanswer" id="wAnswerZone"></div><div class="wbank" id="wBankZone"></div><button id="wSubmitBtn">Submit Sentence</button>`;
+  function draw(){
+    const ans = document.getElementById('wAnswerZone');
+    const bank = document.getElementById('wBankZone');
+    ans.innerHTML = writeState.currentAnswer.map((w,i)=>`<span class="wchip" data-i="${i}">${w}</span>`).join("") || '<span style="color:var(--ink-soft);font-size:13px;">Click words below to build your sentence…</span>';
+    bank.innerHTML = writeState.currentBank.map((w,i)=>`<span class="wchip bank" data-i="${i}">${w}</span>`).join("");
+    ans.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx=+el.dataset.i;
+        writeState.currentBank.push(writeState.currentAnswer[idx]);
+        writeState.currentAnswer.splice(idx,1);
+        draw();
+      });
+    });
+    bank.querySelectorAll('.wchip').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx=+el.dataset.i;
+        writeState.currentAnswer.push(writeState.currentBank[idx]);
+        writeState.currentBank.splice(idx,1);
+        draw();
+      });
+    });
+  }
+  draw();
+  document.getElementById('wSubmitBtn').addEventListener('click', submitTask1Item);
+}
+function normalizeSentence(s){ return s.toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim(); }
+function submitTask1Item(){
+  const item = WRITE_TASK1.items[writeState.task1Index];
+  const given = writeState.currentAnswer.join(" ");
+  const correct = normalizeSentence(given) === normalizeSentence(item.key);
+  writeState.task1Answers.push({given, key:item.key, correct});
+  document.getElementById('wStopMsg').style.display="block";
+  document.getElementById('wStopMsg').textContent = "Response submitted. Moving to the next sentence…";
+  setTimeout(()=>{
+    if(writeState.task1Index < WRITE_TASK1.items.length-1){ writeState.task1Index++; runTask1Item(); }
+    else { clearInterval(writeState.task1TimerId); runTask2(); }
+  }, 1000);
+}
+function runTask2(){
+  clearInterval(writeState.task1TimerId);
+  document.getElementById('wTitle').textContent="Task 2 — Write an Email";
+  document.getElementById('wNumLabel').textContent="Question 11";
+  document.getElementById('wInstructText').style.display="none";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `<div class="wprompt"><b>Prompt:</b> ${WRITE_TASK2.prompt}</div>`;
+  document.getElementById('wTaskArea').innerHTML = `<textarea class="wtextarea" id="wEmailBox" placeholder="Type your email here..."></textarea><div class="wwordcount" id="wEmailCount">0 words</div>`;
+  const box = document.getElementById('wEmailBox');
+  box.addEventListener('input', ()=>{
+    writeState.task2Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wEmailCount').textContent = wc+" words";
+  });
+  startFreeWriteTimer(WRITE_TASK2.timerSec, ()=>{
+    box.disabled=true;
+    writeState.task2Result = scoreWritingTask(writeState.task2Text, WRITE_TASK2);
+    document.getElementById('wStopMsg').style.display="block";
+    document.getElementById('wStopMsg').textContent="Time's up! Moving to the next task…";
+    setTimeout(runTask3, 1500);
+  });
+}
+function runTask3(){
+  document.getElementById('wTitle').textContent="Task 3 — Academic Discussion";
+  document.getElementById('wNumLabel').textContent="Question 12";
+  document.getElementById('wInstructText').style.display="none";
+  document.getElementById('wStopMsg').style.display="none";
+  document.getElementById('wTimer').classList.remove('low');
+  document.getElementById('wPromptArea').innerHTML = `
+    <div class="wpost"><b>Professor Robinson:</b><br>"${WRITE_TASK3.professor}"</div>
+    <div class="wpost"><b>Student 1 (Michael):</b><br>"${WRITE_TASK3.student1}"</div>
+    <div class="wpost"><b>Student 2 (Elena):</b><br>"${WRITE_TASK3.student2}"</div>`;
+  document.getElementById('wTaskArea').innerHTML = `<textarea class="wtextarea" id="wDiscBox" placeholder="Write your response to the discussion here..."></textarea><div class="wwordcount" id="wDiscCount">0 words</div>`;
+  const box = document.getElementById('wDiscBox');
+  box.addEventListener('input', ()=>{
+    writeState.task3Text = box.value;
+    const wc = box.value.trim() ? box.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wDiscCount').textContent = wc+" words";
+  });
+  startFreeWriteTimer(WRITE_TASK3.timerSec, ()=>{
+    box.disabled=true;
+    writeState.task3Result = scoreWritingTask(writeState.task3Text, WRITE_TASK3);
+    document.getElementById('wStopMsg').style.display="block";
+    document.getElementById('wStopMsg').textContent="Time's up!";
+    setTimeout(finishWriting, 1500);
+  });
+}
+function startFreeWriteTimer(totalSec, onDone){
+  let t = totalSec;
+  const timerEl = document.getElementById('wTimer');
+  timerEl.textContent = fmtMMSS(t);
+  clearInterval(writeState.freeTimerId);
+  writeState.freeTimerId = setInterval(()=>{
+    t--; timerEl.textContent = fmtMMSS(Math.max(t,0));
+    if(t<=30) timerEl.classList.add('low');
+    if(t<=0){ clearInterval(writeState.freeTimerId); onDone(); }
+  }, 1000);
+}
+function finishWriting(){
+  if(!writeState.task2Result) writeState.task2Result = scoreWritingTask(writeState.task2Text, WRITE_TASK2);
+  if(!writeState.task3Result) writeState.task3Result = scoreWritingTask(writeState.task3Text, WRITE_TASK3);
+  const correctCount = writeState.task1Answers.filter(a=>a.correct).length;
+  document.getElementById('writeSummary').innerHTML =
+    `Task 1: ${correctCount}/10 sentences built correctly.<br>
+     Task 2 (Email): ${writeState.task2Result.score}/6 — ${writeState.task2Result.feedback[0]}<br>
+     Task 3 (Discussion): ${writeState.task3Result.score}/6 — ${writeState.task3Result.feedback[0]}`;
+  showScreen('writeDone');
+}
+document.getElementById('writeDoneBtn').addEventListener('click', ()=> goToSpeaking());
+function goToWriting(){ window.speechSynthesis && window.speechSynthesis.cancel(); showScreen('writeIntro'); }
+function scoreWritingOverall6(){
+  const t1 = (writeState.task1Answers.filter(a=>a.correct).length/WRITE_TASK1.items.length)*6;
+  const t2 = writeState.task2Result ? writeState.task2Result.score : 0;
+  const t3 = writeState.task3Result ? writeState.task3Result.score : 0;
+  return Math.round(((t1+t2+t3)/3)*2)/2;
+}
+const SPEAK_PART1 = {
+  key:"p1", title:"Part 1 — Listen and Repeat",
+  instructions:"You are at a busy international train station. Listen to the phrases and repeat what you hear. Repeat only once.",
+  image: null,
+  timerSec: 8,
+  items:[
+    {text:"The express train to London will depart from platform four.", rate:0.92},
+    {text:"Please make sure you have your tickets ready for inspection.", rate:0.92},
+    {text:"Passengers should stand behind the yellow line for safety.", rate:1.02},
+    {text:"The dining car is located at the front of the train.", rate:1.02},
+    {text:"We apologize for the delay due to signal failure on the tracks.", rate:1.14},
+    {text:"Mind the gap between the train and the platform edge.", rate:1.14},
+    {text:"You can store heavy luggage in the overhead racks above your seat.", rate:1.26}
+  ]
+};
+
+const SPEAK_PART2 = {
+  key:"p2", title:"Part 2 — Take an Interview",
+  instructions:"You are being interviewed for a travel magazine about people's vacation habits. Answer the questions and be sure to say as much as you can in the time allowed. No preparation time provided.",
+  image: null,
+  timerSec: 45, beep:true,
+  items:[
+    {text:"Hi! Let's talk about travel. Some people prefer going on relaxing beach holidays, while others prefer busy city tours. Which type of vacation do you prefer and why?", rate:1.0},
+    {text:"When traveling to a new country, do you prefer to travel alone, or do you prefer traveling with a group of friends or family? What are the advantages of your choice?", rate:1.0},
+    {text:"Can you describe the most memorable trip you have ever taken? What made it so special to you?", rate:1.0},
+    {text:"Finally, what is one essential piece of advice you would give to someone who is packing for a long international flight?", rate:1.0}
+  ]
+};
+const SPEAK_PARTS = [SPEAK_PART1, SPEAK_PART2];
+const speakState = { partIndex:0, itemIndex:0, stream:null, recorder:null, chunks:[], recordings:[[],[]], countdownId:null, transcriptBuffer:"", recognition:null, pendingUrl:null };
+
+function playBeep(onDone){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type="sine"; osc.frequency.value=880;
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.35);
+    osc.connect(gain).connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime+0.35);
+    osc.onended=()=>{ ctx.close(); if(onDone) onDone(); };
+  } catch(e){ if(onDone) onDone(); }
+}
+document.getElementById('speakStartBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('speakStartBtn');
+  btn.disabled=true; btn.textContent="Requesting microphone access...";
+  try{
+    speakState.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    showScreen('sWrap'); speakState.partIndex=0; speakState.itemIndex=0; runSpeakItem();
+  } catch(err){
+    document.getElementById('micPermissionNote').innerHTML = "⚠️ Microphone access was blocked or unavailable. Please allow microphone permissions and try again.";
+    btn.disabled=false; btn.textContent="Allow Microphone & Start Speaking Section";
+  }
+});
+document.getElementById('skipSpeakBtn').addEventListener('click', ()=>{ finishTest(); });
+function currentSpeakPart(){ return SPEAK_PARTS[speakState.partIndex]; }
+function runSpeakItem(){
+  const part = currentSpeakPart();
+  const item = part.items[speakState.itemIndex];
+  const totalQNum = speakState.partIndex===0 ? (speakState.itemIndex+1) : (7+speakState.itemIndex+1);
+  document.getElementById('sPartTitle').textContent = part.title;
+  document.getElementById('sNumLabel').textContent = "Question "+totalQNum+" of 11";
+  document.getElementById('sInstructText').textContent = part.instructions;
+  document.getElementById('sStopMsg').style.display="none";
+  const cd = document.getElementById('sCountdown');
+  cd.style.display="none"; cd.classList.remove('low');
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec');
+  status.textContent = part.key==="p1" ? "🔊 Listen carefully..." : "🔊 Question is being read...";
+  speakOnce(item.text, item.rate, ()=>{
+    if(part.beep){ status.textContent="Get ready to speak..."; playBeep(()=> startRecordingPhase(part, item, totalQNum)); }
+    else startRecordingPhase(part, item, totalQNum);
+  });
+}
+function buildFeedback(part, item, transcriptRaw, timerSec){
+  const transcript = (transcriptRaw||"").trim();
+  const supported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  if(!supported) return {supported:false, subScore6:4, notes:["Speech-to-text isn't supported in this browser — only recording length was tracked. Try Chrome for word-level feedback."]};
+  if(!transcript) return {supported:true, wordCount:0, wpm:0, subScore6:1, notes:["No speech was detected — try speaking louder or closer to the microphone."]};
+  const words = transcript.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const wpm = Math.round((wordCount/timerSec)*60);
+  const notes = [];
+  let subScore6 = 3;
+  if(part.key==="p1"){
+    const origWords = item.text.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const saidWords = transcript.toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).filter(Boolean);
+    const matched = origWords.filter(w=>saidWords.includes(w)).length;
+    const pct = Math.round((matched/origWords.length)*100);
+    if(pct>=80){ notes.push(`Great repetition — about ${pct}% of the key words matched the original sentence.`); subScore6=6; }
+    else if(pct>=60){ notes.push(`Good match — around ${pct}% of the words matched.`); subScore6=5; }
+    else if(pct>=40){ notes.push(`Partial match — around ${pct}% of the words matched. Listen closely and try to repeat the exact sentence.`); subScore6=4; }
+    else if(pct>=20){ notes.push(`Low match (${pct}%) — try to repeat the exact sentence you heard, word for word.`); subScore6=3; }
+    else { notes.push(`Very low match (${pct}%) — try to repeat the exact sentence you heard, word for word.`); subScore6=2; }
+  } else {
+    if(wordCount>=40){ notes.push("Great length — a thorough, well-developed answer."); subScore6=6; }
+    else if(wordCount>=25){ notes.push("Good length — you gave a reasonably developed answer."); subScore6=5; }
+    else if(wordCount>=15){ notes.push("Fair length — try to add a bit more detail and examples."); subScore6=4; }
+    else if(wordCount>=8){ notes.push("Short answer — try to explain more and add extra details to fill the time."); subScore6=3; }
+    else { notes.push("Very short answer — try to speak for longer and give reasons or examples."); subScore6=2; }
+  }
+  notes.push(`Estimated speaking rate: ~${wpm} words per minute.`);
+  return {supported:true, wordCount, wpm, subScore6, transcript, notes};
+}
+function startRecordingPhase(part, item, totalQNum){
+  const status = document.getElementById('sStatus');
+  const cd = document.getElementById('sCountdown');
+  status.classList.add('rec'); status.innerHTML = '<span class="srecdot"></span>Recording your response...';
+  cd.style.display="block";
+  const timerSec = item.timerSec || part.timerSec;
+  let t = timerSec; cd.textContent = t;
+
+  speakState.transcriptBuffer=""; speakState.recognition=null;
+  const isEdge = /Edg\//.test(navigator.userAgent);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR && !isEdge){
+    try{
+      const recog = new SR();
+      recog.continuous=true; recog.interimResults=false; recog.lang="en-US";
+      recog.onresult = (e)=>{ for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) speakState.transcriptBuffer += " "+e.results[i][0].transcript; } };
+      recog.onerror=()=>{}; recog.start();
+      speakState.recognition = recog;
+    } catch(e){ speakState.recognition=null; }
+  }
+  speakState.chunks=[]; speakState.pendingUrl=null;
+  try{
+    speakState.recorder = new MediaRecorder(speakState.stream);
+    speakState.recorder.ondataavailable = e=>{ if(e.data.size>0) speakState.chunks.push(e.data); };
+    speakState.recorder.onstop = ()=>{
+      const blob = new Blob(speakState.chunks, {type: speakState.chunks[0]?.type || 'audio/webm'});
+      speakState.pendingUrl = URL.createObjectURL(blob);
+    };
+    speakState.recorder.start();
+  } catch(e){}
+  speakState.countdownId = setInterval(()=>{
+    t--; cd.textContent = Math.max(t,0);
+    if(t<=3) cd.classList.add('low');
+    if(t<=0){ clearInterval(speakState.countdownId); stopRecordingPhase(part, item, totalQNum, timerSec); }
+  }, 1000);
+}
+function stopRecordingPhase(part, item, totalQNum, timerSec){
+  if(speakState.recognition){ try{ speakState.recognition.stop(); }catch(e){} }
+  if(speakState.recorder && speakState.recorder.state==="recording") speakState.recorder.stop();
+  const status = document.getElementById('sStatus');
+  status.classList.remove('rec'); status.textContent="";
+  document.getElementById('sCountdown').style.display="none";
+  document.getElementById('sStopMsg').style.display="block";
+  setTimeout(()=>{
+    const feedback = buildFeedback(part, item, speakState.transcriptBuffer, timerSec);
+    speakState.recordings[speakState.partIndex].push({url:speakState.pendingUrl, num:totalQNum, feedback});
+    advanceSpeakItem();
+  }, 1800);
+}
+function advanceSpeakItem(){
+  const part = currentSpeakPart();
+  if(speakState.itemIndex < part.items.length-1){ speakState.itemIndex++; runSpeakItem(); }
+  else if(speakState.partIndex===0){ speakState.partIndex=1; speakState.itemIndex=0; runSpeakItem(); }
+  else finishSpeaking();
+}
+function finishSpeaking(){
+  if(speakState.stream) speakState.stream.getTracks().forEach(t=>t.stop());
+  const all = [...speakState.recordings[0], ...speakState.recordings[1]].sort((a,b)=>a.num-b.num);
+  const summaryBox = document.getElementById('speakSummaryBox');
+  const wpmVals = all.map(r=>r.feedback && r.feedback.wpm).filter(v=>typeof v==="number" && v>0);
+  const avgWpm = wpmVals.length ? Math.round(wpmVals.reduce((a,b)=>a+b,0)/wpmVals.length) : null;
+  let summaryHTML = `<b>Quick summary:</b> ${all.length} of 11 responses recorded.`;
+  if(avgWpm) summaryHTML += ` Average speaking rate: ~${avgWpm} words per minute.`;
+  summaryHTML += ` <br><span style="font-size:11.5px;">Feedback below is rule-based (word count, speech rate, and word-match for repeat tasks) — not a certified score.</span>`;
+  summaryBox.innerHTML = summaryHTML;
+  const list = document.getElementById('replayList');
+  list.innerHTML = "";
+  if(all.length){
+    all.forEach(rec=>{
+      const row = document.createElement('div'); row.className="replay-item";
+      const fb = rec.feedback||{};
+      const notesHTML = (fb.notes||[]).map(n=>`<div>• ${n}</div>`).join("");
+      row.innerHTML = `<div class="rtop"><span><b>Question ${rec.num}</b></span><audio controls src="${rec.url||''}"></audio></div><div class="rfeedback">${notesHTML||"No feedback available."}</div>`;
+      list.appendChild(row);
+    });
+  } else list.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);">No recordings were captured.</div>';
+  showScreen('speakDone');
+}
+document.getElementById('speakingDoneBtn').addEventListener('click', ()=> finishTest());
+function goToSpeaking(){ window.speechSynthesis && window.speechSynthesis.cancel(); showScreen('speakIntro'); }
+function scoreSpeakingOverall6(){
+  const all = [...speakState.recordings[0], ...speakState.recordings[1]];
+  if(!all.length) return 0;
+  const scores = all.map(r=> (r.feedback && typeof r.feedback.subScore6==="number") ? r.feedback.subScore6 : 3);
+  const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+  return Math.round(avg*2)/2;
+}
+
+/* =========================================================
+   RESULTS SCREEN — real-TOEFL-style gauge + CEFR
+========================================================= */
+function cefrFromTotal120(total){
+  if(total<=30) return "A1";
+  if(total<=45) return "A2";
+  if(total<=70) return "B1";
+  if(total<=90) return "B2";
+  if(total<=105) return "C1";
+  return "C2";
+}
+function setGaugeFill(fraction){
+  const path = document.getElementById('gaugeFill');
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len*(1-Math.max(0,Math.min(1,fraction)));
+}
+function finishTest(){
+  const rRaw = scoreReading(), rTotal = totalReadingCount();
+  const lRaw = scoreListening(), lTotal = totalListeningCount();
+  const rFrac = rTotal? rRaw/rTotal : 0;
+  const lFrac = lTotal? lRaw/lTotal : 0;
+  const r6 = Math.round(rFrac*6*2)/2;
+  const l6 = Math.round(lFrac*6*2)/2;
+  const w6 = scoreWritingOverall6();
+  const s6 = scoreSpeakingOverall6();
+
+  const r30 = Math.round(rFrac*30);
+  const l30 = Math.round(lFrac*30);
+  const w30 = Math.round((w6/6)*30);
+  const s30 = Math.round((s6/6)*30);
+  const total120 = r30+l30+w30+s30;
+  const overall6 = Math.round(((r6+l6+w6+s6)/4)*2)/2;
+  const cefr = cefrFromTotal120(total120);
+
+  document.getElementById('gaugeScoreText').textContent = overall6.toFixed(1)+" of 6";
+  document.getElementById('gaugeTotalText').textContent = total120+" of 120";
+  document.getElementById('gaugeCefrText').textContent = "CEFR: "+cefr;
+  document.getElementById('rscore6').textContent = r6.toFixed(1)+" of 6";
+  document.getElementById('rscoreRaw').textContent = rRaw+"/"+rTotal+" correct";
+  document.getElementById('lscore6').textContent = l6.toFixed(1)+" of 6";
+  document.getElementById('lscoreRaw').textContent = lRaw+"/"+lTotal+" correct";
+  document.getElementById('wscore6').textContent = w6.toFixed(1)+" of 6";
+  const t1c = writeState.task1Answers.filter(a=>a.correct).length;
+  document.getElementById('wscoreRaw').textContent = "Sentences "+t1c+"/10 · Email "+(writeState.task2Result?writeState.task2Result.score:0)+"/6 · Discussion "+(writeState.task3Result?writeState.task3Result.score:0)+"/6";
+  document.getElementById('sscore6').textContent = s6.toFixed(1)+" of 6";
+  const spCount = speakState.recordings[0].length + speakState.recordings[1].length;
+  document.getElementById('sscoreRaw').textContent = spCount+"/11 responses recorded";
+
+  showScreen('endscreen');
+  setGaugeFill(overall6/6);
+}
+function buildDetailedReview(){
+  const inner = document.getElementById('reviewInner');
+  let html = "";
+  html += `<div class="reviewSection"><h2>📖 Reading</h2>`;
+  for(let mIdx=0; mIdx<MODULES.length; mIdx++){
+    const total = moduleSlotCount(mIdx);
+    for(let i=0;i<total;i++){
+      const slot = getSlotInfo(mIdx, i);
+      if(slot.kind==="fill"){
+        const item = slot.item;
+        const given = getGivenWordText(mIdx, item);
+        const correct = isWordCorrect(mIdx, item);
+        html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">M${mIdx+1} Q${item.number}.</span>Complete the word<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+          <div class="line"><b class="lbl">Your answer:</b>${given}</div>${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${item.answer}</div>`}</div>`;
+      } else {
+        const q = slot.question;
+        const given = rState.answers[mIdx+"_"+q.number];
+        const correct = given===q.correct;
+        const letters=["A","B","C","D"];
+        html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">M${mIdx+1} Q${q.number}.</span>${q.q}<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+          <div class="line"><b class="lbl">Your answer:</b>${given!==undefined?letters[given]+") "+q.options[given]:"No answer"}</div>
+          ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}</div>`;
+      }
+    }
+  }
+  html += `</div><div class="reviewSection"><h2>🎧 Listening</h2>`;
+  LISTEN_MODULES.forEach((mod,mi)=>{
+    flattenListenModule(mod).forEach(slot=>{
+      const q = slot.question;
+      const given = listenState.answers[q.number];
+      const correct = given===q.correct;
+      const letters=["A","B","C","D"];
+      const label = q.kind==="sqr" ? "Choose the best response" : q.prompt;
+      html += `<div class="ansRow ${correct?'correct':'wrong'}"><span class="qn">M${mi+1} Q${q.number}.</span>${label}<span class="tag">${correct?'✓ Correct':'✗ Incorrect'}</span>
+        <div class="line"><b class="lbl">Your answer:</b>${given!==undefined?letters[given]+") "+q.options[given]:"No answer"}</div>
+        ${correct?'':`<div class="line"><b class="lbl">Correct answer:</b>${letters[q.correct]}) ${q.options[q.correct]}</div>`}</div>`;
+    });
+  });
+  html += `</div><div class="reviewSection"><h2>✍️ Writing</h2>`;
+  writeState.task1Answers.forEach((a,i)=>{
+    html += `<div class="ansRow ${a.correct?'correct':'wrong'}"><span class="qn">Sentence ${i+1}.</span><span class="tag">${a.correct?'✓ Correct':'✗ Incorrect'}</span>
+      <div class="line"><b class="lbl">Your sentence:</b>${a.given||"(no answer)"}</div>${a.correct?'':`<div class="line"><b class="lbl">Correct sentence:</b>${a.key}</div>`}</div>`;
+  });
+  if(writeState.task2Result){
+    html += `<div class="wscorebox"><b class="wsc-title">Task 2 — Email: ${writeState.task2Result.score}/6</b>${writeState.task2Result.feedback.map(f=>`<div>• ${f}</div>`).join("")}</div>`;
+  }
+  if(writeState.task3Result){
+    html += `<div class="wscorebox"><b class="wsc-title">Task 3 — Academic Discussion: ${writeState.task3Result.score}/6</b>${writeState.task3Result.feedback.map(f=>`<div>• ${f}</div>`).join("")}</div>`;
+  }
+  html += `</div>`;
+  inner.innerHTML = html;
+}
+document.getElementById('openDetailedReviewBtn').addEventListener('click', ()=>{ buildDetailedReview(); showScreen('detailedReview'); });
+document.getElementById('closeDetailedReviewBtn').addEventListener('click', ()=> showScreen('endscreen'));
+</script>
+</body>
+</html>
