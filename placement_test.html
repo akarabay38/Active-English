@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>General English Placement Test</title>
+<style>
+  :root{--bg:#f4f6f9;--card:#fff;--ink:#1f2933;--muted:#697586;--accent:#2f6fed;--accent-dark:#1e4fb8;--good:#1f9d55;--bad:#d64545;--border:#e3e8ef;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+  .topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:10px 20px;}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar h1{font-size:15px;margin:0;font-weight:600;}
+  #timer{font-size:20px;font-weight:700;padding:6px 14px;border-radius:8px;background:#eef3ff;color:var(--accent-dark);min-width:90px;text-align:center;}
+  #timer.warn{background:#fff0e0;color:#b8590e;}
+  #timer.danger{background:#ffe0e0;color:var(--bad);}
+  .wrap{max-width:700px;margin:0 auto;padding:24px 16px 80px;}
+  .start-card{background:#fff;border-radius:14px;padding:32px;margin-top:40px;box-shadow:0 2px 10px rgba(0,0,0,.06);text-align:center;}
+  .start-card h2{margin:12px 0 6px;}
+  .instruction-box{background:#eef3ff;border-radius:8px;padding:12px 16px;font-weight:600;color:#1e4fb8;font-size:14px;margin:14px 0;line-height:1.7;}
+  input#studentName{width:100%;padding:12px 14px;font-size:16px;border:1px solid var(--border);border-radius:8px;margin:12px 0;}
+  .progress-bar-wrap{background:#e3e8ef;border-radius:99px;height:6px;margin-bottom:20px;}
+  .progress-bar{background:var(--accent);height:6px;border-radius:99px;transition:width .3s;}
+  .progress-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .card{background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+  .qmeta{font-size:12px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;}
+  .qtext{font-size:16px;line-height:1.55;margin-bottom:16px;font-weight:500;}
+  .options{display:flex;flex-direction:column;gap:9px;}
+  .option{display:flex;align-items:center;gap:11px;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;font-size:14.5px;transition:all .15s;}
+  .option:hover{background:#f7f9fc;border-color:#c4cdd9;}
+  .option.selected{border-color:var(--accent);background:#eef3ff;font-weight:500;}
+  .option-letter{width:27px;height:27px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:var(--muted);}
+  .option.selected .option-letter{border-color:var(--accent);color:var(--accent);background:#fff;}
+  .reading-box{background:#fbfbfc;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:16px;font-size:14.5px;line-height:1.65;color:#3a4452;max-height:230px;overflow-y:auto;}
+  .nav-row{display:flex;justify-content:flex-end;margin-top:22px;gap:10px;}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:8px;background:var(--accent);color:#fff;padding:12px 24px;font-size:15px;font-weight:600;transition:background .15s;}
+  button:hover{background:var(--accent-dark);}
+  button:disabled{background:#c4cdd9;cursor:not-allowed;}
+  /* Listening */
+  .listening-card{background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+  .listen-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border);}
+  .listen-header h2{margin:0;color:var(--accent-dark);font-size:18px;}
+  .audio-box{display:flex;align-items:center;gap:14px;background:#f0f7ff;border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin:16px 0;}
+  .playbtn{background:var(--good);font-family:inherit;cursor:pointer;border:none;border-radius:8px;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;}
+  .playbtn:hover{background:#177a41;}
+  .warn-box{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px 14px;font-size:13px;color:#7a5800;margin-bottom:14px;}
+  .no-back-box{background:#fff0f0;border:2px solid #ffbaba;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;color:#c0392b;margin-top:20px;text-align:center;}
+  .qblock{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+  .qblock:last-of-type{border-bottom:none;}
+  .qnum{color:var(--accent-dark);font-weight:700;margin-right:4px;}
+  /* Intro */
+  .intro-card{background:#fff;border-radius:14px;padding:32px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+  /* Result */
+  #resultScreen{display:none;}
+  .score-hero{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border-radius:16px;padding:30px;text-align:center;margin-top:30px;}
+  .score-hero .big{font-size:40px;font-weight:800;}
+  .score-hero .net{font-size:18px;opacity:.9;margin-top:6px;}
+  .score-hero .level{font-size:22px;margin-top:8px;font-weight:600;}
+  .breakdown{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+  .bcard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .bcard h4{margin:0 0 4px;font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+  .bcard .val{font-size:18px;font-weight:700;}
+  .qlist{margin-top:24px;}
+  .qrow{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px;}
+  .qrow.correct{color:var(--good);}
+  .qrow.wrong{color:var(--bad);}
+  .qrow.blank{color:var(--muted);}
+  audio{display:none;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="data:image/png;base64,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" alt="logo" style="height:34px;">
+    <h1>General English Placement Test</h1>
+  </div>
+  <div id="timer" class="hidden">35:00</div>
+</div>
+
+<div class="wrap">
+  <div class="start-card" id="startScreen">
+    <img src="data:image/png;base64,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" alt="logo" style="height:80px;margin-bottom:8px;">
+    <h2>Sınava Başla</h2>
+    <div class="instruction-box">
+      🎧 Listening (1–6) &nbsp;·&nbsp; 📝 Grammar (7–20)<br>
+      📚 Vocabulary (21–32) &nbsp;·&nbsp; 📖 Reading (33–40)<br><br>
+      ⏱ 35 dakika &nbsp;|&nbsp; 4 yanlış = 1 doğruyu götürür
+    </div>
+    <input type="text" id="studentName" placeholder="Adın ve Soyadın">
+    <button onclick="startExam()" style="width:100%;margin-top:4px;">Sınavı Başlat</button>
+  </div>
+
+  <div id="examScreen" class="hidden">
+    <div class="progress-label" id="progressLabel"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    <div id="examBody"></div>
+  </div>
+
+  <div id="resultScreen">
+    <div class="score-hero">
+      <div id="studentNameResult" style="font-size:15px;opacity:.8;margin-bottom:4px;"></div>
+      <div class="big" id="scoreBig"></div>
+      <div class="net" id="scoreNet"></div>
+      <div class="level" id="levelResult"></div>
+      <div id="sendStatus" style="margin-top:10px;font-size:13px;opacity:.85;"></div>
+    </div>
+    <div class="breakdown" id="breakdownGrid"></div>
+    <div class="qlist" id="qlist"></div>
+  </div>
+</div>
+
+
+
+<script>
+const EXAM = {"questions": [{"num": 1, "text": "How old is Kathy?", "options": ["12", "14", "15", "16", "18"], "section": "Listening 1", "level": "A1", "audio": 1, "correct": 3}, {"num": 2, "text": "What doesn't she do on her birthday?", "options": ["Making a birthday cake", "Having a party", "Going for a picnic", "Meeting her friends", "Singing 'Happy Birthday'"], "section": "Listening 1", "level": "A1", "audio": 1, "correct": 0}, {"num": 3, "text": "When is Kathy's birthday?", "options": ["13th of June", "14th of July", "30th of June", "30th of July", "16th of June"], "section": "Listening 1", "level": "A1", "audio": 1, "correct": 4}, {"num": 4, "text": "What is Ben's latest book about?", "options": ["Historical places in Europe", "Rules, traditions, and funny stories from different countries", "Famous restaurants and recipes", "His childhood memories", "How to learn new languages"], "section": "Listening 2", "level": "A2", "audio": 2, "correct": 1}, {"num": 5, "text": "What surprised Ben about the pyramids in Egypt?", "options": ["They are very close to Cairo.", "They are much smaller than expected.", "They are located on an island.", "They are surrounded by high mountains.", "Visitors are not allowed inside."], "section": "Listening 2", "level": "A2", "audio": 2, "correct": 0}, {"num": 6, "text": "What is Ben's next book going to be about?", "options": ["International food and drinks", "His experiences in Cairo", "The history of Egypt", "Traveling by train", "Britain"], "section": "Listening 2", "level": "A2", "audio": 2, "correct": 4}, {"num": 7, "text": "What's ____________ name?", "options": ["she", "hers", "him", "he", "her"], "section": "Grammar", "level": "A1", "audio": null, "correct": 4}, {"num": 8, "text": "My aunt ____________ in Manchester.", "options": ["lives", "live", "living", "is live", "is lives"], "section": "Grammar", "level": "A1", "audio": null, "correct": 0}, {"num": 9, "text": "I _____________ tea.", "options": ["does no like", "not like", "like don't", "don't like", "am not like"], "section": "Grammar", "level": "A1", "audio": null, "correct": 3}, {"num": 10, "text": "When _____________?", "options": ["comes home Francesco", "Francesco comes home", "Francesco does come home", "does Francesco come home", "is Francesco come home"], "section": "Grammar", "level": "A2", "audio": null, "correct": 3}, {"num": 11, "text": "A: '____________ to Istanbul, Alex?' B: 'Yes, two years ago.'", "options": ["Did you ever go", "Do you ever go", "Have you ever go", "Are you ever going", "Have you ever been"], "section": "Grammar", "level": "A2", "audio": null, "correct": 4}, {"num": 12, "text": "London is ____________ city I've ever lived in.", "options": ["the most big", "the biggest", "the bigger", "the more big", "biggest"], "section": "Grammar", "level": "A2", "audio": null, "correct": 1}, {"num": 13, "text": "I ____________ go to the cinema tonight.", "options": ["am", "will to", "going to", "go to", "am going to"], "section": "Grammar", "level": "A2", "audio": null, "correct": 4}, {"num": 14, "text": "____________ these days.", "options": ["I never a newspaper buy", "I never buy a newspaper", "I buy never a newspaper", "Never I buy a newspaper", "I buy a newspaper never"], "section": "Grammar", "level": "A2", "audio": null, "correct": 1}, {"num": 15, "text": "The weather has been awful. We've had very ____________ sunshine this summer.", "options": ["little", "a little", "few", "a few", "much"], "section": "Grammar", "level": "B1", "audio": null, "correct": 0}, {"num": 16, "text": "If I __________ you, I wouldn't talk to him again.", "options": ["been", "were", "have been", "am", "was"], "section": "Grammar", "level": "B1", "audio": null, "correct": 1}, {"num": 17, "text": "A vegetarian is someone ____________ doesn't eat meat.", "options": ["who", "what", "which", "whose", "where"], "section": "Grammar", "level": "B1", "audio": null, "correct": 0}, {"num": 18, "text": "Ken____________ his father's car when the accident happened.", "options": ["was driving", "drove", "had driven", "has been driving", "drives"], "section": "Grammar", "level": "B1", "audio": null, "correct": 0}, {"num": 19, "text": "Did you hear what happened to George? He _____________.", "options": ["is arrested", "arrested", "has been arrested", "is being arrested", "was arrested"], "section": "Grammar", "level": "B2", "audio": null, "correct": 2}, {"num": 20, "text": "I don't know where ____________ on his last holiday.", "options": ["did he go", "he did go", "went he", "he went", "has he gone"], "section": "Grammar", "level": "B2", "audio": null, "correct": 3}, {"num": 21, "text": "Sally _______ the train to work every morning.", "options": ["listens", "has", "takes", "goes", "rides"], "section": "Vocabulary", "level": "A1", "audio": null, "correct": 2}, {"num": 22, "text": "The Eiffel Tower is ________ Paris.", "options": ["in", "at", "on", "under", "by"], "section": "Vocabulary", "level": "A1", "audio": null, "correct": 0}, {"num": 23, "text": "Have a great holiday! Don't forget to __________ a lot of photos.", "options": ["have", "be", "do", "take", "make"], "section": "Vocabulary", "level": "A1", "audio": null, "correct": 3}, {"num": 24, "text": "Excuse me, __________ a supermarket near here?", "options": ["is it", "is there", "there is", "it is", "are there"], "section": "Vocabulary", "level": "A2", "audio": null, "correct": 1}, {"num": 25, "text": "You mustn't talk __________ the phone when you're on a plane.", "options": ["on", "under", "with", "out", "by"], "section": "Vocabulary", "level": "A2", "audio": null, "correct": 0}, {"num": 26, "text": "We were late for the concert because we __________ the bus.", "options": ["arrived", "rented", "saw", "missed", "lost"], "section": "Vocabulary", "level": "A2", "audio": null, "correct": 3}, {"num": 27, "text": "Ned doesn't carry around much cash. He usually pays __________ credit card.", "options": ["by", "up", "through", "from", "with"], "section": "Vocabulary", "level": "A2", "audio": null, "correct": 0}, {"num": 28, "text": "Last week, Brenda __________ some money and bought a new coat.", "options": ["accomplished", "lent", "borrowed", "ordered", "earned"], "section": "Vocabulary", "level": "B1", "audio": null, "correct": 2}, {"num": 29, "text": "The police had to let the suspect go because there wasn't enough ___________ against her.", "options": ["fugitive", "hostage", "crime", "evidence", "witness"], "section": "Vocabulary", "level": "B1", "audio": null, "correct": 3}, {"num": 30, "text": "Dorothy never ___________ to her e-mails on time. You should call her instead.", "options": ["returns", "responds", "researches", "replaces", "replies"], "section": "Vocabulary", "level": "B1", "audio": null, "correct": 1}, {"num": 31, "text": "I'd better ___________ doing some more work because if I don't pass my exams, I won't be going anywhere.", "options": ["get down to", "put up with", "fall out with", "get used", "look forward to"], "section": "Vocabulary", "level": "B2", "audio": null, "correct": 0}, {"num": 32, "text": "Freddie is really ___________. It takes him 30 minutes just to decide what to eat at a restaurant.", "options": ["indecisive", "irresponsible", "inaccurate", "influential", "impatient"], "section": "Vocabulary", "level": "B2", "audio": null, "correct": 0}, {"num": 33, "text": "What was Michael Palin's job in 1970?", "options": ["traveler", "actor", "actress", "driver", "journalist"], "section": "Reading 1", "level": "A1", "audio": null, "correct": 1}, {"num": 34, "text": "What did he discover in 1980?", "options": ["He discovered a train.", "He discovered the world in 80 days.", "He discovered his love toward exploration.", "He discovered the North Pole.", "He discovered a new book."], "section": "Reading 1", "level": "A2", "audio": null, "correct": 2}, {"num": 35, "text": "What did Palin walk across?", "options": ["The North Pole", "The South Pole", "The Pacific Ocean", "The Sahara Desert", "The railway route"], "section": "Reading 1", "level": "A2", "audio": null, "correct": 3}, {"num": 36, "text": "When did Palin go from the North Pole to the South Pole?", "options": ["1988", "2002", "1996", "1973", "1991"], "section": "Reading 1", "level": "A2", "audio": null, "correct": 4}, {"num": 37, "text": "How many passengers use the airport every year?", "options": ["9 million", "90 million", "19 million", "15 million", "76 million"], "section": "Reading 2", "level": "A2", "audio": null, "correct": 2}, {"num": 38, "text": "How long does it take to walk from the terminal to the hostel?", "options": ["5 minutes", "24 minutes", "15 minutes", "50 minutes", "10 minutes"], "section": "Reading 2", "level": "A2", "audio": null, "correct": 2}, {"num": 39, "text": "Where are the reception desk and the café?", "options": ["In the airport", "In the old first-class seating area", "Near airplane seats", "Next to the cockpit", "In the cockpit"], "section": "Reading 2", "level": "B1", "audio": null, "correct": 1}, {"num": 40, "text": "How many nights do visitors usually stay?", "options": ["One", "Two", "Three", "Four", "Ten"], "section": "Reading 2", "level": "A2", "audio": null, "correct": 0}], "readings": {"Reading 1": "Michael Palin was an actor and writer from 1965 to 1980. Then in 1980, he made a TV show about a trip by train, and he discovered that he loved travel and exploration. So, he changed his job. In 1988, he went Around the world in 80 days. Jules Verne wrote the same story in 1973. Palin followed the same route. In 1991, Palin traveled from the North Pole to the South Pole. In 1996 and 1997, he went on a ten-month adventure around the Pacific Ocean. In 2002, he walked across the Sahara Desert. On each adventure, he met people from the local area and filmed them for a TV show.", "Reading 2": "About nineteen million passengers use Stockholm-Arlanda airport every year. Airplanes take off and land all the time, but at the side of the runway there's a big Boeing 747 airplane and it never takes off. That's because it's a hostel called \"Jumbo Stay\". It's only fifteen minutes on foot from the main airport terminal or five minutes by bus. The Jumbo Stay is a real airplane from 1976 and from the outside you think it's a normal airplane. But on the inside it's very different. There's a reception desk and a twenty-four-a-day café in the old first-class seating area. There aren't any airplane seats. There are twenty-seven rooms with seventy-six beds. Each room has one or two beds, a TV and the Internet. The rooms are small but cheap, and visitors usually only stay for a night. You can also sleep in the cockpit of the airplane. It's more expensive but it's a private double room with a shower. Jumbo Stay is very popular with families and with travelers who want a different kind of travel experience."}};
+
+// Build steps
+// Grammar/Vocab/Reading: one question at a time
+// Listening 1: all 3 on one page, Listening 2: all 3 on one page
+const LISTENING_SECTIONS = ["Listening 1","Listening 2"];
+const AUDIO_MAP = {"Listening 1":1,"Listening 2":2};
+const SECTION_INTROS = {
+  "Listening 1":{icon:"🎧", title:"Listening 1",       sub:"Önce soruları oku, sonra sesi dinle."},
+  "Listening 2":{icon:"🎧", title:"Listening 2",       sub:"Önce soruları oku, sonra sesi dinle."},
+  "Grammar":    {icon:"📝", title:"Grammar Bölümü",    sub:"Sorular tek tek çıkar — geri dönüş yoktur."},
+  "Vocabulary": {icon:"📚", title:"Vocabulary Bölümü", sub:"Sorular tek tek çıkar — geri dönüş yoktur."},
+  "Reading 1":  {icon:"📖", title:"Reading Bölümü",    sub:"Metni okuyup soruları cevaplayabilirsin — geri dönüş yoktur."},
+};
+
+let steps = [];
+let seenSections = new Set();
+
+EXAM.questions.forEach(q => {
+  const sec = q.section;
+  // Add intro once per section group
+  if(!seenSections.has(sec)){
+    seenSections.add(sec);
+    if(SECTION_INTROS[sec]) steps.push({type:'intro', sec});
+  }
+  // Listening: group all qs in one step
+  if(LISTENING_SECTIONS.includes(sec)){
+    // Find or create group step
+    const existing = steps.find(s=>s.type==='listening' && s.sec===sec);
+    if(existing){ existing.qs.push(q); }
+    else { steps.push({type:'listening', sec, qs:[q], audioId:AUDIO_MAP[sec]}); }
+  } else if(sec==="Reading 1"||sec==="Reading 2"){
+    steps.push({type:'reading', sec, q});
+  } else {
+    steps.push({type:'question', sec, q});
+  }
+});
+
+let currentStep=0, studentName="", answers={}, timeLeft=35*60, timerInterval=null, submitted=false;
+
+function startExam(){
+  const name=document.getElementById('studentName').value.trim();
+  if(!name){alert('Lütfen adın ve soyadını yaz.');return;}
+  studentName=name;
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
+  document.getElementById('timer').classList.remove('hidden');
+  startTimer(); renderStep();
+}
+
+function startTimer(){
+  updateTimerDisplay();
+  timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);submitExam(true);}},1000);
+}
+
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  const el=document.getElementById('timer');
+  el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  el.classList.remove('warn','danger');
+  if(timeLeft<=300)el.classList.add('danger');
+  else if(timeLeft<=600)el.classList.add('warn');
+}
+
+function updateProgress(){
+  const total=EXAM.questions.length, answered=Object.keys(answers).length;
+  document.getElementById('progressLabel').textContent=`${answered} / ${total} soru cevaplandı`;
+  document.getElementById('progressBar').style.width=Math.round(answered/total*100)+'%';
+}
+
+function renderStep(){
+  updateProgress();
+  stopAllAudio();
+  const step=steps[currentStep];
+  if(!step){submitExam(false);return;}
+  if(step.type==='intro') renderIntro(step);
+  else if(step.type==='question') renderQuestion(step);
+  else if(step.type==='reading') renderReading(step);
+  else if(step.type==='listening') renderListening(step);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function stopAllAudio(){}
+
+function renderIntro(step){
+  const {icon,title,sub}=SECTION_INTROS[step.sec];
+  document.getElementById('examBody').innerHTML=`
+  <div class="intro-card">
+    <div style="font-size:52px;">${icon}</div>
+    <h2 style="color:var(--accent-dark);margin:10px 0 6px;">${title}</h2>
+    <p style="color:var(--muted);font-size:14px;">${sub}</p>
+    <button onclick="nextStep()">Başla →</button>
+  </div>`;
+}
+
+function optionsHtml(q){
+  return q.options.map((opt,idx)=>{
+    const letter=String.fromCharCode(65+idx);
+    const sel=answers[q.num]===idx?'selected':'';
+    return `<div class="option ${sel}" id="opt-${q.num}-${idx}" onclick="selectOption(${q.num},${idx},${!!document.getElementById('nextBtn')})">
+      <div class="option-letter">${letter}</div><span>${opt}</span></div>`;
+  }).join('');
+}
+
+function renderQuestion(step){
+  const q=step.q;
+  document.getElementById('examBody').innerHTML=`
+  <div class="card">
+    <div class="qmeta">${q.section} — Soru ${q.num}</div>
+    <div class="qtext">${q.num}. ${q.text}</div>
+    <div class="options">${optionsHtml(q)}</div>
+    <div class="no-back-box">⚠️ Bir sonraki soruya geçtikten sonra bu soruya geri dönemezsiniz.</div>
+    <div class="nav-row">
+      <button id="nextBtn" onclick="nextStep()" ${answers[q.num]===undefined?'disabled':''}>İleri →</button>
+    </div>
+  </div>`;
+}
+
+function renderReading(step){
+  const q=step.q;
+  const text=EXAM.readings[step.sec]||'';
+  document.getElementById('examBody').innerHTML=`
+  <div class="card">
+    <div class="qmeta">${q.section} — Soru ${q.num}</div>
+    <div class="reading-box">${text}</div>
+    <div class="qtext">${q.num}. ${q.text}</div>
+    <div class="options">${optionsHtml(q)}</div>
+    <div class="no-back-box">⚠️ Bir sonraki soruya geçtikten sonra bu soruya geri dönemezsiniz.</div>
+    <div class="nav-row">
+      <button id="nextBtn" onclick="nextStep()" ${answers[q.num]===undefined?'disabled':''}>İleri →</button>
+    </div>
+  </div>`;
+}
+
+function renderListening(step){
+  let qblocksHtml = step.qs.map(q=>`
+    <div class="qblock">
+      <div class="qtext"><span class="qnum">${q.num}.</span>${q.text}</div>
+      <div class="options">${optionsHtml(q)}</div>
+    </div>`).join('');
+
+  const isLast = currentStep===steps.length-1;
+  const nextLabel = isLast ? 'Sınavı Bitir ✓' : 'İleri →';
+
+  document.getElementById('examBody').innerHTML=`
+  <div class="listening-card">
+    <div class="listen-header">
+      <span style="font-size:28px;">🎧</span>
+      <h2>${step.sec}</h2>
+    </div>
+    <div class="warn-box">📌 Öğretmeniniz sesi çalarken aşağıdaki soruları cevaplayın.</div>
+    ${qblocksHtml}
+    <div class="nav-row">
+      <button onclick="nextStep()">${nextLabel}</button>
+    </div>
+  </div>`;
+}
+
+
+function selectOption(qnum,idx){
+  answers[qnum]=idx;
+  document.querySelectorAll(`[id^="opt-${qnum}-"]`).forEach(el=>el.classList.remove('selected'));
+  document.getElementById(`opt-${qnum}-${idx}`).classList.add('selected');
+  const nb=document.getElementById('nextBtn');
+  if(nb) nb.disabled=false;
+  updateProgress();
+}
+
+function nextStep(){
+  currentStep++;
+  if(currentStep>=steps.length){submitExam(false);return;}
+  renderStep();
+}
+
+function submitExam(auto){
+  if(submitted)return;
+  submitted=true;
+  clearInterval(timerInterval);
+  stopAllAudio();
+  showResults();
+}
+
+function showResults(){
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('resultScreen').style.display='block';
+  let c=0,w=0,b=0;
+  const macro={Grammar:[0,0],Vocabulary:[0,0],Reading:[0,0],Listening:[0,0]};
+  const lvlStats={};
+  let qlistHtml='';
+
+  EXAM.questions.forEach(q=>{
+    const ua=answers[q.num];
+    const blank=ua===undefined, correct=!blank&&ua===q.correct, wrong=!blank&&!correct;
+    if(correct)c++; else if(wrong)w++; else b++;
+    const mk=q.section.startsWith('Listening')?'Listening':q.section.startsWith('Reading')?'Reading':q.section;
+    if(macro[mk]){if(correct)macro[mk][0]++;else if(wrong)macro[mk][1]++;}
+    const lv=q.level;
+    if(lv){if(!lvlStats[lv])lvlStats[lv]={c:0,t:0};lvlStats[lv].t++;if(correct)lvlStats[lv].c++;}
+    const uL=!blank?String.fromCharCode(65+ua):'—', cL=String.fromCharCode(65+q.correct);
+    const rc=blank?'blank':(correct?'correct':'wrong'), ic=blank?'○':(correct?'✓':'✗');
+    qlistHtml+=`<div class="qrow ${rc}"><span>${ic} S${q.num} — ${q.section}</span>
+      <span>${blank?'Boş':('Senin: '+uL+(correct?'':' | Doğru: '+cL))}</span></div>`;
+  });
+
+  const net=Math.round((c-w/4)*100)/100;
+  document.getElementById('studentNameResult').textContent=studentName;
+  document.getElementById('scoreBig').textContent=`${c} D  /  ${w} Y  /  ${b} B`;
+  document.getElementById('scoreNet').textContent=`Net: ${net} / ${EXAM.questions.length}`;
+
+  // Seviye hesabı: net puan eşiğine göre
+  const net40 = Math.round((c - w/4) * 100) / 100;
+  let estLvl = 'A1';
+  if(net40 >= 33) estLvl = 'B2';
+  else if(net40 >= 23) estLvl = 'B1';
+  else if(net40 >= 11) estLvl = 'A2';
+  else estLvl = 'A1';
+  document.getElementById('levelResult').textContent='Tahmini Seviye: '+estLvl;
+
+  let bHtml='';
+  Object.entries(macro).forEach(([k,v])=>{
+    const n=Math.round((v[0]-v[1]/4)*100)/100;
+    bHtml+=`<div class="bcard"><h4>${k}</h4><div class="val">${v[0]}D ${v[1]}Y → Net: ${n}</div></div>`;
+  });
+  document.getElementById('breakdownGrid').innerHTML=bHtml;
+  document.getElementById('qlist').innerHTML='<h3 style="margin:20px 0 10px">Soru Detayları</h3>'+qlistHtml;
+
+  sendToGoogleForm(macro,c,w,net,estLvl);
+  downloadCSV(macro,c,w,net,estLvl);
+}
+
+function sendToGoogleForm(m,c,w,net,lvl){
+  const fd=new FormData();
+  fd.append('entry.1704509545',studentName);
+  fd.append('entry.55992721',c+'D / '+w+'Y → Net: '+net);
+  fd.append('entry.62054113',m.Listening?m.Listening[0]+'D '+m.Listening[1]+'Y':'—');
+  fd.append('entry.551404973',m.Grammar?m.Grammar[0]+'D '+m.Grammar[1]+'Y':'—');
+  fd.append('entry.1793838962',m.Vocabulary?m.Vocabulary[0]+'D '+m.Vocabulary[1]+'Y':'—');
+  fd.append('entry.2128205401',m.Reading?m.Reading[0]+'D '+m.Reading[1]+'Y':'—');
+  fd.append('entry.1812550524',lvl);
+  fetch('https://docs.google.com/forms/u/0/d/e/1FAIpQLSe-8q1szhfktorpFxMNPcEQn3r5lh2mr_jHlCe8cnfKulf7IA/formResponse',
+    {method:'POST',mode:'no-cors',body:fd})
+    .then(()=>{document.getElementById('sendStatus').textContent='✓ Sonuç öğretmene gönderildi.';})
+    .catch(()=>{document.getElementById('sendStatus').textContent='⚠ Gönderilemedi — CSV indirildi.';});
+}
+
+function downloadCSV(m,c,w,net,lvl){
+  const rows=[
+    ['Ogrenci','Dogru','Yanlis','Net','Grammar','Vocabulary','Reading','Listening','Seviye'],
+    [studentName,c,w,net,
+     m.Grammar?m.Grammar[0]+'D '+m.Grammar[1]+'Y':'—',
+     m.Vocabulary?m.Vocabulary[0]+'D '+m.Vocabulary[1]+'Y':'—',
+     m.Reading?m.Reading[0]+'D '+m.Reading[1]+'Y':'—',
+     m.Listening?m.Listening[0]+'D '+m.Listening[1]+'Y':'—',lvl]
+  ];
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=studentName.replace(/\s+/g,'_')+'_sonuc.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+window.addEventListener('beforeunload',e=>{
+  if(!submitted&&Object.keys(answers).length>0){e.preventDefault();e.returnValue='';}
+});
+</script>
+</body>
+</html>
