@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vlog Script Builder | Active English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14171A;
+    --panel:#1E2226;
+    --panel-light:#262B30;
+    --line:#33393F;
+    --ink:#EDEDE7;
+    --muted:#9AA0A6;
+    --red:#FF4B3E;
+    --yellow:#F5C542;
+    --teal:#2DD4BF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em;}
+  .mono{font-family:'Space Mono',monospace;}
+
+  /* ---------- CLAPPERBOARD HEADER ---------- */
+  .slate{
+    position:relative;
+    background:var(--panel);
+    border-bottom:6px solid #000;
+    overflow:hidden;
+  }
+  .slate-stripes{
+    height:16px;
+    background:repeating-linear-gradient(115deg,#111 0 26px,#f2f2f2 26px 52px);
+  }
+  .slate-body{
+    padding:22px 24px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .slate-title h1{
+    font-size:clamp(34px,6vw,56px);
+    margin:0;
+    line-height:0.9;
+    color:var(--ink);
+  }
+  .slate-title h1 span{color:var(--red);}
+  .slate-sub{color:var(--muted); font-size:14px; margin-top:4px;}
+  .slate-meta{
+    display:flex; gap:18px; font-size:12px; color:var(--muted);
+  }
+  .slate-meta div b{display:block; color:var(--yellow); font-size:16px;}
+
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 20px 80px;}
+
+  /* ---------- THEME PICKER ---------- */
+  .section-label{
+    display:flex; align-items:center; gap:10px; margin:0 0 14px;
+    font-family:'Space Mono',monospace; font-size:13px; color:var(--yellow); text-transform:uppercase; letter-spacing:0.08em;
+  }
+  .section-label::after{content:""; flex:1; height:1px; background:var(--line);}
+
+  .reel{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+    margin-bottom:36px;
+  }
+  .reel-card{
+    background:var(--panel);
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:16px 14px;
+    cursor:pointer;
+    text-align:center;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .reel-card:hover{transform:translateY(-3px); border-color:var(--teal);}
+  .reel-card.active{border-color:var(--red); background:var(--panel-light);}
+  .reel-card .ico{font-size:28px; display:block; margin-bottom:8px;}
+  .reel-card .en{font-weight:600; font-size:14px;}
+  .reel-card .tr{font-size:12px; color:var(--muted); margin-top:2px;}
+
+  /* ---------- SCENE TABS ---------- */
+  .scenes{display:none;}
+  .scenes.show{display:block;}
+  .scene-tabs{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .scene-tab{
+    font-family:'Space Mono',monospace;
+    background:var(--panel);
+    border:2px solid var(--line);
+    color:var(--muted);
+    padding:8px 16px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .scene-tab b{color:var(--yellow); margin-right:6px;}
+  .scene-tab.active{border-color:var(--red); color:var(--ink); background:var(--panel-light);}
+
+  .stage{display:grid; grid-template-columns:1.3fr 1fr; gap:24px;}
+  @media(max-width:880px){.stage{grid-template-columns:1fr;}}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px;}
+
+  .titles-box{margin-bottom:18px;}
+  .title-chip{
+    display:inline-block; background:var(--panel-light); border:1px dashed var(--teal);
+    color:var(--teal); padding:6px 12px; border-radius:20px; font-size:13px; margin:0 8px 8px 0; cursor:pointer;
+  }
+
+  .scene-pane{display:none;}
+  .scene-pane.show{display:block;}
+
+  .phrase-card{
+    background:var(--panel-light);
+    border:1px solid var(--line);
+    border-left:4px solid var(--red);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .phrase-card:hover{background:#2c3238;}
+  .phrase-en{font-weight:600; font-size:14.5px;}
+  .phrase-tr{font-size:12.5px; color:var(--muted); margin-top:3px; display:none;}
+  .phrase-card.open .phrase-tr{display:block;}
+  .phrase-hint{font-size:10.5px; color:var(--teal); text-transform:uppercase; letter-spacing:.05em; margin-top:4px;}
+
+  .vocab-wrap{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+  .vocab-chip{
+    background:transparent; border:1px solid var(--yellow); color:var(--yellow);
+    padding:5px 10px; border-radius:16px; font-size:12.5px; cursor:pointer; position:relative;
+  }
+  .vocab-chip.open{background:var(--yellow); color:#1a1a1a;}
+  .vocab-tr{
+    display:none; position:absolute; bottom:120%; left:0; background:#000; color:#fff;
+    padding:4px 8px; border-radius:5px; font-size:11px; white-space:nowrap; z-index:5;
+  }
+  .vocab-chip.open .vocab-tr{display:block;}
+
+  /* ---------- PHONE PREVIEW ---------- */
+  .phone{
+    position:sticky; top:20px;
+    background:#000;
+    border-radius:34px;
+    padding:14px 10px;
+    border:3px solid #333;
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+  }
+  .phone-notch{width:60px; height:6px; background:#333; border-radius:4px; margin:0 auto 10px;}
+  .phone-screen{
+    background:#0c0f11;
+    border-radius:22px;
+    min-height:420px;
+    max-height:60vh;
+    overflow-y:auto;
+    padding:16px;
+    font-size:15px;
+    line-height:1.6;
+    outline:none;
+  }
+  .phone-screen:empty::before{
+    content:"Buraya senin script'in yazılacak... Sol taraftan cümlelere tıkla ya da direkt yaz! 🎬";
+    color:var(--muted);
+  }
+  .phone-stats{
+    display:flex; justify-content:space-between; color:var(--muted); font-size:11.5px;
+    margin-top:10px; font-family:'Space Mono',monospace; padding:0 6px;
+  }
+  .phone-stats b{color:var(--teal);}
+
+  .controls{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+  .btn{
+    flex:1; min-width:90px;
+    font-family:'Space Mono',monospace;
+    background:var(--panel-light); border:1px solid var(--line); color:var(--ink);
+    padding:10px 8px; border-radius:8px; cursor:pointer; font-size:12px; text-align:center;
+  }
+  .btn:hover{border-color:var(--teal);}
+  .btn.danger:hover{border-color:var(--red);}
+  .btn.primary{background:var(--red); border-color:var(--red); color:#fff; font-weight:700;}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--teal); color:#04201c; padding:10px 18px; border-radius:8px; font-weight:600;
+    font-size:13px; opacity:0; transition:all .25s ease; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .empty-state{
+    text-align:center; color:var(--muted); padding:60px 20px; font-size:14px;
+  }
+  .empty-state .ico{font-size:40px; display:block; margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="slate">
+  <div class="slate-stripes"></div>
+  <div class="slate-body">
+    <div class="slate-title">
+      <h1>VLOG SCRIPT <span>BUILDER</span></h1>
+      <div class="slate-sub">Active English 🎥 kendi vlog senaryonu yaz, teleprompter'da gör</div>
+    </div>
+    <div class="slate-meta">
+      <div><b id="metaTheme">—</b>TEMA / THEME</div>
+      <div><b id="metaWords">0</b>KELİME / WORDS</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-label">01 · Vlog türünü seç / Pick your vlog type</div>
+  <div class="reel" id="themeReel"></div>
+
+  <div class="scenes" id="scenesArea">
+    <div class="section-label">02 · Sahneni oluştur / Build your scenes</div>
+    <div class="scene-tabs" id="sceneTabs"></div>
+
+    <div class="stage">
+      <div class="panel">
+        <div class="titles-box">
+          <div class="phrase-hint" style="margin-bottom:8px;">💡 Başlık fikirleri (tıkla, script'e eklenir)</div>
+          <div id="titleChips"></div>
+        </div>
+        <div id="scenePanes"></div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" id="scriptArea" contenteditable="true"></div>
+          <div class="phone-stats">
+            <span>📝 <b id="wordCount">0</b> kelime</span>
+            <span>⏱️ ~<b id="timeEst">0</b> sn okuma</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn primary" onclick="saveScript()">💾 Kaydet</button>
+          <button class="btn" onclick="loadScript()">📂 Yükle</button>
+          <button class="btn" onclick="copyScript()">📋 Kopyala</button>
+          <button class="btn danger" onclick="clearScript()">🗑️ Temizle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <span class="ico">🎬</span>
+    Başlamak için yukarıdan bir vlog türü seç!
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {
+  day: {
+    icon:"📱", en:"A Day in My Life", tr:"Bir Günüm",
+    titles:[
+      ["My Morning Routine (and Chaos)","Sabah Rutinim (ve Kaos)"],
+      ["24 Hours as a High School Student","Bir Lise Öğrencisi Olarak 24 Saat"],
+      ["Come Spend a Saturday With Me","Cumartesi Günümü Benimle Geçir"]
+    ],
+    hook:[
+      ["Hey guys, welcome back to my channel!","Selam millet, kanalıma tekrar hoş geldiniz!"],
+      ["Today I'm going to show you a normal day in my life.","Bugün size hayatımdan sıradan bir günü göstereceğim."],
+      ["It's 7 a.m. and I just woke up.","Saat sabah 7 ve az önce uyandım."],
+      ["Let's get started, shall we?","Hadi başlayalım, olur mu?"],
+      ["If you're new here, don't forget to subscribe!","Yeni buradaysan, abone olmayı unutma!"]
+    ],
+    body:[
+      ["First, I'm going to have breakfast.","İlk olarak kahvaltı yapacağım."],
+      ["After that, I usually get ready for school.","Ondan sonra genelde okula hazırlanırım."],
+      ["This is one of my favorite parts of the day.","Bu, günümün en sevdiğim kısımlarından biri."],
+      ["Honestly, this class is so much fun.","Dürüst olmak gerekirse bu ders çok eğlenceli."],
+      ["Let me show you what's in my bag.","Size çantamda ne olduğunu göstereyim."]
+    ],
+    outro:[
+      ["And that's pretty much my day!","İşte günüm aşağı yukarı böyleydi!"],
+      ["Thanks so much for watching until the end.","Sonuna kadar izlediğiniz için çok teşekkürler."],
+      ["Let me know in the comments what your day looks like.","Sizin gününüzün nasıl geçtiğini yorumlarda yazın."],
+      ["Don't forget to like this video.","Bu videoyu beğenmeyi unutmayın."],
+      ["See you in the next vlog, bye!","Bir sonraki vlogda görüşürüz, hoşça kalın!"]
+    ],
+    vocab:[["routine","rutin"],["exhausted","bitkin"],["classmate","sınıf arkadaşı"],["schedule","program"],["nap","kısa uyku"],["homework","ev ödevi"],["commute","işe/okula gidiş geliş"],["relax","dinlenmek"]]
+  },
+  review:{
+    icon:"📦", en:"Product / Movie Review", tr:"İnceleme",
+    titles:[
+      ["I Tried the Most Viral Snack — Honest Review","En Viral Atıştırmalığı Denedim — Dürüst İnceleme"],
+      ["Should You Watch This Movie? My Honest Opinion","Bu Filmi İzlemeli misin? Dürüst Fikrim"],
+      ["Unboxing and Reviewing My New Headphones","Yeni Kulaklığımı Kutudan Çıkarma ve İnceleme"]
+    ],
+    hook:[
+      ["Today I'm reviewing something you all asked about.","Bugün hepinizin sorduğu bir şeyi inceliyorum."],
+      ["I've been waiting to try this for weeks.","Haftalardır bunu denemeyi bekliyordum."],
+      ["No spoilers, I promise!","Spoiler yok, söz veriyorum!"],
+      ["Let's dive right in.","Hemen konuya girelim."],
+      ["I have zero expectations, honestly.","Dürüst olmak gerekirse hiç beklentim yok."]
+    ],
+    body:[
+      ["First impressions: it looks really good.","İlk izlenim: gerçekten iyi görünüyor."],
+      ["The best part about this is the price.","Bununla ilgili en iyi kısım fiyatı."],
+      ["On the other hand, I didn't like the packaging.","Öte yandan ambalajı sevmedim."],
+      ["Compared to other brands, this stands out.","Diğer markalarla karşılaştırıldığında bu öne çıkıyor."],
+      ["I'd give this a solid 7 out of 10.","Buna rahatlıkla 10 üzerinden 7 verirdim."]
+    ],
+    outro:[
+      ["So, would I recommend it? Absolutely!","Peki tavsiye eder miyim? Kesinlikle!"],
+      ["Overall, it was worth the money.","Genel olarak paraya değerdi."],
+      ["Let me know if you want more reviews like this.","Bunun gibi daha fazla inceleme ister misiniz, söyleyin."],
+      ["That's my honest opinion, thanks for watching!","Bu benim dürüst fikrim, izlediğiniz için teşekkürler!"],
+      ["See you in the next review!","Bir sonraki incelemede görüşürüz!"]
+    ],
+    vocab:[["overrated","hak ettiğinden fazla övülen"],["worth it","değer"],["packaging","ambalaj"],["disappointed","hayal kırıklığına uğramış"],["impressive","etkileyici"],["texture","doku"],["recommend","tavsiye etmek"],["overall","genel olarak"]]
+  },
+  challenge:{
+    icon:"🏆", en:"7-Day Challenge", tr:"Meydan Okuma",
+    titles:[
+      ["I Only Spoke English for 7 Days","7 Gün Sadece İngilizce Konuştum"],
+      ["No Phone for a Week — Here's What Happened","Bir Hafta Telefonsuz — İşte Olanlar"],
+      ["I Tried Waking Up at 6 AM for 7 Days","7 Gün Boyunca Sabah 6'da Kalkmayı Denedim"]
+    ],
+    hook:[
+      ["I'm doing something crazy for the next 7 days.","Önümüzdeki 7 gün boyunca çılgın bir şey yapıyorum."],
+      ["This challenge is going to be so difficult.","Bu meydan okuma çok zor olacak."],
+      ["Let's see if I can actually do this.","Bakalım gerçekten bunu yapabilecek miyim."],
+      ["Day 1 starts right now.","1. gün şimdi başlıyor."],
+      ["I already regret this decision.","Şimdiden bu karara pişman oldum."]
+    ],
+    body:[
+      ["Day 3 was honestly the hardest.","3. gün dürüst olmak gerekirse en zoruydu."],
+      ["I almost gave up today.","Bugün neredeyse pes ediyordum."],
+      ["Something unexpected happened this morning.","Bu sabah beklenmedik bir şey oldu."],
+      ["I'm starting to get used to it.","Buna alışmaya başlıyorum."],
+      ["Here's an update on how it's going.","İşte nasıl gittiğine dair bir güncelleme."]
+    ],
+    outro:[
+      ["I finally made it to day 7!","Sonunda 7. güne ulaştım!"],
+      ["This challenge taught me a lot about myself.","Bu meydan okuma bana kendimle ilgili çok şey öğretti."],
+      ["Would I do it again? Maybe!","Tekrar yapar mıydım? Belki!"],
+      ["Comment down below what challenge I should try next.","Bir sonraki hangi meydan okumayı denemem gerektiğini yorumlayın."],
+      ["Thanks for following this journey with me.","Bu yolculukta bana eşlik ettiğiniz için teşekkürler."]
+    ],
+    vocab:[["give up","pes etmek"],["struggle","mücadele etmek"],["survive","hayatta kalmak"],["habit","alışkanlık"],["progress","ilerleme"],["exhausting","yorucu"],["worth it","değer"],["update","güncelleme"]]
+  },
+  street:{
+    icon:"🎤", en:"Street Interview", tr:"Sokak Röportajı",
+    titles:[
+      ["Asking Students Their Dream Job","Öğrencilere Hayallerindeki Mesleği Sordum"],
+      ["What Makes You Happy? Street Interview","Seni Ne Mutlu Eder? Sokak Röportajı"],
+      ["Funny Answers to Random Questions","Rastgele Sorulara Komik Cevaplar"]
+    ],
+    hook:[
+      ["Today I'm asking people a simple question.","Bugün insanlara basit bir soru soruyorum."],
+      ["Excuse me, do you have a minute?","Affedersiniz, bir dakikanız var mı?"],
+      ["I wonder what people are going to say.","İnsanların ne söyleyeceğini merak ediyorum."],
+      ["Let's ask some students at school.","Okulda birkaç öğrenciye soralım."],
+      ["This should be interesting!","Bu ilginç olmalı!"]
+    ],
+    body:[
+      ["So, what's your answer to that?","Peki, buna cevabınız ne?"],
+      ["That's such an interesting perspective.","Bu çok ilginç bir bakış açısı."],
+      ["Wow, I didn't expect that answer!","Vay canına, bu cevabı beklemiyordum!"],
+      ["Can you explain that a bit more?","Bunu biraz daha açıklayabilir misiniz?"],
+      ["Let's ask one more person.","Bir kişiye daha soralım."]
+    ],
+    outro:[
+      ["Those were some really surprising answers!","Bunlar gerçekten sürpriz cevaplardı!"],
+      ["Thanks to everyone who answered my questions.","Sorularımı cevaplayan herkese teşekkürler."],
+      ["What would you have answered? Tell me below!","Siz ne cevap verirdiniz? Aşağıda söyleyin!"],
+      ["That's it for today's street interview.","Bugünkü sokak röportajı bu kadardı."],
+      ["See you in the next interview!","Bir sonraki röportajda görüşürüz!"]
+    ],
+    vocab:[["stranger","yabancı (tanımadık kişi)"],["opinion","fikir"],["random","rastgele"],["perspective","bakış açısı"],["shy","utangaç"],["confident","kendinden emin"],["reaction","tepki"],["surprising","şaşırtıcı"]]
+  },
+  mock:{
+    icon:"🎥", en:"Mockumentary", tr:"Sahte Belgesel",
+    titles:[
+      ["The Secret Life of the School Cafeteria","Okul Kantininin Gizli Hayatı"],
+      ["A Day in the Life of a Sleepy Student (Documentary)","Uykulu Bir Öğrencinin Hayatından Bir Gün (Belgesel)"],
+      ["The Mysterious Disappearance of My Homework","Ödevimin Gizemli Kayboluşu"]
+    ],
+    hook:[
+      ["In a school, not so far away...","Çok da uzak olmayan bir okulda..."],
+      ["This is a story that must be told.","Bu, anlatılması gereken bir hikaye."],
+      ["What you're about to see is... mostly true.","Görmek üzere olduğunuz şey... çoğunlukla doğru."],
+      ["Our investigation begins here.","Araştırmamız burada başlıyor."],
+      ["Nobody could have predicted what happened next.","Kimse bundan sonra olacakları tahmin edemezdi."]
+    ],
+    body:[
+      ["According to our sources, this happens every day.","Kaynaklarımıza göre bu her gün oluyor."],
+      ["The evidence was right in front of us.","Kanıt tam önümüzdeydi."],
+      ["Witnesses describe the event as 'unbelievable.'","Tanıklar olayı 'inanılmaz' olarak tanımlıyor."],
+      ["But that wasn't even the strangest part.","Ama en garip kısmı bu bile değildi."],
+      ["Let's take a closer look at the facts.","Gerçeklere biraz daha yakından bakalım."]
+    ],
+    outro:[
+      ["And so, the mystery was finally solved.","Ve böylece gizem sonunda çözüldü."],
+      ["Some questions, however, remain unanswered.","Bazı sorular ise cevapsız kalıyor."],
+      ["This has been a totally serious documentary.","Bu tamamen ciddi bir belgeseldi."],
+      ["Stay tuned for the next investigation.","Bir sonraki araştırma için bizi izlemeye devam edin."],
+      ["The truth is out there... probably.","Gerçek dışarıda bir yerde... muhtemelen."]
+    ],
+    vocab:[["evidence","kanıt"],["witness","tanık"],["mysterious","gizemli"],["investigation","araştırma/soruşturma"],["suspicious","şüpheli"],["reveal","ortaya çıkarmak"],["disappear","kaybolmak"],["truth","gerçek"]]
+  }
+};
+
+let currentTheme = null;
+let currentScene = 'hook';
+const STORAGE_KEY = 'vlogScriptBuilder_v1';
+
+const reel = document.getElementById('themeReel');
+Object.keys(DATA).forEach(key=>{
+  const t = DATA[key];
+  const card = document.createElement('div');
+  card.className='reel-card';
+  card.dataset.key=key;
+  card.innerHTML = `<span class="ico">${t.icon}</span><div class="en">${t.en}</div><div class="tr">${t.tr}</div>`;
+  card.onclick = ()=>selectTheme(key);
+  reel.appendChild(card);
+});
+
+function selectTheme(key){
+  currentTheme = key;
+  document.querySelectorAll('.reel-card').forEach(c=>c.classList.toggle('active', c.dataset.key===key));
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('scenesArea').classList.add('show');
+  document.getElementById('metaTheme').textContent = DATA[key].tr.toUpperCase();
+
+  renderTitles();
+  renderSceneTabs();
+  currentScene='hook';
+  renderScenePanes();
+  showScenePane('hook');
+}
+
+function renderTitles(){
+  const box = document.getElementById('titleChips');
+  box.innerHTML='';
+  DATA[currentTheme].titles.forEach(([en,tr])=>{
+    const chip = document.createElement('span');
+    chip.className='title-chip';
+    chip.textContent = en;
+    chip.title = tr;
+    chip.onclick = ()=>insertToScript(en, true);
+    box.appendChild(chip);
+  });
+}
+
+function renderSceneTabs(){
+  const tabs = document.getElementById('sceneTabs');
+  tabs.innerHTML='';
+  const scenes = [['hook','01','HOOK / GİRİŞ'],['body','02','BODY / GELİŞME'],['outro','03','OUTRO / KAPANIŞ']];
+  scenes.forEach(([key,num,label])=>{
+    const tab = document.createElement('div');
+    tab.className='scene-tab'+(key==='hook'?' active':'');
+    tab.dataset.key=key;
+    tab.innerHTML = `<b>${num}</b>${label}`;
+    tab.onclick = ()=>{ showScenePane(key); };
+    tabs.appendChild(tab);
+  });
+}
+
+function renderScenePanes(){
+  const wrap = document.getElementById('scenePanes');
+  wrap.innerHTML='';
+  ['hook','body','outro'].forEach(sceneKey=>{
+    const pane = document.createElement('div');
+    pane.className='scene-pane';
+    pane.dataset.key=sceneKey;
+
+    const phrasesHtml = DATA[currentTheme][sceneKey].map(([en,tr])=>`
+      <div class="phrase-card" onclick="handlePhraseClick(this, \`${en.replace(/`/g,"'")}\`)">
+        <div class="phrase-en">${en}</div>
+        <div class="phrase-tr">${tr}</div>
+        <div class="phrase-hint">👆 tıkla: script'e ekle / tekrar tıkla: Türkçesini gör</div>
+      </div>`).join('');
+
+    const vocabHtml = DATA[currentTheme].vocab.map(([en,tr])=>`
+      <span class="vocab-chip" onclick="this.classList.toggle('open')">${en}<span class="vocab-tr">${tr}</span></span>`).join('');
+
+    pane.innerHTML = `
+      <div class="phrase-hint" style="margin:14px 0 8px; color:var(--muted);">💬 Faydalı ifadeler</div>
+      ${phrasesHtml}
+      <div class="phrase-hint" style="margin:16px 0 8px; color:var(--muted);">🔤 Kelime bankası (tıkla, Türkçesini gör)</div>
+      <div class="vocab-wrap">${vocabHtml}</div>
+    `;
+    wrap.appendChild(pane);
+  });
+}
+
+function showScenePane(key){
+  currentScene = key;
+  document.querySelectorAll('.scene-tab').forEach(t=>t.classList.toggle('active', t.dataset.key===key));
+  document.querySelectorAll('.scene-pane').forEach(p=>p.classList.toggle('show', p.dataset.key===key));
+}
+
+function handlePhraseClick(el, text){
+  if(el.classList.contains('open')){
+    insertToScript(text, false);
+  } else {
+    document.querySelectorAll('.phrase-card.open').forEach(c=>c.classList.remove('open'));
+    el.classList.add('open');
+  }
+}
+
+function insertToScript(text, isTitle){
+  const area = document.getElementById('scriptArea');
+  area.focus();
+  const line = document.createElement('div');
+  line.style.marginBottom = isTitle ? '10px' : '6px';
+  if(isTitle){
+    line.style.fontWeight='700';
+    line.style.color='#F5C542';
+  }
+  line.textContent = text;
+  area.appendChild(line);
+  updateStats();
+  showToast(isTitle ? '📌 Başlık eklendi!' : '✅ Cümle eklendi!');
+}
+
+document.getElementById('scriptArea').addEventListener('input', updateStats);
+
+function updateStats(){
+  const text = document.getElementById('scriptArea').innerText.trim();
+  const words = text.length ? text.split(/\s+/).filter(Boolean).length : 0;
+  document.getElementById('wordCount').textContent = words;
+  document.getElementById('metaWords').textContent = words;
+  document.getElementById('timeEst').textContent = Math.round(words / 2.3);
+}
+
+function saveScript(){
+  const html = document.getElementById('scriptArea').innerHTML;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({html, theme: currentTheme}));
+    showToast('💾 Script kaydedildi!');
+  }catch(e){
+    showToast('⚠️ Kaydetme başarısız oldu.');
+  }
+}
+
+function loadScript(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw){ showToast('📭 Kayıtlı script bulunamadı.'); return; }
+    const data = JSON.parse(raw);
+    document.getElementById('scriptArea').innerHTML = data.html || '';
+    updateStats();
+    showToast('📂 Script yüklendi!');
+  }catch(e){
+    showToast('⚠️ Yükleme başarısız oldu.');
+  }
+}
+
+function clearScript(){
+  if(confirm('Script alanını temizlemek istediğine emin misin?')){
+    document.getElementById('scriptArea').innerHTML='';
+    updateStats();
+    showToast('🗑️ Temizlendi.');
+  }
+}
+
+function copyScript(){
+  const text = document.getElementById('scriptArea').innerText.trim();
+  if(!text){ showToast('⚠️ Kopyalanacak bir şey yok.'); return; }
+  navigator.clipboard.writeText(text).then(()=>{
+    showToast('📋 Panoya kopyalandı!');
+  }).catch(()=>{
+    showToast('⚠️ Kopyalama başarısız oldu.');
+  });
+}
+
+let toastTimer;
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
