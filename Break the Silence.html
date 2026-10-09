@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Break the Silence</title>
+<style>
+:root{--bg:#EEF1F6;--ink:#14213D;--mute:#5B6478;--pop:#5B3DF5;--onpop:#fff;--sun:#FFC83D;--card:#fff;--line:#D5DAE5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1626;--ink:#EEF1F6;--mute:#A3ACC0;--pop:#8F7BFF;--onpop:#0F1626;--card:#18213A;--line:#2A3452}}
+:root[data-theme="dark"]{--bg:#0F1626;--ink:#EEF1F6;--mute:#A3ACC0;--pop:#8F7BFF;--onpop:#0F1626;--card:#18213A;--line:#2A3452}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;font-size:18px;line-height:1.6;overflow-wrap:anywhere}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+h1,h2,h3,.word{font-family:"Bricolage Grotesque","Arial Black",Impact,sans-serif;line-height:1.08;margin:0}
+section{padding:64px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(28px,6vw,40px);margin-bottom:12px}
+p{margin:0 0 14px;max-width:62ch}
+.lead{color:var(--mute)}
+.hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:40px 20px}
+.word{font-size:clamp(64px,19vw,150px);letter-spacing:-.03em;transition:color .5s}
+.quiet .word{color:var(--mute);font-weight:400}.loud .word{color:var(--pop)}
+.badge{align-self:flex-start;background:var(--pop);color:var(--onpop);font-weight:700;font-size:15px;border-radius:999px;padding:8px 16px;margin-bottom:22px}
+.sub{font-size:20px;margin:18px 0 26px;min-height:3.2em}
+button{font:inherit;font-weight:700;background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:14px 26px;cursor:pointer}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:3px}
+h1{font-size:clamp(34px,9vw,64px);letter-spacing:-.02em}
+.tag{font-size:clamp(20px,5vw,28px);color:var(--pop);font-weight:700;margin:8px 0 4px}
+.tr{color:var(--mute);margin:0 0 28px}
+.slogan{margin:28px 0 8px}
+.slogan .sl{border-left:6px solid var(--pop);padding:4px 0 4px 16px;margin-bottom:22px}
+.slogan .en{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-size:clamp(26px,7vw,44px);line-height:1.15;margin:0 0 6px}
+.slogan .sl:nth-child(2) .en{color:var(--pop)}
+.slogan .trl{color:var(--mute);margin:0;font-size:18px}
+.q{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pop);border-radius:14px;padding:18px 20px;margin-top:22px}
+.q b{display:block;font-size:20px;margin-bottom:6px}.q span{color:var(--mute)}
+.grid,.stats,.cards{display:grid;gap:16px;margin-top:22px}
+.grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.stats{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.cards{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card,.stat,.ph{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h3{font-size:22px;margin-bottom:6px}.card p,.stat p{margin:0;font-size:16px}
+.card .en{color:var(--pop);font-weight:700;font-size:15px;margin-bottom:8px}
+.chip{display:inline-block;background:var(--sun);color:#14213D;font-size:14px;font-weight:700;border-radius:999px;padding:4px 12px}
+.chip.done{background:#1F7A6D;color:#fff}.chip.now{background:var(--pop);color:var(--onpop)}
+.stat .chip{margin-bottom:10px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-top:12px}
+summary{font-weight:700;cursor:pointer}details p{margin:10px 0 0;font-size:16px}
+.phases{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.ph{display:flex;gap:14px}
+.ph .n{flex:none;width:38px;height:38px;border-radius:50%;background:var(--pop);color:var(--onpop);font-weight:700;display:flex;align-items:center;justify-content:center}
+.ph .ic{font-size:26px;line-height:1}.ph h3{font-size:20px;margin:4px 0 2px}.ph .tr2{color:var(--pop);font-weight:700;font-size:15px;margin-bottom:8px}
+.ph p{font-size:16px;margin:0 0 10px}
+.outs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:22px}
+.out{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;padding:0 0 20px;display:flex;flex-direction:column}
+.out h3{font-size:21px;margin:18px 20px 2px}.out .tr2{color:var(--pop);font-weight:700;font-size:15px;margin:0 20px 10px}
+.out p{font-size:16px;margin:0 20px 16px}.out .chip{align-self:flex-start;margin:auto 20px 0}
+.vis{height:130px;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px}
+.vis i{display:block;background:rgba(255,255,255,.92);border-radius:6px}
+.v-poster{background:#5B3DF5;flex-direction:column}.v-poster i{width:62%;height:12px}.v-poster i:first-child{height:34px;width:70%;background:var(--sun)}
+.v-video{background:#6A4C93}.v-video b{width:0;height:0;border-left:34px solid var(--sun);border-top:22px solid transparent;border-bottom:22px solid transparent;margin-left:8px}
+.v-story{background:#1F7A6D}.v-story i{width:62px;height:46px;border-radius:14px}.v-story i:nth-child(2){margin-top:30px;background:var(--sun)}
+.v-kit{background:#C8431F;flex-wrap:wrap;align-content:center;padding:16px 70px}.v-kit i{width:44px;height:44px;border-radius:10px}.v-kit i:nth-child(2){background:var(--sun)}
+.v-pledge{background:#14213D;flex-direction:column;align-items:flex-start;padding:16px 34px}.v-pledge i{height:8px;width:100%}.v-pledge i:nth-child(2){width:80%}.v-pledge b{display:block;width:40%;height:12px;border-bottom:3px solid var(--sun);margin-top:8px}
+.v-report{background:#5B3DF5;align-items:flex-end;padding:20px 60px}.v-report i{width:34px;border-radius:6px 6px 0 0}.v-report i:nth-child(1){height:40px}.v-report i:nth-child(2){height:70px;background:var(--sun)}.v-report i:nth-child(3){height:95px}
+ul.tick{list-style:none;padding:0;margin:14px 0 0}
+ul.tick li{position:relative;padding:0 0 10px 28px}
+ul.tick li::before{content:"";position:absolute;left:4px;top:.55em;width:10px;height:10px;border-radius:50%;background:var(--pop)}
+.safe{background:var(--card);border:2px solid var(--pop);border-radius:18px;padding:24px;margin-top:20px}
+.help{background:var(--sun);color:#14213D;border-radius:18px;padding:24px;margin-top:20px}
+.help h3{font-size:24px;margin-bottom:8px}.help p{margin:0}
+.final{text-align:left}.final .big{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-size:clamp(24px,6vw,36px);line-height:1.2;margin-bottom:18px;max-width:22em}
+footer{padding:28px 0 56px;color:var(--mute);font-size:15px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="hero quiet" id="hero">
+  <div class="badge">eTwinning Proje Çalışması · İdeal Eğitim Koleji</div>
+  <div class="word" id="word">Sus.</div>
+  <p class="sub" id="sub">Okulda biri üzülüyor ama kimse bir şey demiyor. Bu sessizlik kimin işine yarıyor?</p>
+  <div><button id="breakBtn" type="button">Sessizliği boz</button></div>
+</header>
+
+<main class="wrap">
+<section>
+  <h1>BREAK THE SILENCE</h1>
+  <p class="tag">From Empathy to Action</p>
+  <p class="tr">Sessizliği Boz: Empatiden Eyleme</p>
+  <div class="slogan">
+    <div class="sl"><p class="en">SEE THE PERSON.</p><p class="trl">İnsanı gör. Karşındaki bir “rol” değil, bir insan.</p></div>
+    <div class="sl"><p class="en">FEEL THE DIFFERENCE.</p><p class="trl">Empati kur. O olsan ne hissederdin?</p></div>
+    <div class="sl"><p class="en">MAKE A CHANGE.</p><p class="trl">Değişime katıl. Küçük bir hareket bile fark yaratır.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Proje nedir?</h2>
+  <p><b>BREAK THE SILENCE</b>, İdeal Eğitim Koleji bünyesinde 9. ve 10. sınıf öğrencileri için hazırlanan; akran zorbalığı, empati, güvenli destek ve kapsayıcı okul kültürüne odaklanan bir eTwinning proje çalışmasıdır.</p>
+  <p>Projemiz, öğrencilerin İngilizce iletişim becerilerini geliştirirken farklı bakış açılarını anlamalarını, güvenli çözüm yolları üretmelerini ve olumlu okul kültürüne katkıda bulunmalarını amaçlamaktadır.</p>
+  <p>Uluslararası ortaklarla iş birliği geliştirilmesi ve öğrencilerin farklı ülkelerden akranlarıyla birlikte dijital ürünler hazırlaması planlanmaktadır.</p>
+  <div class="q"><b>What can we do to make every student feel safe, respected and included?</b><span>Her öğrencinin kendini güvende, saygı görmüş ve topluluğun bir parçası hissetmesi için neler yapabiliriz?</span></div>
+  <div class="stats">
+    <div class="stat"><span class="chip done">Tamamlandı</span><p>Proje fikri ve planı hazırlandı. Bu tanıtım sayfası yayında.</p></div>
+    <div class="stat"><span class="chip now">Devam ediyor</span><p>eTwinning üzerinden uluslararası ortak arayışı.</p></div>
+    <div class="stat"><span class="chip">Planlanıyor</span><p>Ortak etkinlikler, çalışmalar ve ürünler.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Zorbalık nedir, neye benzer?</h2>
+  <p>Biri sana bilerek, tekrar tekrar zarar veriyorsa ve karşı koymak zorsa bu zorbalıktır. Dört yüzü var:</p>
+  <div class="grid">
+    <div class="card"><h3>Fiziksel</h3><p>İtmek, vurmak, eşyaya zarar vermek.</p></div>
+    <div class="card"><h3>Sözel</h3><p>Alay etmek, lakap takmak, tehdit etmek.</p></div>
+    <div class="card"><h3>Sosyal</h3><p>Dışlamak, dedikodu yaymak, gruba almamak.</p></div>
+    <div class="card"><h3>Siber</h3><p>Mesajla, sosyal medyada, oyunda rahatsız etmek.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Zorbalığı görürsen ne yapabilirsin?</h2>
+  <p>Kahraman olmak zorunda değilsin. Güvenli yollar var. Dokun, aç:</p>
+  <details><summary>Mağdurun yanına git</summary><p>Sonra yanına gidip “İyi misin? Yanındayım.” demek bile çok değerli. Yalnız olmadığını bilmek yarayı hafifletir.</p></details>
+  <details><summary>Zorbayı ödüllendirme</summary><p>Gülme, paylaşma, videoya çekme. İzleyici olmadığında zorbalığın sahnesi kalmaz.</p></details>
+  <details><summary>Bir yetişkine haber ver</summary><p>Öğretmenine, rehber öğretmene ya da müdür yardımcısına söylemek “ispiyonculuk” değil, birini korumaktır.</p></details>
+  <details><summary>Kendini tehlikeye atma</summary><p>Kavga ortasına girme. Güvenli değilse uzaklaş ve yardım çağır.</p></details>
+</section>
+
+<section>
+  <h2>Proje aşamalarımız</h2>
+  <p class="lead">Yedi aşamanın hepsi şimdilik planlanıyor. Gerçekleşenler tamamlandıkça işaretlenecek.</p>
+  <ol class="phases">
+    <li class="ph"><span class="n">1</span><div><h3>Meet and Understand</h3><div class="tr2">Tanış ve Anla</div><p>Hedefler, takvim ve dijital güvenlik kuralları tanıtılır. Başlangıç anketi yapılır.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">2</span><div><h3>The Empty Chair</h3><div class="tr2">Boş Sandalye</div><p>Dışlanan kurgusal bir öğrenci üzerinden duygular ve bakış açıları tartışılır.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">3</span><div><h3>Stop, Think, Choose</h3><div class="tr2">Dur, Düşün, Seç</div><p>Kurgusal okul senaryolarında tepki seçenekleri değerlendirilir, İngilizce destek ifadeleri geliştirilir.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">4</span><div><h3>Words Can Build Bridges</h3><div class="tr2">Kelimeler Köprü Kurabilir</div><p>İncitici ifadeler saygılı ifadelere dönüştürülür. Ortak bir Kind Words Dictionary hazırlanır.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">5</span><div><h3>One Story, Many Voices</h3><div class="tr2">Tek Hikâye, Birçok Ses</div><p>Planlanan uluslararası karma takımlar ortak bir dijital hikâye veya çizgi roman hazırlar.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">6</span><div><h3>Be the Difference</h3><div class="tr2">Fark Yaratan Sen Ol</div><p>Yeni öğrencileri karşılamak, eşit katılımı desteklemek gibi küçük okul uygulamaları planlanır.</p><span class="chip">Planlanıyor</span></div></li>
+    <li class="ph"><span class="n">7</span><div><h3>Reflect and Share</h3><div class="tr2">Değerlendirme ve Paylaşım</div><p>Başlangıç ve bitiş anketlerinin karşılaştırılması, öğrenci geri bildirimlerinin değerlendirilmesi, ortak ürünlerin tamamlanması ve sonuçların okul topluluğuyla paylaşılması.</p><span class="chip">Planlanıyor</span></div></li>
+  </ol>
+</section>
+
+<section>
+  <h2>İngilizce Öğrenme ve Gelişim</h2>
+  <p class="lead">Aşağıdaki becerilerin proje boyunca geliştirilmesi hedeflenmektedir.</p>
+  <div class="cards">
+    <div class="card"><div class="en">Speaking and Discussion</div><p>İngilizce fikir ifade etme ve tartışmalara katılma.</p></div>
+    <div class="card"><div class="en">Writing and Vocabulary</div><p>Saygılı iletişim ifadeleri öğrenme ve İngilizce metinler hazırlama.</p></div>
+    <div class="card"><div class="en">Critical Thinking</div><p>Kurgusal senaryoları değerlendirme ve çözüm önerileri geliştirme.</p></div>
+    <div class="card"><div class="en">International Collaboration</div><p>Farklı ülkelerden öğrencilerle ortak çalışma.</p></div>
+    <div class="card"><div class="en">Digital Literacy</div><p>Dijital içerikleri sorumlu ve güvenli biçimde oluşturma.</p></div>
+  </div>
+  <p class="lead" style="margin-top:18px">Müfredat bağlantısı, uygulama öncesinde ilgili sınıf düzeylerinin güncel İngilizce kazanımlarıyla eşleştirilecektir.</p>
+</section>
+
+<section>
+  <h2>Ortak ürünlerimiz</h2>
+  <p class="lead">Aşağıdaki ürünlerin hepsi planlama aşamasındadır. Henüz hazırlanmış bir ürün yoktur.</p>
+  <div class="outs">
+    <article class="out"><div class="vis v-poster" role="img" aria-label="Başlık ve satırlar: dijital poster çizimi"><i></i><i></i><i></i></div>
+      <h3>DİJİTAL POSTER</h3><div class="tr2">Digital Poster</div><p>Okulda ve ortak okullarla paylaşılacak dijital tasarımlar.</p><span class="chip">Planlanıyor</span></article>
+    <article class="out"><div class="vis v-video" role="img" aria-label="Oynat simgesi: kısa spot video çizimi"><b></b></div>
+      <h3>KISA SPOT VİDEOLAR</h3><div class="tr2">Short Video Spots</div><p>Öğrencilerin kendi sesiyle hazırlayacağı, zorbalığa karşı mini videolar.</p><span class="chip">Planlanıyor</span></article>
+    <article class="out"><div class="vis v-kit" role="img" aria-label="Dört renkli kare: araç kutusu çizimi"><i></i><i></i><i></i><i></i></div>
+      <h3>THE EMPATHY TOOLKIT</h3><div class="tr2">Empati Araç Kutusu</div><p>Empati, saygılı iletişim ve güvenli destek yollarını içeren ortak dijital rehber.</p><span class="chip">Planlanıyor</span></article>
+    <article class="out"><div class="vis v-story" role="img" aria-label="Üç konuşma balonu: ortak hikâye çizimi"><i></i><i></i><i></i></div>
+      <h3>ONE STORY, MANY VOICES</h3><div class="tr2">Uluslararası Dijital Hikâye</div><p>Farklı ülkelerden öğrencilerin birlikte oluşturacağı ortak dijital hikâye veya çizgi roman.</p><span class="chip">Planlanıyor</span></article>
+    <article class="out"><div class="vis v-pledge" role="img" aria-label="Satırlar ve imza çizgisi: öğrenci bildirgesi çizimi"><i></i><i></i><i></i><b></b></div>
+      <h3>OUR SCHOOL, OUR PROMISE</h3><div class="tr2">Okulumuz, Sözümüz</div><p>Daha güvenli ve kapsayıcı okullar için ortak öğrenci bildirgesi.</p><span class="chip">Planlanıyor</span></article>
+    <article class="out"><div class="vis v-report" role="img" aria-label="Üç sütun: etki raporu çizimi"><i></i><i></i><i></i></div>
+      <h3>BE THE DIFFERENCE — IMPACT REPORT</h3><div class="tr2">Değişimin Etki Raporu</div><p>Etkinlikleri, öğrenci geri bildirimlerini ve değerlendirme sonuçlarını içeren proje etki raporu.</p><span class="chip">Planlanıyor</span></article>
+  </div>
+</section>
+
+<section>
+  <h2>Öğrenme ve Etki Nasıl Değerlendirilecek?</h2>
+  <p>Proje sürecinde öğrencilerin gelişimini takip etmek için başlangıç ve bitiş anketleri, kurgusal senaryo değerlendirmeleri, İngilizce iletişim rubrikleri ve öğrenci geri bildirimleri kullanılacaktır. Proje sonunda başlangıç ve bitiş verileri karşılaştırılacak; elde edilen sonuçlar ve geliştirilmesi gereken alanlar raporlanacaktır.</p>
+</section>
+
+<section>
+  <h2>Güvenlik ve gizlilik</h2>
+  <div class="safe">
+    <p style="font-weight:700;font-size:20px">Her öğrencinin kendini güvende, değerli ve kabul edilmiş hissetme hakkı vardır.</p>
+    <ul class="tick">
+      <li>Etkinliklerde gerçek öğrenci isimleri yerine kurgusal senaryolar kullanılacaktır.</li>
+      <li>Öğrencilerden kişisel zorbalık deneyimlerini açıklamaları istenmeyecektir.</li>
+      <li>Fotoğraf, video ve öğrenci çalışmalarında gerekli izinler alınacaktır.</li>
+      <li>Kişisel bilgiler izinsiz paylaşılmayacaktır.</li>
+      <li>Gerçek bir zorbalık durumu gündeme geldiğinde okulun ilgili rehberlik ve güvenlik prosedürleri izlenecektir.</li>
+    </ul>
+  </div>
+  <div class="help"><h3>Yardıma ihtiyacın varsa</h3><p>Yaşadığın ya da gördüğün bir durumu sessizce anlatmak istersen rehberlik servisimizin kapısı açık. Konuşmak güçsüzlük değil, cesarettir.</p></div>
+</section>
+
+<section class="final">
+  <p class="big">Zorbalığı görmezden gelmek yerine anlamayı, dışlamak yerine dahil etmeyi, incitmek yerine destek olmayı seçiyoruz.</p>
+  <p>Her öğrenci saygıyı hak eder. Her öğrencinin sesi değerlidir.</p>
+</section>
+</main>
+
+<footer class="wrap"><b>BREAK THE SILENCE</b> — See the Person. Feel the Difference. Make a Change.<br>İdeal Eğitim Koleji | eTwinning Proje Çalışması</footer>
+
+<script>
+(function(){
+  var h=document.getElementById('hero'),w=document.getElementById('word'),s=document.getElementById('sub'),b=document.getElementById('breakBtn'),l=false;
+  b.addEventListener('click',function(){
+    l=!l;h.classList.toggle('quiet',!l);h.classList.toggle('loud',l);
+    w.textContent=l?'Konuş.':'Sus.';
+    s.textContent=l?'İlk adım bu: gör, hisset, harekete geç. Aşağı kaydır, projeyi keşfet.':'Okulda biri üzülüyor ama kimse bir şey demiyor. Bu sessizlik kimin işine yarıyor?';
+    b.textContent=l?'Geri sessizliğe dön':'Sessizliği boz';
+  });
+})();
+</script>
+</body>
+</html>
