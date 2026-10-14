@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Elveda Gülsarı – Sınav Simülasyonu</title>
+<style>
+:root{--bg:#eef2ee;--c:#fff;--t:#17211d;--m:#5d6b64;--b:#cfd8d2;--p:#1f5c4a;--ok:#1b7a3a;--no:#b3261e;--sel:#dcebe3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111815;--c:#1a2420;--t:#e8efeb;--m:#9baba3;--b:#2f3d37;--p:#7fd1b0;--ok:#6fcf8a;--no:#ff8a80;--sel:#23352d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111815;--c:#1a2420;--t:#e8efeb;--m:#9baba3;--b:#2f3d37;--p:#7fd1b0;--ok:#6fcf8a;--no:#ff8a80;--sel:#23352d;color-scheme:dark}
+*{box-sizing:border-box}html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--t);font:16px/1.55 Georgia,"Times New Roman",serif}
+#app{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:28px;margin:12px 0 4px}.m{color:var(--m)}
+button{font:inherit;color:var(--t);background:var(--c);border:1px solid var(--b);border-radius:8px;padding:10px 14px;margin:4px 4px 4px 0;cursor:pointer}
+button.p{background:var(--p);color:var(--bg);border-color:var(--p)}button:disabled{opacity:.4}
+.top{display:flex;justify-content:space-between;color:var(--m)}
+.card{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:16px;margin:10px 0}
+.q{font-weight:700;margin:0 0 12px}
+.o{display:flex;gap:10px;width:100%;text-align:left;align-items:flex-start}
+.o i{font-style:normal;font-weight:700;min-width:1.4em;color:var(--p)}
+.sel{background:var(--sel);border-color:var(--p)}
+.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 20%,var(--c))}
+.no{border-color:var(--no);background:color-mix(in srgb,var(--no) 20%,var(--c))}
+.pal{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pal b{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--b);border-radius:6px;font-size:13px;cursor:pointer}
+.pal .dn{background:var(--sel)}.pal .cur{outline:2px solid var(--p)}
+.big{font-size:40px;font-weight:700;color:var(--p)}
+.w{border-top:1px solid var(--b);padding:10px 0;font-size:15px}
+</style></head><body><div id="app"></div>
+<script>
+const Q1=[
+["Cengiz Aytmatov eserlerini hangi dillerde kaleme almıştır?","Yalnızca Kırgızca","Kazakça ve Özbekçe","Rusça ve Kırgızca","Türkçe ve Rusça",2],
+["Tanabay, hikâyenin başında yola neden öfkeli çıkmıştır?","Çiftlik başkanıyla kavga ettiği için","Oğlunun evinde gelinle yaşadığı tartışma yüzünden","Gülsarı'yı satmak zorunda kaldığı için","Karısı onu evden kovduğu için",1],
+["Tanabay ile Gülsarı'nın son yolculuğu hangi mevsimin sonunda geçer?","Ekim sonu","Haziran başı","Mayıs ortası","Şubat sonu",3],
+["Gülsarı'yı ünlü kılan özellik hangisidir?","Dörtnala koşması","Kısrakları güdmesi","Doğuştan rahvan oluşu","Çifte atışı",2],
+["Gülsarı'ya adını kim koymuştur?","Tanabay'ın küçük kızı","Torgoy'un torunu","Çoro","Caydar",1],
+["Tanabay, Gülsarı'yı ilk kez kimin yılkısında görmüştür?","Torgoy'un","Kulubay'ın","Yevremov'un","Aldanov'un",0],
+["Tanabay'ı demirci dükkânından ayırıp yılkıcılığa ikna eden kişi kimdir?","Kulubay","İbrahim","Torgoy","Çoro",3],
+["Tanabay savaştan dönünce ilk olarak hangi işe girmiştir?","Yılkıcılığa","Demirci dükkânında çalışmaya","Çiftlik başkanlığına","Koyun çobanlığına",1],
+["Bübücan'ı en iyi tanımlayan seçenek hangisidir?","Çoro'nun dul kız kardeşi","Torgoy'un gelini","‘Asker karısıyım, dulum’ diyen, boynunda yabani karanfil kolye taşıyan kadın","Köyün öğretmeni",2],
+["Gülsarı'yı yılkıdan alıp çiftliğe götürmek için Tanabay'ın çadırına gelen hara müdürü kimdir?","Sekizbayev","Kerimbekov","İbrahim","Aytbay",2],
+["Gülsarı'nın kaçmasını önlemek için ayaklarına vurulan bukağıyı Tanabay nasıl çıkarmıştır?","Zincirli demir bukağının kilitlerini demirci ustalığıyla açarak","Halatı bıçakla keserek","Ağaç köstekleri baltayla kırarak","Deri kayışları çözerek",0],
+["Gülsarı iğdiş edilirken olay yerinde bulunan çiftlik başkanı kimdir?","Kaşkatayev","Sekizbayev","Corokul Aldanov","Samansur",2],
+["Caydar, Tanabay'ın isteği üzerine hangi çalgıda hangi ezgiyi çalar?","Kaval – Boz Keçi","Davul – Yaşlı Avcı","Tambur – Kızıl Yazma","Kopuz – Ağlayan Deve",3],
+["Tanabay eski obayı yenilemek için yün isteyince yönetim hangi gerekçeyi ileri sürmüştür?","Keçe ustası kalmadığını","Yünün devlete satılıp dış ticaret açığının kapatılmasında kullanıldığını, kendi ihtiyacına ayrılmasının uygun olmayacağını","Yünün çok pahalı olduğunu","Caydar'ın obayı istemediğini",1],
+["Tanabay'ın koyun sürüsüne yamak olarak verilen gençler kimlerdir?","Samansur ile Altıka","Kerimbekov ile Aşım","Aşım Bulatbekov ile Bektay Zarlıkov","Aytbay ile Abalak'ın oğlu",2],
+["Koyunların döl dökümü için Tanabay'ın sürüsünün götürüldüğü yer neresidir?","Sarıkuyu vadisi","Sarıgöğüs vadisi","Aleksandrovka","Beş Ağaç vadisi",3],
+["Bektay sürüyü bırakıp giderken Tanabay'a kaç koyun teslim etmiştir?","285","385","450","500",1],
+["Sekizbayev'in görevi aşağıdakilerden hangisidir?","İlçe parti başkanı","Çiftlik sayım memuru","Gençlik kolu başkanı","İlçe savcısı",3],
+["Tanabay'ın Sekizbayev'e saldırması sırasında Gülsarı neden zarar görür?","Öfkeyle savurduğu dirgen, Sekizbayev'in bindiği Gülsarı'nın başına iner","Gülsarı onu ısırdığı için","Gülsarı kaçmaya çalıştığı için","Çoro atı sürmek istediği için",0],
+["Sekizbayev, Tanabay'ın eylemini suç yasasının kaçıncı maddesine uyduğunu söyler?","12. madde","101. madde","58. madde","7. madde",2],
+["Tanabay'ın partiden çıkarılması oylamada nasıl sonuçlanmıştır?","Oybirliğiyle","Üçe üç kalınca ilçe başkanı Kaşkatayev'in oyuyla","Beşe iki","Çoro'nun oyuyla",1],
+["Yönetim kurulunda Tanabay'ı savunan gençlik kolu üyesi kimdir?","Aşım","Samansur","Aytbay","Kerimbekov",3],
+["Tanabay, parti kimlik kartını nasıl taşımaktadır?","Karısının diktiği, kayışlı meşin bir torbada, iç fanilasının altında","Şapkasının içinde","Çizmesinin konçunda","Cüzdanında",0],
+["Çoro, ölmeden önce Tanabay'dan ne istemiştir?","Gülsarı'ya iyi bakmasını","Samansur'a yardım etmesini","Parti kimlik kartını kendi eliyle ilçe merkezine götürmesini","Partiye geri dönmesini",2],
+["Çoro'nun cenazesine gelen Kazaklar nasıl ağıt yakar?","Oy, kardeşim, oy!","Vay, yiğidim, vay!","Çoro, dön geri!","Ey, bozkır, ey!",0],
+["Çoro'nun cenazesinde Gülsarı hangi durumdadır?","Cenaze arabasına koşulmuştur","Ahırda bağlıdır","Eyeri boş, yas bellemesiyle bekler","Mezarlığa kadar koşturulur",2],
+["Yolda alay eden kamyon şoförü hangi görüşü dile getirir?","Tanabay'ı atıyla devlet çiftliğine götürmek ister","Bilim ve teknik çağında kocamış beygire ve yaşlı insana yer olmadığını söyler","Gülsarı'yı yarışlardan tanıdığını söyler","Gülsarı'yı satın almak ister",1],
+["Hikâyenin sonunda Tanabay hangi kararı verir?","Köyü terk etmeye","Yeni bir at almaya","Koyunculuğa dönmeye","Samansur'a yazıp partiye dönmek için yardım istemeye",3],
+["Eserde geçmiş olaylar hangi teknikle aktarılır?","Mektup","Günlük","Geriye dönüş ve iç konuşma","Tiyatro diyaloğu",2]
+];
+const Q2=[
+["Tanabay'ın karısının adı nedir?","Bübücan","Caydar","Çolpon","Cemile",1],
+["Tanabay'ın kaç çocuğu vardır?","İki kızı","Yalnız bir oğlu","İki kızı ve bir oğlu","Üç kızı",2],
+["Gülsarı'nın çocukluk arkadaşı olan, eyere alıştırıldığı gece onu arayıp bulan kısrak hangisidir?","Al donlu kısrak","Alnı akıtmalı küçük doru kısrak","Demir kır kısrak","Kestane doru kısrak",1],
+["Gülsarı ilk kez ne zaman ağlar?","Torgoy gittiğinde","Yarışı kaybedince","İğdiş edilince","Kemendle yakalanıp eyere alıştırıldığı gece, susuz kalıp ayakta bekletilirken",3],
+["1 Mayıs yarışında Gülsarı'nın önünde giden en güçlü iki at hangileridir?","Kestane doru ile al donlu","Demir kır ile al donlu","Doru ile kır","Kula ile boz",1],
+["Keçi kapmaca oyununda Tanabay kiminle boğuşarak keçiyi alır?","Kestane doru ata binmiş genç bir Kazak","Kulubay","Torgoy","Bektay",0],
+["Keçi kapmacanın son bölümü hangi adla anılır?","Kök börü","Alaman bayga","Çelik çomak","Ulak tartış",1],
+["Gülsarı, Bübücan'ın avlusunda bağlıyken ne olur?","Köpek onu ısırır","Hastalanıp yığılır","Fırtına kopunca bağını koparıp Tanabay'ı sürükleyerek yılkıya doğru deli gibi koşar","Bübücan atı çözüp kaçırır",2],
+["Fırtına gecesinden sonra Tanabay bozkırda ne yapar?","Bübücan'a geri döner","Çayıra kapanıp utançtan hüngür hüngür ağlar","Gülsarı'yı satmaya karar verir","Karısını döver",1],
+["Tanabay gençliğinde obalar konusunda ne yapmıştır?","Obaları savunan konuşma yapmıştır","Obalara keçe dağıtmıştır","Obaları kendi eliyle yakmıştır","Parti gençlik kolunda obaların kaldırılmasını isteyen bir söylev çekmiştir",3],
+["Tanabay gençliğinde hangi Rus çiftçinin yanında ırgat olarak çalışmıştır?","Yevremov","Aldanov","Kaşkatayev","Sekizbayev",0],
+["Kulubay, Tanabay'ın nesidir?","Öz ağabeyi","Amcası","Üvey ağabeyi","Kayınbiraderi",2],
+["Kulubay sürgüne götürülürken ne yapmıştır?","Kooperatifin ilk ektiği taze ekinleri çiğneyip köklerinden koparmıştır","Tanabay'a saldırmıştır","Hayvanları kaçırmıştır","Evini yakmıştır",0],
+["Çiftlikte eskiden asılan ve üzerlerine adlar yazılan tahtalar hangi renklerdedir?","Mavi ve sarı","Kırmızı ve kara","Yeşil ve beyaz","Mor ve gri",1],
+["Savaştan önce çiftliğe verilen ilk kamyon kaç tonluktur?","Üç tonluk","İki tonluk","Beş tonluk","Bir buçuk tonluk",3],
+["‘Kırmızı yazmalı emekçi kız’ türküsü köylüye hangi araçla dinletilirdi?","Radyo","Gramofon","Telgraf","Sinema",1],
+["Çoro ile Tanabay'ın birlikte çalıştıkları yapı hangisidir?","Çuyski kanalı","Turksib demiryolu","Toktogul barajı","Issık-Göl yolu",0],
+["Aldanov'a göre çiftliklerdeki aksaklıkların asıl nedeni nedir?","Çobanların tembelliği","Yem kıtlığı","Çiftliklerin ufaklığı","Hava koşulları",2],
+["İbrahim, yılkıcılara nasıl hitap eder?","Usta","Baba","Başkan","Ağa",3],
+["Tanabay, kuzu barınağının damını örtmek için hangi çalıları keser?","Kavak dalı","Ardıç dalı","Yaban gülü çalıları","Meşe dalı",2],
+["Caydar'ı ağır biçimde yaralayan olay nedir?","Atın tekmesi","Çatı kirişinin üstüne düşmesi","Koyunun toslaması","Düşüp kayması",1],
+["Tanabay çömezi Bektay'ı durdurmaya çalışınca Bektay ne yapar?","Özür diler","Tüfeğe sarılır","Koyunları dağıtır","Çenesine yumruk atıp gider",3],
+["Tanabay, Sekizbayev'i hangi sözlerle nitelendirir?","Meşin palto giymiş yeni sömürgen","Kızıl komiser","Bozkırın çakalı","Parti uşağı",0],
+["Sekizbayev, çiftliğe giderken hangi ata biner?","Doru ata","Kır ata","Kula rahvan Gülsarı'ya","Yürüyerek gider",2],
+["İlçe parti başkanı kimdir?","Kaşkatayev","Sekizbayev","Aldanov","Kerimbekov",0],
+["Çoro'nun oğlu Samansur hakkında hangisi doğrudur?","Hukuk okuyan bir öğrencidir","Fakültenin ikinci sınıfında okuyan, tarımdan anlayan bir gençtir","Çiftlikte seyistir","Sekizbayev'in yardımcısıdır",1],
+["Çoro'nun kimlik kartı hangi birime teslim edilir?","Başkanın odasına","Savcılığa","Kayıt işleri bölümüne","Arşive",2],
+["Tanabay'ın partiden atılmasından yedi yıl sonra yaptığı iş nedir?","Koyun çobanlığı","Sarıgöğüs vadisinde çiftlik atlarına bekçilik","Demircilik","Ambar sorumluluğu",1],
+["Kerimbekov ile İbrahim, Tanabay'ı bulduklarında o ne yapmaktadır?","Koyun kırpmaktadır","At eğitmektedir","Balık tutmaktadır","Tırpanla ot biçmektedir",3],
+["Gülsarı'nın sırtında ırmağı geçmeye çalışırken suya düşen çocuk kendini kim sanmaktadır?","Manas","Çoro","Çapayev","Karaoğul",2]
+];
+const Q3=[
+["Gülsarı'nın annesi nasıl bir attır?","Alnı akıtmalı doru kısrak","Uzun yeleli iri bir kısrak","Kestane doru kısrak","Demir kır kısrak",1],
+["Torgoy, Tanabay'a Gülsarı'yı eğitirken neye dikkat etmesini söyler?","Hemen hızlı koşturmaya başlamasını","İlk günler terli terli su içirmemesini","Onu hep bağlı tutmasını","Geceleri sürmesini",1],
+["Torgoy'a göre isteyeni çok olan iki şey hangisidir?","Güzel kız ve rahvan at","Altın ve at","Kımız ve kuzu","Kopuz ve kılıç",0],
+["Gülsarı nasıl yakalanır?","Çitle sıkıştırılarak","Gece uyurken","Yem verilerek","Tuz yalarken boynuna ükrük (kıl kement) geçirilerek",3],
+["Çiftlik eyerinde Tanabay'ı en çok çileden çıkaran şey nedir?","Altın dizgin","Gümüş üzengi","Eyerin üstündeki kadife kaplı kalın minder","Ağır nal",2],
+["Köstekli Gülsarı yılkıya ulaşınca ne olur?","Yılkı aygırı onu ısırıp tekmeler","Kısraklar onu karşılar","Kurt saldırır","Tanabay onu kovar",0],
+["Gülsarı iğdiş edilirken avlunun dışında çocuklar hangi oyunu oynamaktadır?","Aşık atma","Saklambaç","Kovalamaca","Çelik çomak",3],
+["Çelik çomak oyununda yenilen çocuk ne yapar?","Şarkı söyler","Ceza öder","Düdük gibi öterek koşar; soluğu yetmezse kazananı sırtında taşır","Oyundan atılır",2],
+["Çoro, Gülsarı'ya binince neyi hisseder?","Atın üstünde uyur","Başı döner","Ata alışamaz","Yüreğinin sızısı kalmaz",3],
+["Gülsarı, çiftlik başkanı Aldanov'a karşı nasıl davranır?","Kuzu gibi uslu durur","Yanına gelince çıldırır, onu yaklaştırmaz","Ona hep rahvan yürür","Ondan korkup hiç kıpırdamaz",1],
+["Tanabay, ilçe toplantısında kürsüye çıkınca ne yapar?","Uzun bir konuşma yapar","Ürküp birkaç söz ettikten sonra kürsüden iner","Yönetimi suçlar","Kürsüye çıkmayı reddeder",1],
+["Tanabay'a verilen koyun sürüsü yaklaşık kaç baştır?","Yüz","Üç yüz","Beş yüze yakın","Bin",2],
+["Tanabay'ın sürüsüne döl dökümü için kaç sakınan (yardımcı kadın) gelir?","Bir","İki","Dört","Yedi",1],
+["Tanabay yamak istediğinde İbrahim ne yapar?","Hemen yamak gönderir","Hüngür hüngür ağlayıp mahkemeye düşeceğinden yakınır","Başkana şikâyet eder","Tanabay'ı dövmeye kalkar",1],
+["Bektay'ın çobanlığa devam etmek için ileri sürdüğü istekler hangileridir?","Maaş zammı","Radyo, ara sıra sinema, günlük gazete ve dergi, yenilenen çadır","Yeni bir at","Kentte ev",1],
+["Tanabay, yıllar sonra Bektay'ı kentte nerede görür?","Tarlada çalışırken","Askerde","Bir birahanenin önünde fıçı yüklerken","Okulda",2],
+["Bektay'ın yargılanışında Tanabay ne yapar?","Duruşmaya hiç gitmez","Ağır suçlar sayarak onu suçlar","Onu savunmak için yalan söyler","Yalnızca sürüyü bırakıp gittiğini söyler; çıkışta ‘hapisten çıkınca gel bana’ der",3],
+["Tanabay, ölen hayvanlar için tutanağı imzalarken ne olur?","Tutanağı yırtar","İmzalamayı reddeder","Bakmadan imzalarken kalemin ucunu kırar","Gözyaşı döker",2],
+["Caydar, dirgen olayından sonra Tanabay'ı ilk kez ne yaparken görür?","Sarhoşken","Ağlarken","Dua ederken","Şarkı söylerken",1],
+["Kerimbekov'un babası ne iş yapar?","Savcı","Demirci","Öğretmen","Çoban",3],
+["Kerimbekov'un yönetim kuruluna önerisi nedir?","Tanabay'ın hapsi","Tanabay'ın sürgünü","Tanabay'a tekdir cezası, Sekizbayev'e de aynı ceza","Hiç ceza verilmemesi",2],
+["Tanabay, Çoro'ya son konuşmasında ne der?","Aramızda dostluk mostluk kalmadı; komünist değilim ben artık","Seni bağışladım","Hasta olmuşsun, eve gidelim","Başkanla konuşalım",0],
+["Çoro krize girerken hangi atın üstündedir ve ne der?","Kır at; ‘Dur’ der","Doru at; ‘Koş’ der","Gülsarı; ‘Tez eve yetiş’ diye fısıldar","Yürüyerek gider",2],
+["Çoro can çekişirken parti toplantısında neyi anlatmak ister?","Emekli olacağını","Aldanov hakkındaki düşüncelerini ve Tanabay'ın atılmasını istemediğini","Samansur'u başkan yapacağını","Çiftliği satacağını",1],
+["Çoro'nun ağır hasta olduğunu Tanabay'a kim bildirir?","Altıka","Bektay","Aytbay","Kerimbekov",2],
+["Tanabay'ı Çoro'nun yanına gitmeye zorlayan kimdir?","Kızı","Caydar","Aytbay","Bübücan",1],
+["Tanabay, Çoro'nun vasiyetini yerine getirmeye hangi atla gider?","Kendi doru atıyla","Çoro'nun kır atıyla","Kamyonla","Gülsarı ile",3],
+["Tanabay, Çoro'nun kimlik kartını götürünce Kaşkatayev ne yapar?","Onu kabul etmez; kartı kayıt işlerine vermesini söyletir","Onunla yemek yer","Partiye geri alır","Tutuklatır",0],
+["‘Yaşlı Avcı’ türküsünde baba, oğlunu neden vurur?","Oğlu onu aldattığı için","Kıskandığı için","Yanlışlıkla","Oğlu yalvararak acısına son vermesini istediği için",3],
+["Karaoğul, Boz Keçi tarafından nereye çıkarılır?","Mağaraya","Nehir ortasına","Aşılmaz bir kayanın tepesine","Ormana",2],
+["Kerimbekov partiye dönmesini isteyince Tanabay ne yapar?","Hemen kabul eder","Yaşlandığını söyleyip düşüneceğini bildirir, sonra bir türlü karar veremez","Reddedip onu kovar","Samansur'a danışır",1],
+["Tanabay, toz bulutu içinde koşturulan Gülsarı'yı görünce ne yapar?","Biniciyle kavga eder","Atı satın alır","Biniciye bağırır ama arkasından gitmez","Gülsarı'yı geri alır",2],
+["Tanabay'ın oğlu ne iş yapar?","Çobandır","Teknisyen okulunu bitirip ilçede iş tutmuştur","Savcıdır","Demircidir",1],
+["Gelin, Tanabay'a neden kızar?","Ev işlerine yardım etmediği için","Gülsarı'ya çok bağlandığı için","Hediyeleri beğenmediği için","Kocasının terfi edememesini Tanabay'ın partiden atılmasına bağladığı için",3],
+["Tanabay'ın oğluna götürdüğü armağanlar arasında hangisi yoktur?","Kesilmiş bir koç","Patates","Karısının pişirdiği ekmekler","Gümüş eyer",3],
+["Caydar, oğullarının evine neden gitmez?","Çocuklara baktığı için","Hastalığını bahane eder; gelinini sevmediği için","Yol uzun olduğu için","Davet edilmediği için",1],
+["Tanabay, eve çabuk varmak için köprüden sonra nereden sapar?","Ana yoldan sürer","Nehir boyunca gider","Dağlardan geçen cılgaya (kestirme yola) sapar","Demiryolunu izler",2],
+["Gülsarı ölünce Tanabay ne yapar?","Soğuyan göz kapaklarını indirir, yuları alıp arkasına bakmadan yürür","Leşi gömer","Köye haber salar","Sabaha kadar başında kalır",0],
+["Eser hangi dönemde ve nerede geçer?","1950'ler Sovyet Kırgızistan'ı","Çarlık dönemi Moskova'sı","1990'lar Kazakistan'ı","1930'larda Sibirya",0],
+["Aşağıdakilerden hangisi eserin başlıca temalarındandır?","Deniz serüveni","Bilim kurgu","Yalnızca aşk üçgeni","İnsan–hayvan dostluğu, yaşlılık ve yabancılaşma, bürokrasi eleştirisi",3]
+];
+let Q=Q1;
+const $=s=>document.querySelector(s),L="ABCD",fmt=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+let S,T;
+function home(){$("#app").innerHTML=`<h1>Elveda Gülsarı</h1><p class="m">Cengiz Aytmatov · oturum 1–2: 30, oturum 3: 40 soru · süre soru sayısı kadar dk · 4 yanlış 1 doğruyu götürür</p><button class="p" onclick="go('exam',1)">1. Oturum · Sınav</button><button onclick="go('study',1)">1. Oturum · Çalışma</button><br><button class="p" onclick="go('exam',2)">2. Oturum · Sınav</button><button onclick="go('study',2)">2. Oturum · Çalışma</button><br><button class="p" onclick="go('exam',3)">3. Oturum · Sınav</button><button onclick="go('study',3)">3. Oturum · Çalışma</button>`}
+function go(m,n){Q=n==3?Q3:n==2?Q2:Q1;S={i:0,a:Q.map(_=>-1),m,t:Q.length*60,d:0,c:0};clearInterval(T);if(m=="exam")T=setInterval(()=>{if(--S.t<=0)fin();else{const e=$("#tm");if(e)e.textContent=fmt(S.t)}},1e3);draw()}
+function draw(){!S?home():S.d?res():ask()}
+function ask(){const q=Q[S.i],a=S.a[S.i],st=S.m=="study"&&a>=0;
+$("#app").innerHTML=`<div class="top"><b>${S.i+1} / ${Q.length}</b><span id="tm">${S.m=="exam"?fmt(S.t):"Çalışma"}</span></div>
+<div class="card"><p class="q">${q[0]}</p>${[0,1,2,3].map(j=>{let c=a==j?"sel":"";if(st)c=j==q[5]?"ok":a==j?"no":"";return`<button class="o ${c}" onclick="pick(${j})"><i>${L[j]}</i><span>${q[j+1]}</span></button>`}).join("")}</div>
+<div><button ${S.i?"":"disabled"} onclick="mv(-1)">Önceki</button><button ${S.i<Q.length-1?"":"disabled"} onclick="mv(1)">Sonraki</button><button class="p" onclick="end()">${S.c?"Emin misin? Bitir":"Bitir"}</button></div>
+<div class="pal">${Q.map((_,i)=>`<b class="${i==S.i?"cur":""} ${S.a[i]>=0?"dn":""}" onclick="S.i=${i};S.c=0;draw()">${i+1}</b>`).join("")}</div>`}
+function pick(j){if(S.m=="study"&&S.a[S.i]>=0)return;S.a[S.i]=S.a[S.i]==j&&S.m=="exam"?-1:j;S.c=0;draw()}
+function mv(d){S.i+=d;S.c=0;draw()}
+function end(){if(S.c)fin();else{S.c=1;draw()}}
+function fin(){clearInterval(T);S.d=1;draw();scrollTo(0,0)}
+function res(){let D=0,Y=0,B=0,w="";Q.forEach((q,i)=>{const a=S.a[i];if(a<0)B++;else if(a==q[5])D++;else Y++;if(a!=q[5])w+=`<div class="w"><b>${i+1}.</b> ${q[0]}<br><span class="m">Senin cevabın: ${a<0?"boş":L[a]+") "+q[a+1]}</span><br>Doğru: <b>${L[q[5]]}) ${q[q[5]+1]}</b></div>`});
+const n=D-Y/4;$("#app").innerHTML=`<h1>Sonuç</h1><div class="card"><div class="big">${n.toFixed(2)} net</div><p>${D} doğru · ${Y} yanlış · ${B} boş<br>Başarı: %${Math.round(D/Q.length*100)}</p></div>${w?"<h2>Gözden geçir</h2>"+w:"<p>Hepsi doğru.</p>"}<button class="p" onclick="S=null;draw()">Yeniden başla</button>`}
+draw();
+</script></body></html>
