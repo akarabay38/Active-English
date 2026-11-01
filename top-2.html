@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top-2</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#D0241C; --navy:#1B3A5C; --cream:#F5F0E8; --gold:#FFD166; --green:#06D6A0; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:'Nunito',sans-serif; background:var(--cream); min-height:100vh; display:flex; flex-direction:column; }
+  header{ background:var(--navy); padding:13px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 12px rgba(0,0,0,0.28); }
+  .brand{ font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; }
+  .brand span:first-child{ color:var(--red); }
+  .brand span:last-child{ color:white; margin-left:6px; }
+  .social-links{ display:flex; gap:9px; }
+  .social-btn{ display:flex; align-items:center; gap:6px; padding:7px 15px; border-radius:50px; text-decoration:none; font-size:13px; font-weight:800; color:white; transition:transform .18s,opacity .18s; white-space:nowrap; }
+  .social-btn:hover{ transform:translateY(-2px); opacity:.85; }
+  .btn-insta{ background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .btn-yt{ background:#FF0000; }
+  .band{ background:var(--red); color:white; text-align:center; padding:9px 16px; font-size:13px; font-weight:700; letter-spacing:.03em; }
+  main{ flex:1; max-width:820px; width:100%; margin:0 auto; padding:30px 18px 60px; }
+  .card{ background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.12); padding:30px 28px 24px; animation:fadeUp .4s ease; }
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+  .card-label{ font-size:11px; font-weight:800; letter-spacing:.13em; color:var(--red); text-transform:uppercase; margin-bottom:5px; }
+  .card-title{ font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--navy); margin-bottom:20px; letter-spacing:.03em; }
+  .reading-text{ font-size:18px; line-height:1.95; color:#1a1a2e; }
+  .word{ cursor:pointer; border-radius:5px; padding:1px 3px; transition:background .15s,color .15s; display:inline; }
+  .word.content:hover{ background:#e8eef7; color:var(--navy); }
+  .word.func:hover{ background:#f0f0f0; }
+  .word.active{ background:var(--navy)!important; color:white!important; border-radius:5px; }
+  .hint{ margin-top:18px; text-align:center; font-size:13px; color:#999; }
+  .hint b{ color:var(--navy); }
+  .tooltip-box{ position:fixed; will-change:left,top; background:var(--navy); color:white; border-radius:14px; padding:14px 18px; max-width:260px; z-index:9999; pointer-events:none; opacity:0; transform:translateY(8px); transition:opacity .18s,transform .18s; box-shadow:0 10px 32px rgba(0,0,0,0.25); font-size:14px; }
+  .tooltip-box.show{ opacity:1; transform:translateY(0); pointer-events:all; }
+  .t-word{ font-size:17px; color:var(--gold); font-weight:800; display:block; margin-bottom:6px; }
+  .t-tr{ display:flex; align-items:flex-start; gap:6px; margin-bottom:4px; }
+  .t-tr .flag{ font-size:15px; flex-shrink:0; }
+  .t-tr .val{ font-size:14px; font-weight:700; color:white; }
+  .t-syn{ display:flex; align-items:flex-start; gap:6px; }
+  .t-syn .flag{ font-size:15px; flex-shrink:0; }
+  .t-syn .val{ font-size:13px; font-weight:600; color:var(--green); }
+  .t-note{ font-size:11.5px; color:#9ab3cc; margin-top:5px; display:block; font-style:italic; }
+  .t-save-btn{ display:flex; align-items:center; justify-content:center; gap:5px; margin-top:10px; width:100%; padding:7px 10px; border-radius:8px; border:none; background:var(--gold); color:#1a1a2e; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; pointer-events:all; }
+  .t-save-btn:hover{ background:#ffc933; transform:scale(1.03); }
+  .t-save-btn.saved{ background:var(--green); color:#0a2a20; }
+  .saved-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .saved-section.has-words{ display:block; animation:fadeUp .35s ease; }
+  .saved-header{ background:var(--navy); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .saved-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .saved-header-right{ display:flex; gap:8px; align-items:center; }
+  .clear-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .clear-btn:hover{ background:rgba(255,255,255,0.25); }
+  .word-count{ background:var(--gold); color:var(--navy); border-radius:50px; padding:3px 11px; font-size:12px; font-weight:800; }
+  .saved-list{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .saved-item{ background:#f7f9fc; border-radius:12px; padding:12px 16px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; border-left:4px solid var(--navy); animation:fadeUp .25s ease; }
+  .saved-item-body{ flex:1; min-width:0; }
+  .saved-word{ font-size:16px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+  .saved-tr{ font-size:13px; color:#333; margin-bottom:2px; }
+  .saved-syn{ font-size:12px; color:#06a07a; font-weight:600; }
+  .saved-note{ font-size:11px; color:#888; font-style:italic; margin-top:2px; }
+  .remove-btn{ background:none; border:none; cursor:pointer; color:#ccc; font-size:18px; line-height:1; padding:2px 4px; border-radius:6px; transition:color .15s,background .15s; flex-shrink:0; }
+  .remove-btn:hover{ color:var(--red); background:#ffeaea; }
+  .stats-section{ margin-top:24px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .stats-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .stats-header{ background:linear-gradient(135deg,var(--navy),#2a5298); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; }
+  .stats-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .stats-reset-btn{ background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:background .15s; }
+  .stats-reset-btn:hover{ background:rgba(255,255,255,0.25); }
+  .stats-body{ padding:18px 18px 22px; display:flex; flex-direction:column; gap:14px; }
+  .stats-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat-box{ background:#f4f7fc; border-radius:14px; padding:14px 16px; text-align:center; border-top:4px solid var(--navy); }
+  .stat-box.accent{ border-top-color:var(--green); }
+  .stat-box.warn{ border-top-color:var(--gold); }
+  .stat-box.danger{ border-top-color:var(--red); }
+  .stat-value{ font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--navy); line-height:1; }
+  .stat-box.accent .stat-value{ color:#06a07a; }
+  .stat-box.warn .stat-value{ color:#c9960a; }
+  .stat-box.danger .stat-value{ color:var(--red); }
+  .stat-label{ font-size:12px; font-weight:700; color:#888; margin-top:4px; }
+  .hard-words-box{ background:#fff8e1; border-radius:14px; padding:14px 16px; border-left:4px solid var(--gold); }
+  .hard-words-title{ font-size:13px; font-weight:800; color:#c9960a; margin-bottom:10px; }
+  .hard-words-list{ display:flex; flex-wrap:wrap; gap:7px; }
+  .hard-chip{ background:white; border:1.5px solid #f0d070; border-radius:50px; padding:4px 12px; font-size:13px; font-weight:700; color:var(--navy); display:flex; align-items:center; gap:5px; }
+  .hard-chip .miss-count{ font-size:11px; color:var(--red); font-weight:800; }
+  .streak-box{ background:linear-gradient(135deg,#fff3f3,#fff8e1); border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:12px; border:1.5px solid #fde8c0; }
+  .streak-icon{ font-size:32px; line-height:1; }
+  .streak-text{ font-size:13px; font-weight:700; color:#555; }
+  .streak-num{ font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--red); }
+  .exercise-section{ margin-top:16px; background:white; border-radius:20px; box-shadow:0 6px 28px rgba(27,58,92,0.10); overflow:hidden; display:none; }
+  .exercise-section.visible{ display:block; animation:fadeUp .35s ease; }
+  .exercise-header{ background:var(--red); color:white; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .exercise-header h2{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:.04em; }
+  .exercise-body{ padding:20px 18px 24px; }
+  .ex-instruction{ font-size:13.5px; color:#555; font-weight:600; margin-bottom:18px; text-align:center; }
+  .match-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .match-col{ display:flex; flex-direction:column; gap:8px; }
+  .match-card{ padding:11px 14px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; border:2.5px solid transparent; transition:all .18s; user-select:none; min-height:52px; display:flex; align-items:center; justify-content:center; line-height:1.3; }
+  .match-card.eng{ background:#eef2fb; color:var(--navy); border-color:#c5d2ee; }
+  .match-card.tr{ background:#f0faf6; color:#0a5c40; border-color:#a8e6d0; }
+  .match-card.selected{ border-color:var(--gold); background:#fff8e1; transform:scale(1.03); box-shadow:0 4px 14px rgba(255,209,102,.35); }
+  .match-card.correct{ border-color:var(--green); background:#d4fdf0; color:#056b44; cursor:default; animation:pop .25s ease; }
+  .match-card.wrong{ border-color:var(--red); background:#fde8e7; animation:shake .3s ease; }
+  .match-card.dimmed{ opacity:.3; cursor:default; pointer-events:none; }
+  @keyframes pop{ 0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)} }
+  @keyframes shake{ 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)} }
+  .score-bar{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; font-size:14px; font-weight:700; color:var(--navy); }
+  .score-num{ font-size:24px; font-weight:800; color:var(--red); }
+  .ex-result{ display:none; text-align:center; margin-top:18px; padding:18px; background:#d4fdf0; border-radius:14px; font-size:16px; font-weight:800; color:#056b44; }
+  .ex-result.show{ display:block; animation:fadeUp .3s ease; }
+  .ex-btn{ display:inline-block; margin-top:12px; padding:10px 28px; background:var(--navy); color:white; border:none; border-radius:50px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .ex-btn:hover{ background:#152d48; transform:scale(1.03); }
+  .start-ex-btn{ display:flex; align-items:center; justify-content:center; gap:7px; width:calc(100% - 36px); margin:0 18px 18px; padding:12px; background:var(--red); color:white; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:background .15s,transform .12s; }
+  .start-ex-btn:hover{ background:#b01e17; transform:scale(1.02); }
+  .start-ex-btn:disabled{ background:#ccc; cursor:default; transform:none; }
+  footer{ background:#0f1923; color:#5a7a99; text-align:center; padding:14px; font-size:12px; }
+  footer strong{ color:white; }
+  @media(max-width:520px){ .reading-text{font-size:16px} .card{padding:20px 15px 18px} }
+  .tabs-wrapper{ margin-bottom:18px; position:relative; }
+  .reading-select{ width:100%; padding:13px 44px 13px 16px; border-radius:14px; border:2px solid var(--navy); background:white; color:var(--navy); font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; cursor:pointer; appearance:none; -webkit-appearance:none; box-shadow:0 4px 14px rgba(27,58,92,0.12); background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231B3A5C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; transition:box-shadow .18s,border-color .18s; }
+  .reading-select:hover{ box-shadow:0 6px 18px rgba(27,58,92,0.2); }
+  .reading-select:focus{ outline:none; border-color:var(--red); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span>ACTIVE</span><span>ENGLISH</span></div>
+  <div class="social-links">
+    <a class="social-btn btn-insta" href="https://www.instagram.com/aktifingilizceonline" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+      Instagram
+    </a>
+    <a class="social-btn btn-yt" href="https://www.youtube.com/@aktifingilizce" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2.1.3 4.2.3 4.2s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.3 21.6 12 21.6 12 21.6s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.2v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+      YouTube
+    </a>
+  </div>
+</header>
+<div class="band">📖 Kelimeye tıkla → 🇹🇷 Türkçesi + 🔤 İngilizce eş anlamlısını gör!</div>
+<main>
+  <div class="tabs-wrapper"><select class="reading-select" id="readingSelect" aria-label="Paragraf seç"></select></div>
+  <div class="card">
+    <div class="card-label" id="cardLabel">Aktif İngilizce – Okuma Parçası</div>
+    <div class="card-title" id="cardTitle"></div>
+    <div class="reading-text" id="readingText"></div>
+    <p class="hint">👆 Herhangi bir kelimeye tıkla — <b>Türkçe anlamı</b> ve <b>İngilizce eş anlamlısı</b> çıksın!</p>
+  </div>
+  <div class="saved-section" id="savedSection">
+    <div class="saved-header">
+      <h2>⭐ Kaydettiğin Kelimeler</h2>
+      <div class="saved-header-right">
+        <span class="word-count" id="wordCount">0</span>
+        <button class="clear-btn" onclick="clearAll()">🗑 Hepsini Sil</button>
+      </div>
+    </div>
+    <button class="start-ex-btn" id="startExBtn" onclick="startExercise()" disabled>🎯 Eşleştirme Egzersizi Başlat</button>
+    <div class="saved-list" id="savedList"></div>
+  </div>
+  <div class="stats-section" id="statsSection">
+    <div class="stats-header">
+      <h2>📊 Kelime Skorum</h2>
+      <button class="stats-reset-btn" onclick="resetStats()">Sıfırla</button>
+    </div>
+    <div class="stats-body">
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-value" id="statLearned">0</div><div class="stat-label">Bu hafta kaydedilen kelime</div></div>
+        <div class="stat-box accent"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Doğru eşleştirme oranı</div></div>
+        <div class="stat-box warn"><div class="stat-value" id="statAttempts">0</div><div class="stat-label">Toplam egzersiz turu</div></div>
+        <div class="stat-box danger"><div class="stat-value" id="statMistakes">0</div><div class="stat-label">Toplam hatalı deneme</div></div>
+      </div>
+      <div class="streak-box"><div class="streak-icon">🔥</div><div><div class="streak-text">Günlük seri</div><div class="streak-num" id="statStreak">0 gün</div></div></div>
+      <div class="hard-words-box" id="hardWordsBox" style="display:none">
+        <div class="hard-words-title">😅 En zorlandığın kelimeler</div>
+        <div class="hard-words-list" id="hardWordsList"></div>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-section" id="exerciseSection">
+    <div class="exercise-header">
+      <h2>🎯 Eşleştirme Egzersizi</h2>
+      <button class="ex-btn" style="margin-top:0;padding:6px 16px;font-size:13px;" onclick="closeExercise()">✕ Kapat</button>
+    </div>
+    <div class="exercise-body">
+      <p class="ex-instruction">Sol sütundan bir İngilizce kelime, sağ sütundan Türkçesi'ni seç!</p>
+      <div class="match-grid">
+        <div class="match-col" id="colEng"></div>
+        <div class="match-col" id="colTr"></div>
+      </div>
+      <div class="score-bar">Doğru: <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span></div>
+      <div class="ex-result" id="exResult">🎉 Tebrikler! Hepsini doğru eşleştirdin!<br><button class="ex-btn" onclick="startExercise()">🔄 Tekrar Oyna</button></div>
+    </div>
+  </div>
+</main>
+<footer><strong>Active English</strong> &copy; 2025 · aktifingilizceonline</footer>
+<div class="tooltip-box" id="tooltip">
+  <span class="t-word" id="tWord"></span>
+  <div class="t-tr"><span class="flag">🇹🇷</span><span class="val" id="tTr"></span></div>
+  <div class="t-syn"><span class="flag">🔤</span><span class="val" id="tSyn"></span></div>
+  <span class="t-note" id="tNote"></span>
+  <button class="t-save-btn" id="tSaveBtn" onclick="toggleSave()">⭐ Kaydet</button>
+</div>
+<script>
+const WORDS = {
+  "a":{tr:"bir",syn:"—",func:true},
+  "machines":{tr:"makineler",syn:"apparatuses"},
+  "often":{tr:"sıklıkla",syn:"frequently"},
+  "as":{tr:"olarak/gibi",syn:"like",func:true},
+  "futuristic":{tr:"fütüristik/geleceğe ait",syn:"ultramodern"},
+  "in":{tr:"içinde/-de",syn:"within",func:true},
+  "early":{tr:"erken/ilk dönem",syn:"initial"},
+  "science":{tr:"bilim",syn:"—"},
+  "fiction":{tr:"kurgu",syn:"—"},
+  "has":{tr:"sahip/-mış",syn:"—",func:true},
+  "been":{tr:"olmuş",syn:"—",func:true},
+  "concept":{tr:"kavram/fikir",syn:"idea"},
+  "by":{tr:"tarafından",syn:"—",func:true},
+  "for":{tr:"için/boyunca",syn:"—",func:true},
+  "centuries":{tr:"yüzyıllar",syn:"—"},
+  "were":{tr:"idi/-ydi",syn:"—",func:true},
+  "simple":{tr:"basit",syn:"basic"},
+  "and":{tr:"ve",syn:"—",func:true},
+  "the":{tr:"o/bu",syn:"—",func:true},
+  "of":{tr:"-nın/-in",syn:"—",func:true},
+  "modern":{tr:"modern/çağdaş",syn:"contemporary"},
+  "but":{tr:"ama",syn:"—",func:true},
+  "they":{tr:"onlar",syn:"—",func:true},
+  "laid":{tr:"attı/koydu (lay)",syn:"established"},
+  "future":{tr:"gelecek",syn:"—"},
+  "one":{tr:"bir/biri",syn:"—",func:true},
+  "earliest":{tr:"en eski",syn:"first"},
+  "is":{tr:"-dir",syn:"—",func:true},
+  "on":{tr:"üzerine/-de",syn:"—",func:true},
+  "that":{tr:"ki/o",syn:"—",func:true},
+  "could":{tr:"-ebilirdi",syn:"—",func:true},
+  "powered":{tr:"güçle çalışan",syn:"driven"},
+  "human":{tr:"insan",syn:"—"},
+  "system":{tr:"sistem",syn:"mechanism"},
+  "although":{tr:"-e rağmen",syn:"though"},
+  "his":{tr:"onun (erkek)",syn:"—",func:true},
+  "never":{tr:"asla",syn:"—",func:true},
+  "it":{tr:"o/onu",syn:"—",func:true},
+  "century":{tr:"yüzyıl",syn:"—"},
+  "creation":{tr:"eser/yaratım",syn:"invention"},
+  "form":{tr:"biçim/şekil",syn:"type"},
+  "or":{tr:"veya",syn:"—",func:true},
+  "today":{tr:"bugün",syn:"—"},
+  "standards":{tr:"standartlar/ölçütler",syn:"criteria"},
+  "its":{tr:"onun",syn:"—",func:true},
+  "time":{tr:"zaman/dönem",syn:"—"},
+  "he":{tr:"o (erkek)",syn:"—",func:true},
+  "used":{tr:"kullandı/kullanılan",syn:"utilized"},
+  "knowledge":{tr:"bilgi",syn:"—"},
+  "systems":{tr:"sistemler",syn:"mechanisms"},
+  "many":{tr:"çok sayıda",syn:"numerous",func:true},
+  "other":{tr:"diğer",syn:"—",func:true},
+  "including":{tr:"dahil olmak üzere",syn:"such as"},
+  "continue":{tr:"devam etmek",syn:"keep on"},
+  "to":{tr:"-e/-mek",syn:"—",func:true},
+  "have":{tr:"sahip/-miş",syn:"—",func:true},
+  "even":{tr:"hatta",syn:"—",func:true},
+  "influenced":{tr:"etkiledi",syn:"shaped"},
+  "like":{tr:"gibi",syn:"such as",func:true},
+  "european":{tr:"Avrupa'ya ait",syn:"of Europe"},
+  "space":{tr:"uzay",syn:"—"},
+  "was":{tr:"oldu/-ydi",syn:"—",func:true},
+  "deforestation":{tr:"ormansızlaşma",syn:"forest clearance"},
+  "at":{tr:"-de/-da",syn:"—",func:true},
+  "due":{tr:"dolayı (due to)",syn:"owing"},
+  "vast":{tr:"geniş/uçsuz bucaksız",syn:"huge"},
+  "areas":{tr:"alanlar/bölgeler",syn:"regions"},
+  "are":{tr:"-dir/-lar",syn:"—",func:true},
+  "make":{tr:"yapmak/kılmak",syn:"create"},
+  "way":{tr:"yol",syn:"path"},
+  "which":{tr:"ki/hangi",syn:"—",func:true},
+  "with":{tr:"ile",syn:"—",func:true},
+  "this":{tr:"bu",syn:"—",func:true},
+  "led":{tr:"yol açtı (lead)",syn:"resulted in"},
+  "significant":{tr:"önemli/kayda değer",syn:"considerable"},
+  "damage":{tr:"hasar",syn:"harm"},
+  "experts":{tr:"uzmanlar",syn:"specialists"},
+  "be":{tr:"olmak",syn:"—",func:true},
+  "transformed":{tr:"dönüştürülmüş",syn:"converted"},
+  "into":{tr:"-e/-a (dönüşüm)",syn:"—",func:true},
+  "if":{tr:"eğer",syn:"—",func:true},
+  "current":{tr:"mevcut/güncel",syn:"present"},
+  "countless":{tr:"sayısız",syn:"innumerable"},
+  "rare":{tr:"nadir",syn:"scarce"},
+  "now":{tr:"şimdi",syn:"currently",func:true},
+  "their":{tr:"onların",syn:"—",func:true},
+  "natural":{tr:"doğal",syn:"—"},
+  "habitats":{tr:"yaşam alanları",syn:"—"},
+  "addition":{tr:"ek/ilave",syn:"extra",note:"in addition to = -e ek olarak"},
+  "significantly":{tr:"önemli ölçüde",syn:"considerably"},
+  "contributes":{tr:"katkıda bulunur",syn:"adds"},
+  "activities":{tr:"faaliyetler",syn:"actions"},
+  "also":{tr:"ayrıca",syn:"—",func:true},
+  "during":{tr:"sırasında/boyunca",syn:"—",func:true},
+  "forest":{tr:"orman",syn:"—"},
+  "allow":{tr:"izin vermek",syn:"permit"},
+  "access":{tr:"erişim",syn:"entry"},
+  "these":{tr:"bunlar",syn:"—",func:true},
+  "nearby":{tr:"yakındaki",syn:"close"},
+  "urban":{tr:"kentsel",syn:"city"},
+  "quality":{tr:"kalite",syn:"—"},
+  "health":{tr:"sağlık",syn:"—"},
+  "risks":{tr:"riskler",syn:"dangers"},
+  "local":{tr:"yerel",syn:"—"},
+  "across":{tr:"boyunca/genelinde",syn:"—",func:true},
+  "agricultural":{tr:"tarımsal",syn:"farming-related"},
+  "an":{tr:"bir",syn:"—",func:true},
+  "union":{tr:"birlik",syn:"alliance"},
+  "sparked":{tr:"tetikledi/ateşledi",syn:"triggered"},
+  "over":{tr:"hakkında/üzerine",syn:"—",func:true},
+  "industry":{tr:"sektör/endüstri",syn:"—"},
+  "however":{tr:"ancak",syn:"nevertheless"},
+  "not":{tr:"değil",syn:"—",func:true},
+  "particularly":{tr:"özellikle",syn:"especially"},
+  "where":{tr:"-dığı yer/nerede",syn:"—",func:true},
+  "deep":{tr:"derin",syn:"profound"},
+  "cultural":{tr:"kültürel",syn:"—"},
+  "economic":{tr:"ekonomik",syn:"financial"},
+  "remains":{tr:"kalır/hâlâ ... durumda",syn:"stays"},
+  "communities":{tr:"topluluklar",syn:"—"},
+  "both":{tr:"her ikisi",syn:"—",func:true},
+  "already":{tr:"zaten",syn:"—",func:true},
+  "made":{tr:"yapılır/yapıldı",syn:"—",func:true},
+  "indigenous":{tr:"yerli/otokton",syn:"native"},
+  "purposes":{tr:"amaçlar",syn:"aims"},
+  "wildlife":{tr:"yaban hayatı",syn:"—"},
+  "long":{tr:"uzun süredir",syn:"for a long time"},
+  "more":{tr:"daha fazla",syn:"—",func:true},
+  "than":{tr:"-den/-dan",syn:"—",func:true},
+  "say":{tr:"söylemek",syn:"claim"},
+  "trying":{tr:"çalışıyor/denemek",syn:"attempting"},
+  "new":{tr:"yeni",syn:"—"},
+  "trade":{tr:"ticaret",syn:"commerce"},
+  "find":{tr:"bulmak",syn:"locate"},
+  "does":{tr:"yapar",syn:"—",func:true},
+  "will":{tr:"-ecek",syn:"—",func:true},
+  "i":{tr:"ben",syn:"—",func:true},
+  "changes":{tr:"değişiklikler",syn:"—"},
+  "despite":{tr:"-e rağmen",syn:"in spite of"},
+  "growing":{tr:"artan",syn:"increasing"},
+  "marine":{tr:"deniz",syn:"—"},
+  "who":{tr:"-en/-an (kişi)",syn:"—",func:true},
+  "only":{tr:"yalnızca",syn:"just",func:true},
+  "what":{tr:"ne/-dığı şey",syn:"—",func:true},
+  "there":{tr:"orada/var",syn:"—",func:true},
+  "those":{tr:"olanlar/şunlar",syn:"—",func:true},
+  "reduce":{tr:"azaltmak",syn:"cut down"},
+  "spend":{tr:"harcamak",syn:"—"},
+  "possible":{tr:"mümkün",syn:"feasible"},
+  "some":{tr:"bazı",syn:"—",func:true},
+  "hand":{tr:"el",syn:"—",note:"on the other hand = öte yandan; by hand = elle"},
+  "conscious":{tr:"bilinçli",syn:"aware"},
+  "individuals":{tr:"bireyler",syn:"people"},
+  "excess":{tr:"aşırılık/fazlalık",syn:"surplus"},
+  "production":{tr:"üretim",syn:"manufacturing"},
+  "lead":{tr:"yol açmak",syn:"result in"},
+  "environmental":{tr:"çevresel",syn:"—"},
+  "social":{tr:"toplumsal",syn:"—"},
+  "between":{tr:"arasında",syn:"—",func:true},
+  "workers":{tr:"işçiler/çalışanlar",syn:"employees"},
+  "mass":{tr:"kitlesel/seri",syn:"—"},
+  "less":{tr:"daha az",syn:"—",func:true},
+  "stress":{tr:"stres",syn:"pressure"},
+  "life":{tr:"hayat",syn:"—"},
+  "such":{tr:"böyle",syn:"—",note:"such as = gibi",func:true},
+  "different":{tr:"farklı",syn:"—"},
+  "difficult":{tr:"zor",syn:"hard"},
+  "amount":{tr:"miktar",syn:"quantity"},
+  "data":{tr:"veri",syn:"information"},
+  "available":{tr:"mevcut/erişilebilir",syn:"accessible"},
+  "advanced":{tr:"gelişmiş",syn:"sophisticated"},
+  "powerful":{tr:"güçlü",syn:"mighty"},
+  "government":{tr:"hükümet/yönetim",syn:"administration"},
+  "cities":{tr:"şehirler",syn:"—"},
+  "complex":{tr:"karmaşık",syn:"intricate"},
+  "famous":{tr:"ünlü",syn:"well-known"},
+  "divine":{tr:"ilahi/kutsal",syn:"godly"},
+  "him":{tr:"onu/ona",syn:"—",func:true},
+  "society":{tr:"toplum",syn:"—"},
+  "controlled":{tr:"kontrol edilen",syn:"governed"},
+  "political":{tr:"siyasi",syn:"—"},
+  "maintain":{tr:"sürdürmek/korumak",syn:"preserve"},
+  "gods":{tr:"tanrılar",syn:"deities"},
+  "seen":{tr:"görülen",syn:"regarded"},
+  "responsible":{tr:"sorumlu",syn:"accountable"},
+  "ensuring":{tr:"sağlayarak",syn:"making sure"},
+  "land":{tr:"toprak/arazi",syn:"—"},
+  "prosperity":{tr:"refah/bolluk",syn:"affluence"},
+  "authority":{tr:"otorite/yetki",syn:"power"},
+  "power":{tr:"güç",syn:"—"},
+  "possess":{tr:"sahip olmak",syn:"own"},
+  "influence":{tr:"etki/nüfuz",syn:"impact"},
+  "every":{tr:"her",syn:"—",func:true},
+  "believed":{tr:"inanılıyordu",syn:"—"},
+  "high":{tr:"yüksek/üst düzey",syn:"—"},
+  "highly":{tr:"son derece",syn:"extremely"},
+  "had":{tr:"sahipti",syn:"—",func:true},
+  "you":{tr:"sen/siz",syn:"—",func:true},
+  "colleague":{tr:"iş arkadaşı",syn:"coworker"},
+  "your":{tr:"senin/sizin",syn:"—",func:true},
+  "work":{tr:"iş/çalışma",syn:"—"},
+  "ask":{tr:"sormak",syn:"inquire"},
+  "help":{tr:"yardım",syn:"assistance"},
+  "want":{tr:"istemek",syn:"wish"},
+  "so":{tr:"bu yüzden/-ki",syn:"—",func:true},
+  "friend":{tr:"arkadaş",syn:"buddy"},
+  "restaurant":{tr:"restoran",syn:"—"},
+  "changed":{tr:"değiştirildi",syn:"altered"},
+  "casual":{tr:"rahat/gündelik",syn:"informal"},
+  "about":{tr:"hakkında",syn:"—",func:true},
+  "up":{tr:"yukarı",syn:"—",note:"dressed up = şık giyinmiş",func:true},
+  "feeling":{tr:"hisseden",syn:"sensing"},
+  "routine":{tr:"rutin/düzenli program",syn:"regimen"},
+  "daily":{tr:"günlük",syn:"everyday"},
+  "taking":{tr:"almak",syn:"having"},
+  "concerned":{tr:"endişeli",syn:"worried"},
+  "potential":{tr:"olası/potansiyel",syn:"possible"},
+  "after":{tr:"sonra",syn:"—",func:true},
+  "saying":{tr:"diyerek",syn:"stating"},
+  "suggests":{tr:"önerir",syn:"proposes"},
+  "trip":{tr:"gezi",syn:"journey"},
+  "much":{tr:"çok",syn:"—",func:true},
+  "experience":{tr:"tecrübe",syn:"—"},
+  "very":{tr:"çok",syn:"—",func:true},
+  "idea":{tr:"fikir",syn:"notion"},
+  "safety":{tr:"güvenlik",syn:"—"},
+  "suggest":{tr:"önermek",syn:"propose"},
+  "whether":{tr:"-ip -mediği",syn:"—",func:true},
+  "necessary":{tr:"gerekli",syn:"needed"},
+  "age":{tr:"çağ/yaş",syn:"era",note:"in the age of = ... çağında"},
+  "smartphones":{tr:"akıllı telefonlar",syn:"—"},
+  "while":{tr:"-ken/oysa",syn:"—",func:true},
+  "positive":{tr:"olumlu",syn:"favourable"},
+  "conversation":{tr:"sohbet/konuşma",syn:"discussion"},
+  "widely":{tr:"yaygın olarak",syn:"broadly"},
+  "information":{tr:"bilgi",syn:"data"},
+  "can":{tr:"-ebilir",syn:"—",func:true},
+  "vary":{tr:"değişiklik göstermek",syn:"differ"},
+  "always":{tr:"her zaman",syn:"—",func:true},
+  "individual":{tr:"bireysel/tek tek",syn:"—"},
+  "contributors":{tr:"katkıda bulunanlar",syn:"—"},
+  "when":{tr:"-dığında",syn:"—",func:true},
+  "sources":{tr:"kaynaklar",syn:"—"},
+  "important":{tr:"önemli",syn:"significant"},
+  "example":{tr:"örnek",syn:"instance",note:"for example = örneğin"},
+  "cultures":{tr:"kültürler",syn:"—"},
+  "key":{tr:"anahtar/kilit",syn:"crucial"},
+  "sometimes":{tr:"bazen",syn:"occasionally"},
+  "central":{tr:"merkezi/temel",syn:"main"},
+  "associated":{tr:"ilişkili",syn:"linked"},
+  "group":{tr:"grup",syn:"—"},
+  "scientific":{tr:"bilimsel",syn:"—"},
+  "question":{tr:"soru",syn:"—"},
+  "observed":{tr:"gözlemledi",syn:"noticed"},
+  "each":{tr:"her biri",syn:"—",func:true},
+  "specific":{tr:"belirli/özel",syn:"particular"},
+  "particular":{tr:"belirli/özel",syn:"specific",note:"in particular = özellikle"},
+  "quite":{tr:"oldukça",syn:"fairly"},
+  "play":{tr:"oynamak",syn:"—"},
+  "how":{tr:"nasıl",syn:"—",func:true},
+  "small":{tr:"küçük",syn:"little"},
+  "area":{tr:"alan/bölge",syn:"region"},
+  "staff":{tr:"personel/çalışanlar",syn:"employees"},
+  "currently":{tr:"şu anda",syn:"presently"},
+  "years":{tr:"yıllar",syn:"—"},
+  "expected":{tr:"beklenen",syn:"anticipated"},
+  "tasks":{tr:"görevler",syn:"duties"},
+  "most":{tr:"en/çoğu",syn:"—"},
+  "known":{tr:"bilinen/tanınan",syn:"recognised"},
+  "extended":{tr:"genişletildi",syn:"expanded"},
+  "invented":{tr:"icat edildi",syn:"created"},
+  "written":{tr:"yazılı",syn:"recorded"},
+  "things":{tr:"şeyler",syn:"—"},
+  "do":{tr:"yapmak",syn:"—",func:true},
+  "people":{tr:"insanlar",syn:"—"},
+  "likely":{tr:"olası/muhtemel",syn:"probable"},
+  "get":{tr:"olmak/almak",syn:"become",note:"get stuck = sıkışmak",func:true},
+  "them":{tr:"onlar/onları",syn:"—",func:true},
+  "fall":{tr:"düşmek",syn:"drop"},
+  "affects":{tr:"etkiler",syn:"influences"},
+  "behaviour":{tr:"davranış",syn:"conduct"},
+  "effort":{tr:"çaba",syn:"attempt"},
+  "take":{tr:"almak/olmak",syn:"—",note:"take the form of = ... şeklini almak"},
+  "physical":{tr:"fiziksel",syn:"—"},
+  "person":{tr:"kişi",syn:"individual"},
+  "done":{tr:"yapılan/yapılmış",syn:"carried out"},
+  "body":{tr:"vücut",syn:"—"},
+  "treatments":{tr:"tedaviler",syn:"therapies"},
+  "researchers":{tr:"araştırmacılar",syn:"scientists"},
+  "may":{tr:"-ebilir",syn:"might",func:true},
+  "respond":{tr:"yanıt vermek/tepki vermek",syn:"react"},
+  "evidence":{tr:"kanıt",syn:"proof"},
+  "increasing":{tr:"artıran",syn:"raising"},
+  "success":{tr:"başarı",syn:"achievement"},
+  "support":{tr:"destek",syn:"backing"},
+  "from":{tr:"-den/-dan",syn:"—",func:true},
+  "world":{tr:"dünya",syn:"—"},
+  "various":{tr:"çeşitli",syn:"diverse"},
+  "strategies":{tr:"stratejiler",syn:"plans"},
+  "ecosystems":{tr:"ekosistemler",syn:"—"},
+  "factors":{tr:"faktörler",syn:"elements"},
+  "role":{tr:"rol",syn:"function"},
+  "ultimately":{tr:"sonuçta",syn:"eventually"},
+  "crucial":{tr:"hayati/kritik",syn:"essential"},
+  "instance":{tr:"örnek",syn:"example",note:"for instance = örneğin"},
+  "might":{tr:"-ebilir/olabilir",syn:"may",func:true},
+  "lower":{tr:"daha düşük",syn:"reduced"},
+  "because":{tr:"çünkü",syn:"—",note:"because of = -den dolayı",func:true},
+  "water":{tr:"su",syn:"—"},
+  "nearly":{tr:"neredeyse",syn:"almost"},
+  "nursing":{tr:"hemşirelik",syn:"—"},
+  "healthcare":{tr:"sağlık hizmetleri",syn:"medical care"},
+  "fields":{tr:"alanlar",syn:"areas"},
+  "businesses":{tr:"işletmeler",syn:"companies"},
+  "same":{tr:"aynı",syn:"identical"},
+  "just":{tr:"tıpkı/sadece",syn:"merely",func:true},
+  "successful":{tr:"başarılı",syn:"accomplished"},
+  "held":{tr:"elinde tutulan",syn:"occupied"},
+  "recent":{tr:"yakın zamandaki",syn:"latest"},
+  "studies":{tr:"çalışmalar/araştırmalar",syn:"research"},
+  "factor":{tr:"faktör",syn:"element"},
+  "balance":{tr:"denge",syn:"equilibrium"},
+  "environment":{tr:"ortam/çevre",syn:"setting"},
+  "positions":{tr:"pozisyonlar",syn:"posts"},
+  "ongoing":{tr:"devam eden",syn:"continuing"},
+  "printing":{tr:"matbaacılık/baskı",syn:"—"},
+  "press":{tr:"matbaa/basın",syn:"—"},
+  "johannes":{tr:"Johannes",syn:"—"},
+  "gutenberg":{tr:"Gutenberg",syn:"—",note:"Matbaayı geliştiren Alman mucit"},
+  "mid":{tr:"orta",syn:"middle",note:"mid-15th century = 15. yüzyılın ortası"},
+  "revolutionised":{tr:"devrim yarattı",syn:"transformed"},
+  "shared":{tr:"paylaşıldı",syn:"distributed"},
+  "disseminated":{tr:"yayıldı",syn:"spread"},
+  "before":{tr:"önce",syn:"—",func:true},
+  "books":{tr:"kitaplar",syn:"—"},
+  "documents":{tr:"belgeler",syn:"papers"},
+  "painstakingly":{tr:"büyük titizlikle",syn:"laboriously"},
+  "copied":{tr:"kopyalandı",syn:"duplicated"},
+  "expensive":{tr:"pahalı",syn:"costly"},
+  "allowing":{tr:"izin veren",syn:"permitting"},
+  "texts":{tr:"metinler",syn:"writings"},
+  "end":{tr:"son/sonu",syn:"—"},
+  "printed":{tr:"basılı",syn:"—"},
+  "spread":{tr:"yayılmak/yayılma",syn:"—"},
+  "throughout":{tr:"boyunca/her yerinde",syn:"—",func:true},
+  "europe":{tr:"Avrupa",syn:"—"},
+  "dramatically":{tr:"çarpıcı biçimde",syn:"sharply"},
+  "literacy":{tr:"okuryazarlık",syn:"—"},
+  "rates":{tr:"oranlar",syn:"—"},
+  "impact":{tr:"etki",syn:"influence"},
+  "far":{tr:"çok/uzak",syn:"—",func:true},
+  "beyond":{tr:"ötesinde",syn:"—",func:true},
+  "played":{tr:"oynadı",syn:"—"},
+  "pivotal":{tr:"çok önemli/belirleyici",syn:"crucial"},
+  "ideas":{tr:"fikirler",syn:"—"},
+  "renaissance":{tr:"Rönesans",syn:"—"},
+  "fuelling":{tr:"körükleyen/besleyen",syn:"stimulating"},
+  "intellectual":{tr:"entelektüel/fikri",syn:"—"},
+  "debates":{tr:"tartışmalar",syn:"—"},
+  "discoveries":{tr:"keşifler",syn:"—"},
+  "protestant":{tr:"Protestan",syn:"—"},
+  "reformation":{tr:"Reform (Reformasyon)",syn:"—",note:"16. yüzyılda başlayan dinî Reform hareketi"},
+  "martin":{tr:"Martin",syn:"—"},
+  "luther":{tr:"Luther",syn:"—"},
+  "gained":{tr:"kazandı",syn:"—"},
+  "momentum":{tr:"ivme",syn:"—"},
+  "largely":{tr:"büyük ölçüde",syn:"mainly"},
+  "distributed":{tr:"dağıtılmış/yayılmış",syn:"—"},
+  "reach":{tr:"ulaşmak",syn:"—"},
+  "audiences":{tr:"kitleler/izleyiciler",syn:"—"},
+  "previously":{tr:"daha önce",syn:"formerly"},
+  "inaccessible":{tr:"ulaşılamaz",syn:"unreachable"},
+  "gave":{tr:"verdi",syn:"—"},
+  "rise":{tr:"yükseliş",syn:"—",note:"give rise to = ...a yol açmak"},
+  "pamphlets":{tr:"broşürler",syn:"—"},
+  "newspapers":{tr:"gazeteler",syn:"—"},
+  "eventually":{tr:"sonunda",syn:"ultimately"},
+  "journals":{tr:"dergiler",syn:"—"},
+  "became":{tr:"oldu",syn:"—"},
+  "tools":{tr:"araçlar",syn:"—"},
+  "movements":{tr:"hareketler",syn:"—"},
+  "news":{tr:"haber",syn:"—"},
+  "advancement":{tr:"ilerleme",syn:"—"},
+  "shift":{tr:"kayma/değişim",syn:"—"},
+  "elite":{tr:"seçkinler",syn:"—"},
+  "general":{tr:"genel",syn:"—"},
+  "public":{tr:"halk/kamu",syn:"—"},
+  "helped":{tr:"yardımcı oldu",syn:"—"},
+  "shape":{tr:"şekillendirmek",syn:"—"},
+  "societies":{tr:"toplumlar",syn:"—"},
+  "ways":{tr:"yollar/yöntemler",syn:"—"},
+  "foundation":{tr:"temel",syn:"—"},
+  "enlightenment":{tr:"Aydınlanma",syn:"—",note:"18. yüzyıl Avrupa'sında akıl ve bilim çağı"},
+  "subsequent":{tr:"sonraki",syn:"following"},
+  "revolutions":{tr:"devrimler",syn:"—"},
+  "reshaped":{tr:"yeniden şekillendirdi",syn:"—"},
+  "gunpowder":{tr:"barut",syn:"—"},
+  "warfare":{tr:"savaş",syn:"—"},
+  "dissemination":{tr:"yayma/yayılma",syn:"—"},
+  "giving":{tr:"vererek",syn:"—"},
+  "ordinary":{tr:"sıradan",syn:"—"},
+  "challenge":{tr:"meydan okumak",syn:"—"},
+  "thinking":{tr:"düşünme",syn:"—"},
+  "aboard":{tr:"(araç) içinde/üzerinde",syn:"on board",func:true},
+  "according":{tr:"göre",syn:"—",note:"according to = ...e göre",func:true},
+  "additionally":{tr:"ayrıca",syn:"moreover"},
+  "advancements":{tr:"gelişmeler",syn:"progress"},
+  "alter":{tr:"değiştirmek",syn:"change"},
+  "altering":{tr:"değiştirme",syn:"changing"},
+  "astronauts":{tr:"astronotlar",syn:"—"},
+  "compelling":{tr:"ilgi çekici/ikna edici",syn:"fascinating"},
+  "depending":{tr:"bağlı olarak",syn:"—",note:"depending on = ...e bağlı olarak",func:true},
+  "dilation":{tr:"genleşme/uzama",syn:"expansion",note:"time dilation = zamanın genişlemesi/yavaşlaması"},
+  "door":{tr:"kapı",syn:"—"},
+  "earth":{tr:"Dünya",syn:"—"},
+  "effect":{tr:"etki",syn:"impact"},
+  "einstein":{tr:"Einstein",syn:"—",note:"Albert Einstein: görelilik kuramını geliştiren fizikçi"},
+  "experimental":{tr:"deneysel",syn:"—"},
+  "explore":{tr:"keşfetmek/araştırmak",syn:"investigate"},
+  "fascinated":{tr:"büyüledi/ilgisini çekti",syn:"captivated"},
+  "flow":{tr:"akış",syn:"—"},
+  "generations":{tr:"nesiller",syn:"—"},
+  "glimpse":{tr:"kısa bir bakış",syn:"glance"},
+  "gravity":{tr:"yerçekimi",syn:"—"},
+  "interconnected":{tr:"birbiriyle bağlantılı",syn:"linked"},
+  "international":{tr:"uluslararası",syn:"—"},
+  "intriguing":{tr:"merak uyandıran",syn:"fascinating"},
+  "itself":{tr:"kendisi",syn:"—",func:true},
+  "light":{tr:"ışık",syn:"—"},
+  "minuscule":{tr:"çok küçük",syn:"tiny"},
+  "moves":{tr:"hareket eder",syn:"—"},
+  "mysteries":{tr:"gizemler",syn:"—"},
+  "near":{tr:"yakın",syn:"close"},
+  "no":{tr:"hiç/yok",syn:"—",func:true},
+  "occur":{tr:"meydana gelmek",syn:"happen"},
+  "offers":{tr:"sunar",syn:"provides"},
+  "opens":{tr:"açar",syn:"—"},
+  "our":{tr:"bizim",syn:"—",func:true},
+  "phenomenon":{tr:"olgu/fenomen",syn:"occurrence"},
+  "physicists":{tr:"fizikçiler",syn:"—"},
+  "physics":{tr:"fizik",syn:"—"},
+  "possibilities":{tr:"olasılıklar/ihtimaller",syn:"—"},
+  "propose":{tr:"önermek",syn:"suggest"},
+  "realm":{tr:"alan/âlem",syn:"domain"},
+  "relativity":{tr:"görelilik",syn:"—"},
+  "relegated":{tr:"sınırlı kalmış/havale edilmiş",syn:"confined",note:"be relegated to = ...ile sınırlı kalmak"},
+  "research":{tr:"araştırma",syn:"—"},
+  "scientists":{tr:"bilim insanları",syn:"—"},
+  "shortcuts":{tr:"kısa yollar",syn:"—"},
+  "slowly":{tr:"yavaşça",syn:"—"},
+  "spacetime":{tr:"uzay-zaman",syn:"—"},
+  "speed":{tr:"hız",syn:"—"},
+  "speeds":{tr:"hızlar",syn:"—"},
+  "station":{tr:"istasyon",syn:"—"},
+  "storytellers":{tr:"hikâye anlatıcıları",syn:"—"},
+  "tantalising":{tr:"cezbedici/iştah kabartıcı",syn:"tempting"},
+  "theoretical":{tr:"teorik/kuramsal",syn:"—"},
+  "theoretically":{tr:"teorik olarak",syn:"—"},
+  "theory":{tr:"teori/kuram",syn:"—"},
+  "through":{tr:"içinden/boyunca",syn:"—",func:true},
+  "travel":{tr:"seyahat",syn:"—"},
+  "traveling":{tr:"seyahat etme",syn:"—"},
+  "understanding":{tr:"anlayış",syn:"—"},
+  "universe":{tr:"evren",syn:"—"},
+  "unknowns":{tr:"bilinmeyenler",syn:"—"},
+  "wormholes":{tr:"solucan delikleri",syn:"—"},
+  "americas":{tr:"Amerika kıtaları",syn:"—"},
+  "ancient":{tr:"antik/eski",syn:"old"},
+  "aristotle":{tr:"Aristoteles",syn:"—"},
+  "attention":{tr:"dikkat",syn:"focus"},
+  "babylonians":{tr:"Babilliler",syn:"—"},
+  "back":{tr:"geri",syn:"—",note:"date back to = ...e kadar uzanmak"},
+  "bce":{tr:"MÖ",syn:"—",note:"Before Common Era = Milattan Önce"},
+  "bridge":{tr:"köprü",syn:"—"},
+  "communicated":{tr:"iletişim kurdu/iletti",syn:"conveyed"},
+  "communications":{tr:"iletiler",syn:"messages"},
+  "community":{tr:"topluluk",syn:"—"},
+  "contain":{tr:"içermek",syn:"include"},
+  "dating":{tr:"tarihlenen",syn:"—"},
+  "dedicated":{tr:"adanmış",syn:"devoted"},
+  "detailing":{tr:"ayrıntılı anlatan",syn:"describing"},
+  "dream":{tr:"rüya",syn:"—"},
+  "dreams":{tr:"rüyalar",syn:"—"},
+  "egypt":{tr:"Mısır",syn:"—"},
+  "egyptians":{tr:"Mısırlılar",syn:"—"},
+  "entire":{tr:"tüm/bütün",syn:"whole"},
+  "events":{tr:"olaylar",syn:"—"},
+  "go":{tr:"gitmek",syn:"travel"},
+  "greece":{tr:"Yunanistan",syn:"—"},
+  "greeks":{tr:"Antik Yunanlılar",syn:"—"},
+  "growth":{tr:"büyüme/gelişim",syn:"development"},
+  "guidance":{tr:"rehberlik",syn:"direction"},
+  "hopes":{tr:"umutlar",syn:"—",note:"in hopes of = ...umuduyla"},
+  "insight":{tr:"kavrayış/içgörü",syn:"understanding"},
+  "interpret":{tr:"yorumlamak",syn:"explain"},
+  "interpretation":{tr:"yorumlama",syn:"—"},
+  "iroquois":{tr:"İrokua (Kuzey Amerika yerli halkı)",syn:"—"},
+  "mesopotamian":{tr:"Mezopotamya'ya ait",syn:"—"},
+  "messages":{tr:"mesajlar",syn:"—"},
+  "mind":{tr:"zihin",syn:"—"},
+  "oracles":{tr:"kâhinler",syn:"—"},
+  "overlook":{tr:"gözden kaçırmak",syn:"miss"},
+  "paying":{tr:"vermek/ödemek",syn:"—",note:"pay attention to = ...e dikkat etmek"},
+  "personal":{tr:"kişisel",syn:"—"},
+  "philosopher":{tr:"filozof",syn:"—"},
+  "practiced":{tr:"uygulanmış/yapılmış",syn:"—"},
+  "predict":{tr:"öngörmek/tahmin etmek",syn:"forecast"},
+  "priests":{tr:"rahipler",syn:"—"},
+  "prophetic":{tr:"kehanet niteliğinde",syn:"—"},
+  "provide":{tr:"sağlamak",syn:"supply"},
+  "receiving":{tr:"alma",syn:"—"},
+  "records":{tr:"kayıtlar",syn:"—"},
+  "reflections":{tr:"yansımalar",syn:"—"},
+  "respected":{tr:"saygı gören",syn:"—"},
+  "revealing":{tr:"ortaya çıkaran",syn:"—"},
+  "similarly":{tr:"benzer şekilde",syn:"likewise"},
+  "sleep":{tr:"uyumak",syn:"—"},
+  "soul":{tr:"ruh",syn:"—"},
+  "spirit":{tr:"ruh/ruhsal varlık",syn:"—"},
+  "spiritual":{tr:"manevi/ruhani",syn:"—"},
+  "subconscious":{tr:"bilinçaltı",syn:"—"},
+  "suggested":{tr:"öne sürdü",syn:"—"},
+  "sumerians":{tr:"Sümerler",syn:"—"},
+  "temples":{tr:"tapınaklar",syn:"—"},
+  "thought":{tr:"düşünüldü/sanıldı",syn:"—"},
+  "truths":{tr:"gerçekler",syn:"—"},
+  "viewed":{tr:"gördü/değerlendirdi",syn:"—"},
+  "well-being":{tr:"esenlik/iyilik hali",syn:"—"},
+  "windows":{tr:"pencereler",syn:"—"},
+  "wisdom":{tr:"bilgelik",syn:"—"},
+  "would":{tr:"-ecekti/-erdi",syn:"—",func:true},
+  "accountability":{tr:"hesap verebilirlik",syn:"responsibility"},
+  "accountable":{tr:"hesap verebilir/sorumlu",syn:"responsible"},
+  "additional":{tr:"ek/ilave",syn:"extra"},
+  "assessments":{tr:"değerlendirmeler",syn:"evaluations"},
+  "attractive":{tr:"cazip",syn:"appealing"},
+  "care":{tr:"bakım",syn:"—"},
+  "career":{tr:"kariyer",syn:"—"},
+  "choice":{tr:"seçim",syn:"option"},
+  "competitive":{tr:"rekabetçi",syn:"—"},
+  "complete":{tr:"tamamlamak",syn:"finish"},
+  "consistency":{tr:"tutarlılık",syn:"uniformity"},
+  "continuous":{tr:"sürekli",syn:"ongoing"},
+  "country":{tr:"ülke",syn:"nation"},
+  "courses":{tr:"kurslar",syn:"—"},
+  "curriculum":{tr:"müfredat",syn:"—"},
+  "degrees":{tr:"dereceler/diplomalar",syn:"—"},
+  "developed":{tr:"geliştirilmiş",syn:"—"},
+  "development":{tr:"gelişim",syn:"—"},
+  "doctors":{tr:"doktorlar",syn:"—"},
+  "drivers":{tr:"itici güçler/etkenler",syn:"factors"},
+  "education":{tr:"eğitim",syn:"—"},
+  "emphasis":{tr:"vurgu",syn:"—"},
+  "engage":{tr:"katılmak/meşgul olmak",syn:"take part"},
+  "ensures":{tr:"sağlar/garanti eder",syn:"—"},
+  "excellent":{tr:"mükemmel",syn:"outstanding"},
+  "finland":{tr:"Finlandiya",syn:"—"},
+  "finnish":{tr:"Fin/Finlandiya'ya ait",syn:"—"},
+  "forefront":{tr:"ön saf",syn:"—",note:"at the forefront = en ön safta"},
+  "four":{tr:"dört",syn:"—"},
+  "funded":{tr:"finanse edilen",syn:"—"},
+  "given":{tr:"verilen",syn:"—"},
+  "keeps":{tr:"tutar/sürdürür",syn:"—"},
+  "lasting":{tr:"süren",syn:"—"},
+  "learning":{tr:"öğrenme",syn:"—"},
+  "level":{tr:"seviye",syn:"—",note:"at national level = ulusal düzeyde"},
+  "makes":{tr:"yapar/kılar",syn:"—"},
+  "medical":{tr:"tıbbi",syn:"—"},
+  "motivated":{tr:"motive olmuş",syn:"—"},
+  "national":{tr:"ulusal",syn:"—"},
+  "naturally":{tr:"doğal olarak",syn:"—"},
+  "nurses":{tr:"hemşireler",syn:"—"},
+  "patients":{tr:"hastalar",syn:"—"},
+  "plays":{tr:"oynar",syn:"—"},
+  "profession":{tr:"meslek",syn:"—"},
+  "professional":{tr:"profesyonel",syn:"—"},
+  "professionals":{tr:"profesyoneller",syn:"—"},
+  "programs":{tr:"programlar",syn:"—"},
+  "providers":{tr:"sağlayıcılar",syn:"—"},
+  "receive":{tr:"almak",syn:"—"},
+  "regular":{tr:"düzenli",syn:"—"},
+  "remuneration":{tr:"ücret/maaş",syn:"payment"},
+  "reputation":{tr:"itibar",syn:"—"},
+  "rigorous":{tr:"sıkı/titiz",syn:"strict"},
+  "salaries":{tr:"maaşlar",syn:"—"},
+  "six":{tr:"altı",syn:"—"},
+  "skill":{tr:"beceri",syn:"—"},
+  "skilled":{tr:"becerikli/nitelikli",syn:"—"},
+  "standardised":{tr:"standartlaştırılmış",syn:"—"},
+  "stay":{tr:"kalmak",syn:"remain"},
+  "subject":{tr:"tabi/konu",syn:"—",note:"be subject to = ...e tabi olmak"},
+  "talented":{tr:"yetenekli",syn:"—"},
+  "three":{tr:"üç",syn:"—"},
+  "top-quality":{tr:"en kaliteli",syn:"—"},
+  "training":{tr:"eğitim/antrenman",syn:"—"},
+  "treatment":{tr:"tedavi",syn:"—"},
+  "undergo":{tr:"geçirmek/tabi tutulmak",syn:"experience"},
+  "updated":{tr:"güncel",syn:"—"},
+  "well-paid":{tr:"iyi maaşlı",syn:"—"},
+  "within":{tr:"içinde",syn:"—",func:true},
+  "workforce":{tr:"iş gücü",syn:"—"},
+  "workshops":{tr:"atölyeler",syn:"—"},
+  "against":{tr:"karşı",syn:"—",func:true},
+  "ai":{tr:"yapay zekâ",syn:"artificial intelligence"},
+  "algorithms":{tr:"algoritmalar",syn:"—"},
+  "all-knowing":{tr:"her şeyi bilen",syn:"omniscient"},
+  "analyse":{tr:"analiz etmek",syn:"examine"},
+  "around":{tr:"etrafında/var olan",syn:"—",note:"be around = var olmak",func:true},
+  "artificial":{tr:"yapay",syn:"—"},
+  "aspects":{tr:"yönler/boyutlar",syn:"—"},
+  "automating":{tr:"otomatikleştirme",syn:"—"},
+  "autonomous":{tr:"özerk/otonom",syn:"self-governing"},
+  "behind":{tr:"arkasında",syn:"—",func:true},
+  "blue":{tr:"mavi",syn:"—"},
+  "capable":{tr:"yetenekli/-ebilir durumda",syn:"able"},
+  "cars":{tr:"arabalar",syn:"—"},
+  "champions":{tr:"şampiyonlar",syn:"—"},
+  "checkers":{tr:"dama",syn:"draughts"},
+  "chess":{tr:"satranç",syn:"—"},
+  "culture":{tr:"kültür",syn:"—"},
+  "defeating":{tr:"yenme",syn:"beating"},
+  "depicted":{tr:"tasvir edilen",syn:"portrayed"},
+  "designed":{tr:"tasarlanmış",syn:"—"},
+  "destination":{tr:"varış noktası",syn:"—"},
+  "dramatic":{tr:"dramatik/abartılı",syn:"—"},
+  "embedded":{tr:"gömülü/yerleşmiş",syn:"—"},
+  "emotions":{tr:"duygular",syn:"—"},
+  "enhancing":{tr:"geliştiren/güçlendiren",syn:"improving"},
+  "enjoy":{tr:"keyif almak",syn:"—"},
+  "examples":{tr:"örnekler",syn:"—"},
+  "facet":{tr:"yön/boyut",syn:"aspect"},
+  "fact":{tr:"gerçek",syn:"—",note:"in fact = aslında"},
+  "found":{tr:"bulunmak",syn:"—"},
+  "games":{tr:"oyunlar",syn:"—"},
+  "gerry":{tr:"Gerry",syn:"—"},
+  "give":{tr:"vermek",syn:"—"},
+  "here":{tr:"burada",syn:"—",func:true},
+  "human-like":{tr:"insan benzeri",syn:"—"},
+  "ibm":{tr:"IBM",syn:"—",note:"Deep Blue: IBM'in satranç bilgisayarı"},
+  "immediately":{tr:"hemen/anında",syn:"right away"},
+  "intelligence":{tr:"zekâ",syn:"—"},
+  "kasparov":{tr:"Kasparov",syn:"—",note:"Rus satranç büyükustası; Deep Blue ile karşılaştı"},
+  "language":{tr:"dil",syn:"—"},
+  "learn":{tr:"öğrenmek",syn:"—"},
+  "listen":{tr:"dinlemek",syn:"—"},
+  "lives":{tr:"hayatlar",syn:"—"},
+  "longer":{tr:"daha uzun",syn:"—"},
+  "media":{tr:"medya",syn:"—"},
+  "message":{tr:"mesaj",syn:"—"},
+  "movies":{tr:"filmler",syn:"—"},
+  "music":{tr:"müzik",syn:"—"},
+  "navigation":{tr:"navigasyon/yön bulma",syn:"—"},
+  "next":{tr:"sonraki",syn:"—"},
+  "opponents":{tr:"rakipler",syn:"—"},
+  "patterns":{tr:"kalıplar/örüntüler",syn:"—"},
+  "phones":{tr:"telefonlar",syn:"—"},
+  "popular":{tr:"popüler",syn:"—"},
+  "portrayals":{tr:"tasvirler",syn:"—"},
+  "preferences":{tr:"tercihler",syn:"—"},
+  "processing":{tr:"işleme",syn:"—"},
+  "quickest":{tr:"en hızlı",syn:"fastest"},
+  "quietly":{tr:"sessizce",syn:"—"},
+  "realise":{tr:"fark etmek",syn:"—"},
+  "reality":{tr:"gerçeklik",syn:"—"},
+  "reasoning":{tr:"akıl yürütme",syn:"—"},
+  "recognise":{tr:"tanımak/fark etmek",syn:"—"},
+  "recognition":{tr:"tanıma",syn:"—"},
+  "recommendation":{tr:"öneri",syn:"—"},
+  "rely":{tr:"güvenmek/dayanmak",syn:"depend"},
+  "requests":{tr:"istekler",syn:"—"},
+  "robots":{tr:"robotlar",syn:"—"},
+  "route":{tr:"güzergâh",syn:"—"},
+  "scenes":{tr:"sahneler",syn:"—",note:"behind the scenes = perde arkasında"},
+  "search":{tr:"aramak",syn:"—"},
+  "see":{tr:"görmek",syn:"—"},
+  "send":{tr:"göndermek",syn:"—"},
+  "sensationalised":{tr:"abartılmış/sansasyonel",syn:"—"},
+  "sentient":{tr:"duyarlı/bilinçli",syn:"—"},
+  "speech":{tr:"konuşma",syn:"—"},
+  "stream":{tr:"akış/yayın",syn:"—"},
+  "text":{tr:"metin/mesaj",syn:"—"},
+  "traffic":{tr:"trafik",syn:"—"},
+  "us":{tr:"bizi/bize",syn:"—",func:true},
+  "versions":{tr:"versiyonlar",syn:"—"},
+  "we":{tr:"biz",syn:"—",func:true},
+  "working":{tr:"çalışan",syn:"—"},
+  "world-class":{tr:"dünya standartlarında",syn:"—"},
+  "admire":{tr:"hayran olmak",syn:"respect"},
+  "adventurous":{tr:"maceraperest",syn:"daring"},
+  "advice":{tr:"tavsiye",syn:"guidance"},
+  "backpacking":{tr:"sırt çantasıyla seyahat",syn:"—"},
+  "decide":{tr:"karar vermek",syn:"choose"},
+  "determined":{tr:"kararlı",syn:"resolute"},
+  "her":{tr:"onun (kadın)/ona",syn:"—",func:true},
+  "knowing":{tr:"bilerek",syn:"—"},
+  "offer":{tr:"sunmak/önermek",syn:"provide"},
+  "planning":{tr:"planlayan",syn:"—"},
+  "remote":{tr:"uzak/ıssız",syn:"isolated"},
+  "she":{tr:"o (kadın)",syn:"—",func:true},
+  "sister":{tr:"kız kardeş",syn:"sibling"},
+  "solo":{tr:"tek başına",syn:"alone"},
+  "ago":{tr:"önce",syn:"—",note:"months ago = aylar önce",func:true},
+  "apologise":{tr:"özür dilemek",syn:"say sorry"},
+  "bad":{tr:"kötü",syn:"—"},
+  "book":{tr:"kitap",syn:"—"},
+  "borrowed":{tr:"ödünç aldı",syn:"—"},
+  "catching":{tr:"(catch up) yetişme/dertleşme",syn:"—",note:"catch up = hasret gidermek, son durumu konuşmak"},
+  "close":{tr:"yakın",syn:"—"},
+  "feel":{tr:"hissetmek",syn:"—"},
+  "forgot":{tr:"unuttu",syn:"—"},
+  "keeping":{tr:"tutma/saklama",syn:"—"},
+  "mentioned":{tr:"bahsetti",syn:"—"},
+  "months":{tr:"aylar",syn:"—"},
+  "quickly":{tr:"hızlıca",syn:"—"},
+  "remember":{tr:"hatırlamak",syn:"—"},
+  "return":{tr:"iade etmek/geri vermek",syn:"—"},
+  "suddenly":{tr:"aniden",syn:"—"},
+  "alright":{tr:"iyi/yolunda",syn:"okay"},
+  "everything":{tr:"her şey",syn:"—"},
+  "exhausted":{tr:"bitkin",syn:"worn out"},
+  "gently":{tr:"nazikçe",syn:"softly"},
+  "notice":{tr:"fark etmek",syn:"spot"},
+  "old":{tr:"eski",syn:"—"},
+  "run":{tr:"koşmak",syn:"—",note:"run into = tesadüfen karşılaşmak"},
+  "seems":{tr:"gibi görünüyor",syn:"—"},
+  "sensitive":{tr:"hassas/duyarlı",syn:"—"},
+  "stressed":{tr:"stresli",syn:"tense"},
+  "consistent":{tr:"tutarlı/istikrarlı",syn:"steady"},
+  "curious":{tr:"merak eden",syn:"inquisitive"},
+  "day":{tr:"gün",syn:"—"},
+  "earlier":{tr:"daha erken",syn:"—"},
+  "manages":{tr:"başarır/yönetir",syn:"—"},
+  "productive":{tr:"verimli",syn:"—"},
+  "riser":{tr:"erken kalkan kişi",syn:"—",note:"early riser = sabah erken kalkan kişi"},
+  "seeing":{tr:"görerek",syn:"—"},
+  "struggled":{tr:"zorlandı/mücadele etti",syn:"—"},
+  "tried":{tr:"denedi",syn:"—"},
+  "waking":{tr:"uyanma",syn:"—",note:"wake up = uyanmak"},
+  "accommodation":{tr:"konaklama",syn:"lodging"},
+  "affordable":{tr:"uygun fiyatlı",syn:"inexpensive"},
+  "charge":{tr:"ücret",syn:"fee",note:"free of charge = ücretsiz"},
+  "city":{tr:"şehir",syn:"—"},
+  "cousin":{tr:"kuzen",syn:"—"},
+  "free":{tr:"ücretsiz/serbest",syn:"—"},
+  "guest":{tr:"misafir",syn:"—"},
+  "happen":{tr:"tesadüfen ... olmak/olmak",syn:"—",note:"happen to have = tesadüfen sahip olmak"},
+  "house":{tr:"ev",syn:"—"},
+  "mentions":{tr:"bahseder",syn:"—"},
+  "room":{tr:"oda",syn:"—"},
+  "searching":{tr:"arayan",syn:"—"},
+  "visiting":{tr:"ziyaret eden",syn:"—"},
+  "week":{tr:"hafta",syn:"—"},
+  "bare":{tr:"çıplak/boş",syn:"empty"},
+  "chemicals":{tr:"kimyasallar",syn:"—"},
+  "clear":{tr:"temizlemek",syn:"—"},
+  "companies":{tr:"şirketler",syn:"—"},
+  "damaged":{tr:"hasar görmüş",syn:"—"},
+  "exposed":{tr:"açıkta kalmış",syn:"—"},
+  "frequently":{tr:"sıklıkla",syn:"often"},
+  "globe":{tr:"dünya/küre",syn:"—"},
+  "impacts":{tr:"etkiler",syn:"—"},
+  "issue":{tr:"sorun/mesele",syn:"—"},
+  "leading":{tr:"önde gelen",syn:"—"},
+  "leaving":{tr:"bırakarak",syn:"—"},
+  "left":{tr:"bırakılmış",syn:"—"},
+  "long-term":{tr:"uzun vadeli",syn:"—"},
+  "major":{tr:"büyük/önemli",syn:"—"},
+  "minerals":{tr:"mineraller/madenler",syn:"—"},
+  "mining":{tr:"madencilik",syn:"—"},
+  "once":{tr:"bir kere/-ince",syn:"—",func:true},
+  "removed":{tr:"kaldırılmış",syn:"—"},
+  "seep":{tr:"sızmak",syn:"leak"},
+  "soil":{tr:"toprak",syn:"—"},
+  "surrounding":{tr:"çevreleyen",syn:"—"},
+  "trees":{tr:"ağaçlar",syn:"—"},
+  "unusable":{tr:"kullanılamaz",syn:"—"},
+  "valuable":{tr:"değerli",syn:"—"},
+  "brains":{tr:"beyinler",syn:"—"},
+  "burnout":{tr:"tükenmişlik",syn:"exhaustion"},
+  "connections":{tr:"bağlantılar",syn:"—"},
+  "emotional":{tr:"duygusal",syn:"—"},
+  "feelings":{tr:"duygular/hisler",syn:"—"},
+  "highlights":{tr:"vurgular",syn:"—"},
+  "humans":{tr:"insanlar",syn:"—"},
+  "inclined":{tr:"eğilimli",syn:"—",note:"be inclined to = ...eğiliminde olmak"},
+  "interaction":{tr:"etkileşim",syn:"—"},
+  "interactions":{tr:"etkileşimler",syn:"—"},
+  "loneliness":{tr:"yalnızlık",syn:"—"},
+  "maintaining":{tr:"sürdürme/koruma",syn:"—"},
+  "mental":{tr:"zihinsel/ruhsal",syn:"—"},
+  "moments":{tr:"anlar",syn:"—"},
+  "need":{tr:"ihtiyaç",syn:"—"},
+  "process":{tr:"işlemek/süreç",syn:"—"},
+  "recover":{tr:"toparlanmak",syn:"—"},
+  "relationships":{tr:"ilişkiler",syn:"—"},
+  "require":{tr:"gerektirmek",syn:"—"},
+  "socialisation":{tr:"sosyalleşme",syn:"—"},
+  "solitude":{tr:"yalnız kalma/yalnızlık",syn:"—"},
+  "strong":{tr:"güçlü",syn:"—"},
+  "ties":{tr:"bağlar",syn:"—",note:"social ties = toplumsal bağlar"},
+  "times":{tr:"zamanlar/dönemler",syn:"—"},
+  "why":{tr:"neden",syn:"—",func:true},
+  "anxiety":{tr:"kaygı/anksiyete",syn:"—"},
+  "asleep":{tr:"uykuda",syn:"—",note:"fall asleep = uykuya dalmak"},
+  "bed":{tr:"yatak",syn:"—"},
+  "disorders":{tr:"bozukluklar",syn:"—"},
+  "disturbances":{tr:"bozulmalar/rahatsızlıklar",syn:"—"},
+  "energy":{tr:"enerji",syn:"—"},
+  "having":{tr:"sahip olma/geçirme",syn:"—"},
+  "lacking":{tr:"yoksun olan",syn:"—"},
+  "night":{tr:"gece",syn:"—"},
+  "reason":{tr:"neden",syn:"—"},
+  "report":{tr:"bildirmek",syn:"—"},
+  "shown":{tr:"göstermiş",syn:"—"},
+  "spent":{tr:"geçirdi/harcadı",syn:"—"},
+  "suffer":{tr:"(...den) muzdarip olmak",syn:"—",note:"suffer from = ...den muzdarip olmak"},
+  "tired":{tr:"yorgun",syn:"—"},
+  "wake":{tr:"uyanmak",syn:"—"},
+  "well-rested":{tr:"dinlenmiş",syn:"—"},
+  "aware":{tr:"farkında",syn:"—"},
+  "background":{tr:"geçmiş/arka plan",syn:"—"},
+  "choices":{tr:"seçimler",syn:"—"},
+  "circumstances":{tr:"koşullar/şartlar",syn:"—"},
+  "comes":{tr:"gelir",syn:"—",note:"when it comes to = ... söz konusu olduğunda"},
+  "considerable":{tr:"hatırı sayılır",syn:"—"},
+  "dangers":{tr:"tehlikeler",syn:"—"},
+  "desire":{tr:"arzu/istek",syn:"—"},
+  "encourages":{tr:"teşvik eder",syn:"—"},
+  "engages":{tr:"(...e) girer/katılır",syn:"—"},
+  "excitement":{tr:"heyecan",syn:"—"},
+  "experiences":{tr:"deneyimler",syn:"—"},
+  "fully":{tr:"tamamen",syn:"—"},
+  "involved":{tr:"ilgili/dahil olan",syn:"—"},
+  "others":{tr:"diğerleri",syn:"—"},
+  "overall":{tr:"genel olarak",syn:"—"},
+  "peer":{tr:"akran",syn:"—",note:"peer pressure = akran baskısı"},
+  "personality":{tr:"kişilik",syn:"—"},
+  "presence":{tr:"varlık/bulunma",syn:"—"},
+  "pressure":{tr:"baskı",syn:"—"},
+  "range":{tr:"yelpaze/çeşitlilik",syn:"—",note:"a wide range of = çok çeşitli"},
+  "risk-taking":{tr:"risk alma",syn:"—"},
+  "risky":{tr:"riskli",syn:"—"},
+  "tendency":{tr:"eğilim",syn:"—"},
+  "traits":{tr:"özellikler",syn:"—"},
+  "upbringing":{tr:"yetiştirilme",syn:"—"},
+  "varies":{tr:"değişir",syn:"—"},
+  "wide":{tr:"geniş",syn:"—"},
+  "younger":{tr:"daha genç",syn:"—"},
+  "abilities":{tr:"yetenekler",syn:"—"},
+  "alone":{tr:"tek başına/yalnızca",syn:"—"},
+  "assess":{tr:"değerlendirmek",syn:"—"},
+  "better":{tr:"daha iyi",syn:"—"},
+  "capacity":{tr:"kapasite",syn:"—"},
+  "cases":{tr:"durumlar/vakalar",syn:"—"},
+  "cognitive":{tr:"bilişsel",syn:"—"},
+  "compared":{tr:"kıyaslandığında",syn:"—",note:"compared to = ...e kıyasla"},
+  "familiar":{tr:"aşina",syn:"—"},
+  "guaranteed":{tr:"garantili",syn:"—"},
+  "higher":{tr:"daha yüksek",syn:"—"},
+  "iq":{tr:"IQ (zekâ katsayısı)",syn:"—"},
+  "iqs":{tr:"IQ düzeyleri",syn:"—"},
+  "logical":{tr:"mantıksal",syn:"—"},
+  "perform":{tr:"performans göstermek",syn:"—"},
+  "perseverance":{tr:"azim/sebat",syn:"—"},
+  "predictor":{tr:"belirleyici/gösterge",syn:"—"},
+  "problem-solving":{tr:"problem çözme",syn:"—"},
+  "quotient":{tr:"katsayı/bölüm",syn:"—"},
+  "school":{tr:"okul",syn:"—"},
+  "score":{tr:"puan",syn:"—"},
+  "scores":{tr:"puanlar",syn:"—"},
+  "series":{tr:"dizi/seri",syn:"—"},
+  "stands":{tr:"(for) anlamına gelir",syn:"—",note:"stand for = ...nin kısaltması olmak"},
+  "tend":{tr:"eğilimli olmak",syn:"—",note:"tend to = ...eğiliminde olmak"},
+  "tests":{tr:"testler",syn:"—"},
+  "tool":{tr:"araç",syn:"—"},
+  "attacking":{tr:"saldıran",syn:"—"},
+  "autoimmune":{tr:"otoimmün",syn:"—"},
+  "awry":{tr:"ters/yolunda gitmeyen",syn:"—",note:"go awry = ters gitmek, aksamak"},
+  "bacteria":{tr:"bakteriler",syn:"—"},
+  "birth":{tr:"doğum",syn:"—"},
+  "conditions":{tr:"durumlar/rahatsızlıklar",syn:"—"},
+  "defending":{tr:"savunan",syn:"—"},
+  "deficiencies":{tr:"eksiklikler/yetersizlikler",syn:"—"},
+  "developing":{tr:"geliştirme",syn:"—"},
+  "discovery":{tr:"keşif",syn:"—"},
+  "diseases":{tr:"hastalıklar",syn:"—"},
+  "effective":{tr:"etkili",syn:"—"},
+  "eliminated":{tr:"ortadan kaldırılmış",syn:"—"},
+  "faulty":{tr:"hatalı/arızalı",syn:"—"},
+  "goes":{tr:"gider",syn:"—"},
+  "harmful":{tr:"zararlı",syn:"—"},
+  "healthy":{tr:"sağlıklı",syn:"—"},
+  "identified":{tr:"belirlenmiş",syn:"—"},
+  "immune":{tr:"bağışıklık(la ilgili)",syn:"—",note:"immune system = bağışıklık sistemi"},
+  "implications":{tr:"sonuçlar/çıkarımlar",syn:"—"},
+  "invaders":{tr:"istilacılar/saldırganlar",syn:"—"},
+  "knows":{tr:"bilir",syn:"—"},
+  "manage":{tr:"yönetmek/başa çıkmak",syn:"—"},
+  "mechanisms":{tr:"mekanizmalar",syn:"—"},
+  "medications":{tr:"ilaçlar",syn:"—"},
+  "mistakenly":{tr:"yanlışlıkla",syn:"—"},
+  "offering":{tr:"sunan",syn:"—"},
+  "present":{tr:"mevcut/var olan",syn:"—"},
+  "properly":{tr:"düzgün biçimde",syn:"—"},
+  "response":{tr:"yanıt/tepki",syn:"—"},
+  "stop":{tr:"durmak/durdurmak",syn:"—"},
+  "suppress":{tr:"bastırmak",syn:"—"},
+  "targets":{tr:"hedef alır",syn:"—"},
+  "threat":{tr:"tehdit",syn:"—"},
+  "tissues":{tr:"dokular",syn:"—"},
+  "variety":{tr:"çeşit",syn:"—",note:"a variety of = çeşitli"},
+  "viruses":{tr:"virüsler",syn:"—"},
+  "advantageous":{tr:"avantajlı",syn:"—"},
+  "benefits":{tr:"faydalar",syn:"—"},
+  "choosing":{tr:"seçme",syn:"—"},
+  "comparing":{tr:"karşılaştırma",syn:"—"},
+  "cons":{tr:"olumsuz yanlar",syn:"—"},
+  "decision":{tr:"karar",syn:"—"},
+  "decision-making":{tr:"karar verme",syn:"—"},
+  "drawbacks":{tr:"dezavantajlar",syn:"—"},
+  "essence":{tr:"öz",syn:"—",note:"in essence = özünde"},
+  "favourable":{tr:"elverişli/uygun",syn:"—"},
+  "final":{tr:"son/nihai",syn:"—"},
+  "gains":{tr:"kazanımlar",syn:"—"},
+  "highest":{tr:"en yüksek",syn:"—"},
+  "influences":{tr:"etkiler",syn:"—"},
+  "losses":{tr:"kayıplar",syn:"—"},
+  "lowest":{tr:"en düşük",syn:"—"},
+  "member":{tr:"üye",syn:"—"},
+  "models":{tr:"modeller",syn:"—"},
+  "negative":{tr:"olumsuz",syn:"—"},
+  "opt":{tr:"tercih etmek",syn:"—",note:"opt for = ...i tercih etmek"},
+  "option":{tr:"seçenek",syn:"—"},
+  "options":{tr:"seçenekler",syn:"—"},
+  "pros":{tr:"olumlu yanlar",syn:"—",note:"pros and cons = artılar ve eksiler"},
+  "rational":{tr:"mantıklı/rasyonel",syn:"—"},
+  "requires":{tr:"gerektirir",syn:"—"},
+  "select":{tr:"seçmek",syn:"—"},
+  "solution":{tr:"çözüm",syn:"—"},
+  "team":{tr:"takım/ekip",syn:"—"},
+  "animals":{tr:"hayvanlar",syn:"—"},
+  "apply":{tr:"uygulanmak/geçerli olmak",syn:"—",note:"apply to = ...için geçerli olmak"},
+  "awareness":{tr:"farkındalık",syn:"—"},
+  "constructs":{tr:"yapılar/kavramlar",syn:"—"},
+  "cues":{tr:"ipuçları/işaretler",syn:"—",note:"environmental cues = çevresel ipuçları"},
+  "fastest":{tr:"en hızlı",syn:"—"},
+  "fly":{tr:"uçmak",syn:"—"},
+  "passing":{tr:"geçen/geçme",syn:"—"},
+  "past":{tr:"geçmiş",syn:"—"},
+  "perceive":{tr:"algılamak",syn:"—"},
+  "perception":{tr:"algı",syn:"—"},
+  "predators":{tr:"avcılar/yırtıcılar",syn:"—"},
+  "processes":{tr:"süreçler",syn:"—"},
+  "related":{tr:"ilgili",syn:"—",note:"related to = ...ile ilgili"},
+  "reveals":{tr:"ortaya koyar",syn:"—"},
+  "temperature":{tr:"sıcaklık",syn:"—"},
+  "unlikely":{tr:"olası olmayan",syn:"—"},
+  "artisans":{tr:"zanaatkârlar/ustalar",syn:"—"},
+  "carpentry":{tr:"marangozluk",syn:"—"},
+  "class":{tr:"sınıf/kesim",syn:"—"},
+  "craftsmen":{tr:"zanaatkârlar",syn:"—"},
+  "economies":{tr:"ekonomiler",syn:"—"},
+  "era":{tr:"dönem/çağ",syn:"—"},
+  "expertise":{tr:"uzmanlık",syn:"—"},
+  "fabric":{tr:"doku/yapı",syn:"—",note:"social fabric = toplumsal doku"},
+  "florence":{tr:"Floransa",syn:"—"},
+  "flourished":{tr:"gelişti/yükseldi",syn:"—"},
+  "formed":{tr:"oluşturdu",syn:"—"},
+  "grew":{tr:"büyüdü",syn:"—"},
+  "guilds":{tr:"loncalar",syn:"—",note:"lonca: aynı mesleği yapan zanaatkârların örgütü"},
+  "hubs":{tr:"merkezler",syn:"—"},
+  "industries":{tr:"endüstriler/sektörler",syn:"—"},
+  "lived":{tr:"yaşadı",syn:"—"},
+  "metalwork":{tr:"metal işçiliği",syn:"—"},
+  "organised":{tr:"örgütlenmiş",syn:"—"},
+  "part":{tr:"parça/kısım",syn:"—"},
+  "prominence":{tr:"öne çıkma/ün",syn:"—",note:"rise to prominence = ön plana çıkmak"},
+  "renowned":{tr:"ünlü/tanınmış",syn:"—"},
+  "respective":{tr:"kendi/ilgili",syn:"—"},
+  "risen":{tr:"yükselmiş",syn:"—"},
+  "setting":{tr:"belirleme",syn:"—"},
+  "shaped":{tr:"şekillendirdi",syn:"—"},
+  "textiles":{tr:"tekstil/kumaşlar",syn:"—"},
+  "trades":{tr:"meslekler/ticaret kolları",syn:"—"},
+  "venice":{tr:"Venedik",syn:"—"},
+  "analysis":{tr:"analiz",syn:"—"},
+  "automation":{tr:"otomasyon",syn:"—"},
+  "become":{tr:"olmak",syn:"—"},
+  "confident":{tr:"emin/kendinden emin",syn:"—"},
+  "creativity":{tr:"yaratıcılık",syn:"—"},
+  "foreseeable":{tr:"öngörülebilir",syn:"—",note:"foreseeable future = öngörülebilir gelecek"},
+  "incredible":{tr:"inanılmaz",syn:"—"},
+  "judgment":{tr:"muhakeme/yargı",syn:"—"},
+  "limitations":{tr:"sınırlamalar",syn:"—"},
+  "nothing":{tr:"hiçbir şey",syn:"—",func:true},
+  "operate":{tr:"faaliyet göstermek/çalışmak",syn:"—"},
+  "pace":{tr:"hız/tempo",syn:"—",note:"at an incredible pace = inanılmaz bir hızla"},
+  "progressing":{tr:"ilerleyen",syn:"—"},
+  "replace":{tr:"yerini almak/değiştirmek",syn:"—"},
+  "requiring":{tr:"gerektiren",syn:"—"},
+  "revolutionise":{tr:"devrim yaratmak",syn:"—"},
+  "visible":{tr:"görünür",syn:"—"}
+};
+const READINGS = [
+{
+    tab: "📜 Matbaa",
+    title: "📜 Top-2 · Text 1",
+    text: `The printing press, invented by Johannes Gutenberg in the mid-15th century, revolutionised the way information was shared and disseminated. Before its creation, books and documents were painstakingly copied by hand, which made them expensive and rare. Gutenberg’s press changed this by allowing for the mass production of texts. By the end of the century, printed books had spread throughout Europe, dramatically increasing literacy rates and access to knowledge. The impact of the printing press extended far beyond just books. It played a pivotal role in the spread of ideas during the Renaissance, fuelling intellectual debates and scientific discoveries. The Protestant Reformation, sparked by Martin Luther in 1517, gained momentum largely because of the printing press, as his ideas could be widely distributed and reach audiences that were previously inaccessible. The press gave rise to pamphlets, newspapers, and eventually journals, which became key tools for political movements, the spread of news, and the advancement of science. The shift in power from the elite, who had controlled written knowledge, to the general public helped shape modern societies. In many ways, the printing press laid the foundation for the Enlightenment and the subsequent revolutions that reshaped Europe. Just as gunpowder changed warfare, the printing press transformed the dissemination of knowledge, giving ordinary people the tools to challenge authority and form new ways of thinking.`
+  },
+{
+    tab: "⏳ Time Travel",
+    title: "⏳ Top-2 · Text 2",
+    text: `The question of whether time travel is possible has fascinated both scientists and storytellers for generations. While the concept has long been relegated to the realm of science fiction, advancements in our understanding of physics, particularly Einstein’s theory of relativity, have led some researchers to explore whether time travel could theoretically occur. According to relativity, time and space are interconnected, and the flow of time can vary depending on speed and gravity, which opens the door to intriguing possibilities. For instance, scientists have observed that time moves more slowly for astronauts aboard the International Space Station than for people on Earth – a phenomenon known as time dilation. While this effect is minuscule at current speeds, it suggests that traveling near the speed of light could dramatically alter one’s experience of time. Additionally, some theoretical physicists propose that wormholes – shortcuts through spacetime – could allow for time travel, although there is currently no experimental evidence to support this. Despite the many unknowns, the concept of time travel remains a compelling area of theoretical research and offers a tantalising glimpse into the mysteries of our universe and the potential for altering our understanding of time itself.`
+  },
+{
+    tab: "💭 Dreams",
+    title: "💭 Top-2 · Text 3",
+    text: `Dreams have played a significant role in ancient cultures, often seen as powerful windows into the future or as messages from the divine. In ancient Egypt, dreams were thought to be communications from the gods, and individuals who could interpret dreams held important positions in society. The Egyptians even had dream temples, where people would go to sleep in hopes of receiving prophetic dreams. Similarly, in ancient Greece, dreams were believed to provide guidance and insight. The Greeks viewed dreams as messages from the gods or as reflections of a person’s soul, and dream interpretation was practiced by oracles and priests. The famous philosopher Aristotle suggested that dreams could be a form of subconscious wisdom, revealing truths that the conscious mind might overlook. In Mesopotamian cultures, dreams were also highly respected, with written records dating back to 3100 BCE detailing dreams that were believed to predict future events. The Sumerians and Babylonians believed that specific gods communicated through dreams, and they had entire texts dedicated to dream interpretation. In Indigenous cultures of the Americas, dreams were seen as a bridge to the spiritual world. For the Iroquois, for example, dreams were believed to contain messages from the spirit world, and paying attention to these messages was crucial for personal growth and community well-being.`
+  },
+{
+    tab: "🏥 Finland Healthcare",
+    title: "🏥 Top-2 · Text 4",
+    text: `One of the key drivers of success for Finland’s healthcare system is the high level of training and support given to healthcare professionals. Nurses and doctors in Finland undergo rigorous education, with nursing programs lasting three to four years and medical degrees taking up to six years. The curriculum is developed and standardised at national level, ensuring consistency in skill and knowledge across the country. Healthcare professionals engage in continuous professional development and are expected to complete additional training to stay updated on medical advancements. They are also well-paid, with salaries that are competitive within the European Union, which naturally makes the profession an attractive career choice for talented individuals. Finnish healthcare providers are subject to regular assessments to maintain high standards of care, which keeps staff accountable and ensures that patients receive top-quality treatment. To support ongoing learning, healthcare workers have access to regular workshops and courses funded by the government to help them stay at the forefront of medical knowledge. This emphasis on education, accountability, and competitive remuneration contributes to a highly skilled and motivated healthcare workforce, and this workforce plays a central role in Finland’s reputation for excellent public healthcare.`
+  },
+{
+    tab: "🤖 AI",
+    title: "🤖 Top-2 · Text 5",
+    text: `Artificial intelligence is often depicted in movies and media as an all-knowing, autonomous system capable of complex human-like reasoning and emotions. However, the reality of AI is quite different from these dramatic portrayals. In fact, AI has been around for much longer than most people realise, often working quietly behind the scenes. Some of the earliest examples of AI can be found in the mid-20th century, when simple programs were designed to play games like chess or checkers against human opponents. By the 1990s, more advanced systems like IBM’s Deep Blue were capable of defeating world-class chess champions like Gerry Kasparov. Today, AI is embedded in countless aspects of our daily lives, often in ways we do not immediately recognise. When we ask our smartphones to send a text message or search for a restaurant, AI is at work, processing our requests through speech recognition and natural language processing algorithms. When we stream movies or listen to music, recommendation systems powered by AI learn our preferences to suggest what we might enjoy next. Even the navigation systems in our cars or on our phones rely on AI to analyse traffic patterns and give us the quickest route to our destination. Despite the sensationalised versions we see in popular culture, AI is not just about futuristic robots or sentient machines; it is already here, quietly enhancing and automating tasks in nearly every facet of modern life.`
+  },
+{
+    tab: "🎒 Duruma Uygun 1",
+    title: "🎒 Top-2 · Text 6",
+    label: "Aktif İngilizce – Duruma Uygun İfade",
+    text: `Your sister is planning to take a solo backpacking trip through remote areas, and while you admire her adventurous spirit, you’re also concerned for her safety. Knowing she’s determined to go, you decide to offer some advice by saying: ----`
+  },
+{
+    tab: "📖 Duruma Uygun 2",
+    title: "📖 Top-2 · Text 7",
+    label: "Aktif İngilizce – Duruma Uygun İfade",
+    text: `While catching up with a close friend, you suddenly remember that you borrowed a book from him months ago and forgot to return it. He’s never mentioned it to you, and now you feel bad for keeping it so long. You quickly shift the conversation and apologise: ----`
+  },
+{
+    tab: "☕ Duruma Uygun 3",
+    title: "☕ Top-2 · Text 8",
+    label: "Aktif İngilizce – Duruma Uygun İfade",
+    text: `You run into an old colleague at a café and notice that she seems stressed and exhausted. You used to be close, so after some casual conversation, you want to gently ask if everything is alright. Trying to be sensitive, you say: ----`
+  },
+{
+    tab: "⏰ Duruma Uygun 4",
+    title: "⏰ Top-2 · Text 9",
+    label: "Aktif İngilizce – Duruma Uygun İfade",
+    text: `Your colleague is always an early riser, which seems to help her stay productive throughout the day. Seeing that, you’ve also tried waking up earlier to get more done, but you’ve struggled to maintain the routine. Curious about how she manages to stay consistent, you ask her: ----`
+  },
+{
+    tab: "🏠 Duruma Uygun 5",
+    title: "🏠 Top-2 · Text 10",
+    label: "Aktif İngilizce – Duruma Uygun İfade",
+    text: `Your cousin is visiting the city for a week and mentions that he’s searching for affordable accommodation. You happen to have a guest room available in your house. So, you decide to offer it to him free of charge and say: ----`
+  },
+{
+    tab: "⛏️ Paragraf Tamamlama 1",
+    title: "⛏️ Top-2 · Text 11",
+    label: "Aktif İngilizce – Paragraf Tamamlama",
+    text: `Deforestation is a major issue that impacts ecosystems across the globe, and one of the leading contributors is the mining industry. Mining companies frequently clear vast areas of forest to access valuable minerals, leaving the land bare and exposed. ---- Once the trees are removed, the land is often left damaged and unusable for agricultural purposes or as wildlife habitats. Additionally, the chemicals used in mining can seep into the surrounding soil and water sources, leading to long-term environmental damage that affects not only wildlife but also nearby human communities.`
+  },
+{
+    tab: "🧠 Paragraf Tamamlama 2",
+    title: "🧠 Top-2 · Text 12",
+    label: "Aktif İngilizce – Paragraf Tamamlama",
+    text: `Humans are naturally inclined to form relationships, and social connections play a significant role in mental and emotional well-being. However, like most things, balance is key. While strong social ties can reduce feelings of loneliness and provide support during difficult times, an excess of social interaction can lead to stress and burnout. ---- This need for balance highlights why both socialisation and moments of solitude are necessary for maintaining mental health. Our brains require time to process interactions and recover from the mental effort they require.`
+  },
+{
+    tab: "😴 Paragraf Tamamlama 3",
+    title: "😴 Top-2 · Text 13",
+    label: "Aktif İngilizce – Paragraf Tamamlama",
+    text: `People who suffer from anxiety often experience disturbances in their sleep patterns. They may find it difficult to fall asleep or wake up frequently during the night. In addition, research has shown that individuals with anxiety may spend less time in deep sleep, which is crucial for feeling well-rested. ---- This is one reason why people with anxiety disorders often report feeling tired or lacking energy during the day, despite having spent a significant amount of time in bed.`
+  },
+{
+    tab: "🎢 Paragraf Tamamlama 4",
+    title: "🎢 Top-2 · Text 14",
+    label: "Aktif İngilizce – Paragraf Tamamlama",
+    text: `The tendency to take risks varies significantly from person to person and can be influenced by a wide range of factors, including age, personality traits, and social circumstances. For example, younger people are more inclined to take risks, particularly when it comes to physical activities or trying new experiences. ---- Upbringing, cultural background, and peer pressure also have a considerable impact on whether an individual engages in risky behaviour. The presence of others who are also taking risks often encourages risk-taking, even if the individual is fully aware of the dangers involved. Overall, the desire for excitement and the influence of one’s environment are major contributors to the choices people make.`
+  },
+{
+    tab: "🧮 Paragraf Tamamlama 5",
+    title: "🧮 Top-2 · Text 15",
+    label: "Aktif İngilizce – Paragraf Tamamlama",
+    text: `Many of us are familiar with IQ, which stands for Intelligence Quotient, a tool designed to assess intellectual intelligence through a series of standardised tests. A higher IQ score is often associated with better cognitive abilities, such as problem-solving, logical reasoning, and the capacity to learn quickly. In many cases, individuals with higher IQs tend to perform better in school with less effort compared to those with lower scores. ---- However, recent studies have shown that IQ alone is not a guaranteed predictor of life success, as other factors like emotional intelligence and perseverance also play a crucial role.`
+  },
+{
+    tab: "🧩 Anlam Bütünlüğü 1",
+    title: "🛡️ Top-2 · Text 16",
+    label: "Aktif İngilizce – Anlam Bütünlüğünü Bozan Cümle",
+    text: `(I) The immune system is highly effective at defending the body against harmful invaders like viruses and bacteria, and it also knows when to stop attacking once the threat is eliminated.
+(II) However, sometimes this process goes awry, and the immune system mistakenly targets healthy tissues, leading to autoimmune disorders.
+(III) Recent studies have identified specific mechanisms responsible for this faulty immune response.
+(IV) Sometimes the immune system does not work properly due to immune deficiencies present at birth or medications that suppress the immune system.
+(V) This discovery could have important implications for developing treatments for a variety of autoimmune diseases, offering new strategies to manage these conditions.`
+  },
+{
+    tab: "🧩 Anlam Bütünlüğü 2",
+    title: "⚖️ Top-2 · Text 17",
+    label: "Aktif İngilizce – Anlam Bütünlüğünü Bozan Cümle",
+    text: `(I) Decision-making models suggest that people assess the pros and cons of different options and select the most favourable choice through a rational process. (II) The most important factor in successful group work is that every team member is clear about how a particular decision will be made. (III) They tend to opt for the solution that offers the highest benefits with the lowest drawbacks. (IV) This process requires comparing the potential gains and losses of each option and ultimately choosing the one that seems most advantageous. (V) In essence, the balance of positive and negative factors influences the final choice.`
+  },
+{
+    tab: "🧩 Anlam Bütünlüğü 3",
+    title: "🐾 Top-2 · Text 18",
+    label: "Aktif İngilizce – Anlam Bütünlüğünü Bozan Cümle",
+    text: `(I) New research reveals that the animals that can perceive time passing the fastest are those that can fly, are small or are marine predators.
+(II) Many individuals question whether animals experience time in the same way humans do.
+(III) However, this is unlikely, as animals do not possess the same cognitive processes related to time perception as humans.
+(IV) While some animals can respond to environmental cues, such as changes in light or temperature, this is not the same as a conscious awareness of time passing.
+(V) Human constructs like past, present, and future do not apply to animals in the same way they do to us.`
+  },
+{
+    tab: "🧩 Anlam Bütünlüğü 4",
+    title: "🔨 Top-2 · Text 19",
+    label: "Aktif İngilizce – Anlam Bütünlüğünü Bozan Cümle",
+    text: `(I) By the 15th century, a class of skilled craftsmen had risen to prominence in many European cities. (II) These artisans, organised into guilds, lived in major trade hubs like Venice and Florence and held significant influence over local economies and industries. (III) Guilds flourished in Europe between the 11th and 16th centuries and formed an important part of the economic and social fabric in that era. (IV) Known for their expertise in various trades, such as metalwork, textiles, and carpentry, these craftsmen shaped the development of urban life for centuries. (V) As their influence grew, they became renowned for setting high standards of quality and ensuring the prosperity of their respective trades.`
+  },
+{
+    tab: "🧩 Anlam Bütünlüğü 5",
+    title: "🦾 Top-2 · Text 20",
+    label: "Aktif İngilizce – Anlam Bütünlüğünü Bozan Cümle",
+    text: `(I) It was only in recent years that artificial intelligence has become very visible, but the idea itself is nothing new. (II) The advancement of artificial intelligence is progressing at an incredible pace. (III) However, AI is unlikely to fully replace human workers in many fields, particularly in tasks requiring complex judgment, creativity, or emotional intelligence. (IV) For the foreseeable future, AI will likely be most effective only in areas such as data analysis, automation of routine tasks, and enhancing decision-making processes. (V) Despite these limitations, experts are confident that AI will continue to play a growing role in various industries and revolutionise the way many businesses operate.`
+  }
+];
+
+const tooltip  = document.getElementById('tooltip');
+let activeSpan = null;
+let currentKey = null;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem('top2_saved') || '{}'); } catch(e) {}
+
+function buildHTML(text) {
+  const withWords = text.replace(/([a-zA-Z']+(?:-[a-zA-Z]+)*)/g, (match, p1, off, str) => {
+    if (str[off-1]==='(' && str[off+match.length]===')') return match;
+    const key = match.toLowerCase();
+    const data = WORDS[key];
+    if (!data) return match;
+    return `<span class="${data.func?'word func':'word content'}" data-key="${key}">${match}</span>`;
+  });
+  return withWords.split(/\n\s*\n/).map(p => `<p style="margin-bottom:16px">${p.trim().replace(/\n/g,'<br>')}</p>`).join('');
+}
+
+function switchTab(index) {
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+  currentKey = null;
+  const sel = document.getElementById('readingSelect'); if (sel) sel.value = String(index);
+  const r = READINGS[index];
+  document.getElementById('cardTitle').textContent = r.title;
+  document.getElementById('cardLabel').textContent = r.label || 'Aktif İngilizce – Okuma Parçası';
+  document.getElementById('readingText').innerHTML = buildHTML(r.text);
+  bindWordClicks();
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+const readingSelect = document.getElementById('readingSelect');
+READINGS.forEach((r,i) => {
+  const opt = document.createElement('option');
+  opt.value = String(i);
+  opt.textContent = (i+1) + '. ' + r.tab;
+  readingSelect.appendChild(opt);
+});
+readingSelect.addEventListener('change', () => switchTab(parseInt(readingSelect.value,10)));
+switchTab(0);
+if(READINGS.length<2){const tw=document.querySelector('.tabs-wrapper'); if(tw) tw.style.display='none';}
+
+function persistSaved() { try { localStorage.setItem('top2_saved', JSON.stringify(saved)); } catch(e) {} }
+
+function renderSaved() {
+  const section = document.getElementById('savedSection');
+  const list    = document.getElementById('savedList');
+  const count   = document.getElementById('wordCount');
+  const keys    = Object.keys(saved);
+  count.textContent = keys.length;
+  section.classList.toggle('has-words', keys.length > 0);
+  const exBtn = document.getElementById('startExBtn');
+  if (exBtn) exBtn.disabled = keys.length < 2;
+  list.innerHTML = '';
+  keys.forEach(key => {
+    const d = saved[key];
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    item.innerHTML = `<div class="saved-item-body"><div class="saved-word">${d.word}</div><div class="saved-tr">🇹🇷 ${d.tr}</div><div class="saved-syn">🔤 ${d.syn}</div>${d.note?`<div class="saved-note">${d.note}</div>`:''}</div><button class="remove-btn" onclick="removeWord('${key}')">✕</button>`;
+    list.appendChild(item);
+  });
+  document.querySelectorAll('.word').forEach(sp => { sp.style.background = saved[sp.dataset.key] ? '#fff3b0' : ''; });
+}
+
+function toggleSave() {
+  if (!currentKey) return;
+  const btn = document.getElementById('tSaveBtn');
+  if (saved[currentKey]) {
+    delete saved[currentKey];
+    btn.textContent = '⭐ Kaydet'; btn.classList.remove('saved');
+  } else {
+    const d = WORDS[currentKey] || {};
+    saved[currentKey] = { word: document.getElementById('tWord').textContent, tr: d.tr||'—', syn: d.syn||'—', note: d.note||'' };
+    btn.textContent = '✅ Kaydedildi'; btn.classList.add('saved');
+    recordSave();
+  }
+  persistSaved(); renderSaved();
+}
+
+function removeWord(key) {
+  delete saved[key]; persistSaved(); renderSaved();
+  if (currentKey === key) { document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function clearAll() {
+  if (!Object.keys(saved).length) return;
+  if (confirm('Tüm kayıtlı kelimeler silinsin mi?')) { saved={}; persistSaved(); renderSaved(); document.getElementById('tSaveBtn').textContent='⭐ Kaydet'; document.getElementById('tSaveBtn').classList.remove('saved'); }
+}
+
+function bindWordClicks() {
+  document.querySelectorAll('.word').forEach(span => {
+    span.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeSpan && activeSpan !== span) activeSpan.classList.remove('active');
+      span.classList.add('active'); activeSpan = span;
+      currentKey = span.dataset.key;
+      const d = WORDS[currentKey] || {};
+      document.getElementById('tWord').textContent = span.textContent;
+      document.getElementById('tTr').textContent   = d.tr  || '—';
+      document.getElementById('tSyn').textContent  = d.syn || '—';
+      document.getElementById('tNote').textContent = d.note || '';
+      const btn = document.getElementById('tSaveBtn');
+      if (saved[currentKey]) { btn.textContent='✅ Kaydedildi'; btn.classList.add('saved'); }
+      else { btn.textContent='⭐ Kaydet'; btn.classList.remove('saved'); }
+      const rect = span.getBoundingClientRect(), ttW = 260;
+      tooltip.style.position = 'fixed';
+      let left = rect.left + rect.width/2 - ttW/2;
+      if (left < 8) left = 8;
+      if (left + ttW > window.innerWidth - 8) left = window.innerWidth - ttW - 8;
+      tooltip.style.visibility = 'hidden'; tooltip.style.left = left+'px'; tooltip.style.top = '0px';
+      tooltip.classList.add('show');
+      const ttH = tooltip.offsetHeight || 130;
+      tooltip.classList.remove('show'); tooltip.style.visibility = '';
+      let top = (rect.top - ttH - 12 >= 8) ? rect.top - ttH - 12 : rect.bottom + 10;
+      if (top + ttH > window.innerHeight - 8) top = window.innerHeight - ttH - 8;
+      if (top < 8) top = 8;
+      tooltip.style.left = left+'px'; tooltip.style.top = top+'px';
+      tooltip.classList.add('show');
+    });
+  });
+}
+
+document.addEventListener('click', e => {
+  if (tooltip.contains(e.target)) return;
+  tooltip.classList.remove('show');
+  if (activeSpan) { activeSpan.classList.remove('active'); activeSpan = null; }
+});
+
+let stats = {};
+try { stats = JSON.parse(localStorage.getItem('top2_stats') || '{}'); } catch(e) {}
+stats = Object.assign({ attempts:0, totalCorrect:0, totalAnswered:0, mistakes:{}, streak:0, lastStreakDate:'', weekSaves:{} }, stats);
+
+function persistStats() { try { localStorage.setItem('top2_stats', JSON.stringify(stats)); } catch(e) {} }
+function getWeekKey() { const n=new Date(),j=new Date(n.getFullYear(),0,1); return n.getFullYear()+'-W'+Math.ceil(((n-j)/86400000+j.getDay()+1)/7); }
+function getTodayKey() { return new Date().toISOString().slice(0,10); }
+
+function recordSave() {
+  const wk = getWeekKey();
+  if (!stats.weekSaves) stats.weekSaves = {};
+  if (!stats.weekSaves[wk]) stats.weekSaves[wk] = 0;
+  stats.weekSaves[wk]++;
+  const today = getTodayKey(), yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if (stats.lastStreakDate === today) {}
+  else if (stats.lastStreakDate === yesterday) { stats.streak++; stats.lastStreakDate = today; }
+  else { stats.streak = 1; stats.lastStreakDate = today; }
+  persistStats(); renderStats();
+}
+
+function recordAttempt(correct, total, wrongKeys) {
+  stats.attempts++; stats.totalCorrect += correct; stats.totalAnswered += total;
+  wrongKeys.forEach(k => { stats.mistakes[k] = (stats.mistakes[k]||0)+1; });
+  persistStats(); renderStats();
+}
+
+function renderStats() {
+  const wk = getWeekKey();
+  document.getElementById('statLearned').textContent  = (stats.weekSaves&&stats.weekSaves[wk])||Object.keys(saved).length;
+  document.getElementById('statAttempts').textContent = stats.attempts||0;
+  document.getElementById('statMistakes').textContent = Object.values(stats.mistakes||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('statAccuracy').textContent = stats.totalAnswered>0 ? Math.round((stats.totalCorrect/stats.totalAnswered)*100)+'%' : '—';
+  document.getElementById('statStreak').textContent   = (stats.streak||0)+' gün';
+  const missEntries = Object.entries(stats.mistakes||{}).filter(([k])=>saved[k]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const hardBox = document.getElementById('hardWordsBox'), hardList = document.getElementById('hardWordsList');
+  if (missEntries.length) { hardBox.style.display='block'; hardList.innerHTML=missEntries.map(([k,cnt])=>`<div class="hard-chip">${saved[k]?.word||k}<span class="miss-count">✕${cnt}</span></div>`).join(''); }
+  else hardBox.style.display='none';
+  document.getElementById('statsSection').classList.toggle('visible', Object.keys(saved).length>0||stats.attempts>0);
+}
+
+function resetStats() {
+  if (!confirm('İstatistikler sıfırlansın mı?')) return;
+  stats={attempts:0,totalCorrect:0,totalAnswered:0,mistakes:{},streak:0,lastStreakDate:'',weekSaves:{}};
+  persistStats(); renderStats();
+}
+
+let exSelectedEng=null, exSelectedTr=null, exCorrect=0, exTotal=0, exWrongKeys=[];
+
+function shuffle(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr; }
+
+function startExercise() {
+  const keys = Object.keys(saved);
+  if (keys.length < 2) return;
+  const pick = shuffle([...keys]).slice(0,8);
+  exCorrect=0; exTotal=pick.length; exSelectedEng=null; exSelectedTr=null; exWrongKeys=[];
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('scoreTotal').textContent=exTotal;
+  document.getElementById('exResult').classList.remove('show');
+  const engWords=shuffle([...pick]), trWords=shuffle([...pick]);
+  const colEng=document.getElementById('colEng'), colTr=document.getElementById('colTr');
+  colEng.innerHTML=''; colTr.innerHTML='';
+  engWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card eng'; card.dataset.key=key; card.textContent=d.word;
+    card.addEventListener('click',()=>selectCard(card,'eng')); colEng.appendChild(card);
+  });
+  trWords.forEach(key => {
+    const d=saved[key], card=document.createElement('div');
+    card.className='match-card tr'; card.dataset.key=key; card.textContent=d.tr.split('/')[0].trim();
+    card.addEventListener('click',()=>selectCard(card,'tr')); colTr.appendChild(card);
+  });
+  document.getElementById('exerciseSection').classList.add('visible');
+  document.getElementById('exerciseSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectCard(card, side) {
+  if (card.classList.contains('correct')||card.classList.contains('dimmed')) return;
+  if (side==='eng') { document.querySelectorAll('.match-card.eng.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedEng=card; }
+  else { document.querySelectorAll('.match-card.tr.selected').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); exSelectedTr=card; }
+  if (exSelectedEng && exSelectedTr) checkMatch();
+}
+
+function checkMatch() {
+  const engKey=exSelectedEng.dataset.key, trKey=exSelectedTr.dataset.key;
+  if (engKey===trKey) {
+    exSelectedEng.classList.remove('selected'); exSelectedTr.classList.remove('selected');
+    exSelectedEng.classList.add('correct','dimmed'); exSelectedTr.classList.add('correct','dimmed');
+    exSelectedEng.innerHTML='✅ '+exSelectedEng.textContent;
+    exCorrect++; document.getElementById('scoreNum').textContent=exCorrect;
+    if (exCorrect===exTotal) { recordAttempt(exCorrect,exTotal,exWrongKeys); setTimeout(()=>document.getElementById('exResult').classList.add('show'),400); }
+  } else {
+    exWrongKeys.push(engKey);
+    exSelectedEng.classList.add('wrong'); exSelectedTr.classList.add('wrong');
+    const eng=exSelectedEng, tr=exSelectedTr;
+    setTimeout(()=>{ eng.classList.remove('wrong','selected'); tr.classList.remove('wrong','selected'); },600);
+  }
+  exSelectedEng=null; exSelectedTr=null;
+}
+
+function closeExercise() { document.getElementById('exerciseSection').classList.remove('visible'); }
+
+renderSaved();
+renderStats();
+</script>
+</body>
+</html>
