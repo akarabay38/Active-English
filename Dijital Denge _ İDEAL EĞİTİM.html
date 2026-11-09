@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dijital Denge | İDEAL EĞİTİM</title>
+<meta name="description" content="İDEAL EĞİTİM Dijital Denge: öğrenciler, veliler ve öğretmenler için interaktif dijital farkındalık platformu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F6F7;--tx:#2A2A2D;--mu:#5A5B61;--card:#fff;--ln:#E0E0E3;--nv:#2A2A2D;--bl:#B3262C;--tq:#7C7E84;--or:#D32F36;--soft:#EFEFF1;
+box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141416;--tx:#F0F0F2;--mu:#A9AAB0;--card:#1F1F22;--ln:#37373C;--soft:#262629}}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));overflow-x:hidden}body{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 17px/1.6 Figtree,system-ui,sans-serif}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;line-height:1.08;margin:0}
+h2{font-size:clamp(1.8rem,5vw,2.9rem);max-width:20ch}
+h3{font-size:1.2rem}
+p{margin:.6em 0;max-width:62ch}
+a{color:inherit}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:72px 0}
+nav{position:fixed;left:0;right:0;top:0;padding-top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--ln)}
+nav .wrap{display:flex;gap:12px;align-items:center;height:56px}
+nav b{font-family:'Bricolage Grotesque';font-size:1rem;flex:1}
+#mb{padding:8px 16px;border-radius:999px;border:2px solid var(--tx);background:transparent;font-weight:700}
+#mb span{display:inline-block;transition:transform .2s}#mb[aria-expanded=true] span{transform:rotate(180deg)}
+#mb[aria-expanded=true]{background:var(--or);border-color:var(--or);color:#fff}
+#mp{position:absolute;left:0;right:0;top:100%;background:var(--card);border-bottom:1px solid var(--ln);box-shadow:0 18px 30px rgba(0,0,0,.12)}
+#mp[hidden]{display:none}
+#mp .mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px 18px;align-items:start;height:auto;max-height:calc(100vh - 90px);overflow-y:auto;padding-top:18px;padding-bottom:18px}
+.navsp{height:calc(56px + env(safe-area-inset-top,0px))}
+.mg h4{margin:0 0 4px;font:800 1rem 'Bricolage Grotesque';color:var(--or)}
+.mg a{display:block;padding:8px 0;font-weight:500;color:var(--tx);text-decoration:none}
+.mg a:hover{color:var(--or)}
+.mg a.on{color:var(--or);font-weight:700;border-left:4px solid var(--or);padding-left:10px}
+.hero{background:linear-gradient(135deg,#fff 0%,#FBEAEB 55%,#F3C9CC 100%);color:#2A2A2D;padding:56px 0 48px}
+.hero h1{color:#D32F36;font-size:clamp(3rem,13vw,8rem);font-weight:800;letter-spacing:-.03em}
+.hero .sub{font-size:clamp(1.2rem,3vw,1.7rem);color:#B3262C;font-family:'Bricolage Grotesque';font-weight:600;margin-top:10px}
+.hero p{color:#4A4A50}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:13px 22px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid var(--or);background:var(--or);color:#fff}
+.btn.ghost{background:transparent;color:#2A2A2D;border-color:#2A2A2D}
+.scale{background:#fff;border:1px solid #EBD3D5;box-shadow:0 10px 30px rgba(179,38,44,.12);border-radius:20px;padding:18px;margin-top:34px;max-width:620px}
+.scale svg{width:100%;height:auto;display:block}
+.scale input{width:100%;accent-color:var(--or)}
+.hint{text-align:center;font-weight:700;color:#5A5B61;margin:6px 0;animation:nudge 1.4s ease-in-out infinite}.hint.off{animation:none;opacity:.55}@keyframes nudge{50%{transform:translateX(12px)}}
+.scale output{display:block;text-align:center;font-weight:700;color:#B3262C}
+#beam{transition:transform .35s ease;transform-origin:300px 70px}
+.pan{transition:transform .35s ease}
+.grid{display:grid;gap:16px;margin-top:28px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:20px}
+.card svg.ic{width:34px;height:34px;stroke:var(--tq);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:10px}
+.card p{color:var(--mu);margin:.4em 0 0;font-size:.97rem}
+.eff .card{border-left:6px solid var(--bl)}
+.eff .card:nth-child(2){border-left-color:var(--tq)}.eff .card:nth-child(3){border-left-color:var(--or)}.eff .card:nth-child(4){border-left-color:var(--nv)}
+.note{background:var(--soft);border-radius:12px;padding:12px 16px;font-size:.95rem;color:var(--tx);max-width:70ch;margin-top:18px}
+.alt{background:var(--soft)}
+.alt .card{background:var(--bg)}
+.qs{counter-reset:q;list-style:none;padding:0;margin:26px 0 0;display:grid;gap:10px;max-width:70ch}
+.qs li{counter-increment:q;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px 16px 14px 56px;position:relative}
+.qs li::before{content:counter(q);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--bl);color:#fff;display:grid;place-items:center;font-weight:700}
+.tip{display:flex;gap:14px;align-items:flex-start}
+.tip .ic{flex:none;margin:0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.tabs button{padding:10px 18px;border-radius:999px;border:2px solid var(--ln);background:var(--card);font-weight:700}
+.tabs button[aria-selected=true]{background:var(--nv);color:#fff;border-color:var(--nv)}
+.par{display:grid;gap:16px;margin-top:20px}
+.quote{font-family:'Bricolage Grotesque';font-size:clamp(1.3rem,3.5vw,2rem);font-weight:600;border-left:6px solid var(--or);padding-left:18px;margin:30px 0;max-width:28ch}
+label.chk{display:flex;gap:10px;padding:8px 0;align-items:flex-start;cursor:pointer}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--tq);flex:none;margin-top:3px}
+.contract{background:var(--card);border:2px dashed var(--tq);border-radius:16px;padding:20px;margin-top:16px}
+.contract input[type=text]{width:100%;padding:10px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit;margin:4px 0 10px}
+.mapbox{background:var(--soft);border-radius:20px;padding:12px;margin-top:26px}
+.mapbox svg{width:100%;height:auto;display:block}
+.land{fill:#D5D5D9;stroke:#B3B3B3}
+.pin{cursor:pointer}
+.pin circle{fill:var(--or);stroke:#fff;stroke-width:2;transition:r .2s}
+.pin.on circle,.pin:hover circle{r:11}
+.pin text{fill:#fff;font-size:15px;font-weight:700}
+.cbtn{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.cbtn button{padding:8px 14px;border-radius:999px;border:2px solid var(--ln);background:var(--card);font-weight:600}
+.cbtn button.on{border-color:var(--or);background:var(--or);color:#fff}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--soft);color:var(--tx);border:1px solid var(--tq)}
+.badge.warn{border-color:var(--or)}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opt{text-align:left;padding:14px 16px;border-radius:12px;border:2px solid var(--ln);background:var(--card);width:100%}
+.opt:hover:not([disabled]){border-color:var(--bl)}
+.opt.sel{border-color:var(--tq);background:var(--soft)}
+.fb{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--soft);border-left:6px solid var(--tq)}
+.bar{height:14px;background:var(--ln);border-radius:99px;overflow:hidden;margin:12px 0}
+.bar i{display:block;height:100%;width:0;background:var(--or);transition:width .4s}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step.done{opacity:.75}.step.done h3{text-decoration:line-through}
+.sm{background:transparent;border:2px solid var(--ln);border-radius:999px;padding:8px 16px;font-weight:600;margin-top:14px}
+.gauge{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:10px 0}
+.gauge span{width:114px;height:114px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 2rem 'Bricolage Grotesque'}
+.close{background:linear-gradient(135deg,#D32F36,#9E1F25);color:#fff;text-align:center;padding:90px 0}
+.close h2{max-width:none;font-size:clamp(2rem,7vw,4.5rem)}
+.close p{margin:14px auto;color:#FDECEC}
+.close .sub{color:#fff;font-family:'Bricolage Grotesque';font-size:1.5rem}
+footer{padding:26px 0;color:var(--mu);font-size:.9rem;text-align:center}
+.logo{background:#fff;border-radius:12px;padding:6px;display:block;width:auto;flex:none}
+nav .logo{height:40px;padding:3px 6px;border-radius:8px}
+.hero .logo{height:104px;margin-bottom:18px}
+.close .logo{height:110px;margin:0 auto 26px}
+.hero{position:relative;overflow:hidden}.hero .wrap{position:relative;z-index:1}
+.hero .logo{box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.tri{position:absolute;right:4%;top:50%;width:min(36vw,400px);height:auto;transform:translateY(-50%);animation:rise 1s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(-35%)}}
+@media(max-width:760px){.tri{position:static;display:block;width:110px;margin:0 20px 6px auto;transform:none}}
+
+</style>
+</head>
+<body>
+<nav><div class="wrap"><img class="logo nl" src="data:image/png;base64,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" alt="İdeal Eğitim Koleji logosu"><b>DİJİTAL DENGE</b><button id="mb" aria-expanded="false" aria-controls="mp">Menü <span aria-hidden="true">▾</span></button></div><div id="mp" hidden><div class="wrap mg"><div><h4>Öğrenciler</h4><a href="#kesfet">Keşfet</a><a href="#etki">Ekranın etkileri</a><a href="#oneri">Öneriler</a><a href="#yedi">7 günlük yolculuk</a><a href="#test">Alışkanlık testi</a><a href="#senaryo">Senaryolar</a></div><div><h4>Veliler</h4><a href="#veli">Veli rehberi</a></div><div><h4>Dünya</h4><a href="#dunya">Dünya ne yapıyor?</a></div></div></div></nav>
+<div class="navsp"></div>
+
+<header class="hero"><svg class="tri" viewBox="0 0 300 290" aria-hidden="true"><polygon points="150,10 10,280 150,280" fill="#D32F36"/><polygon points="150,10 290,280 150,280" fill="#B3B3B3"/><circle cx="150" cy="175" r="56" fill="#fff"/><circle cx="150" cy="175" r="44" fill="#B3B3B3"/></svg><div class="wrap">
+
+<h1>DİJİTAL DENGE</h1>
+<div class="sub">Ekranı Sen Yönet, Zamanını Sen Yaşa!</div>
+<p style="margin-top:18px">Telefonlar, tabletler ve bilgisayarlar hayatımızın vazgeçilmez parçaları. Peki, onları biz mi yönetiyoruz, yoksa onlar mı bizi yönetiyor?</p>
+<p>Dijital alışkanlıklarımızı tanımaya, teknolojiyi bilinçli kullanmaya ve hayatımızdaki dengeyi yeniden keşfetmeye hazır mısın?</p>
+
+<div class="scale">
+<svg viewBox="0 0 600 230" role="img" aria-label="Ekran ve hayat arasındaki denge terazisi">
+<path d="M300 70V200M240 205H360" stroke="#B3B3B3" stroke-width="8" stroke-linecap="round"/>
+<g id="beam"><path d="M90 70H510" stroke="#2A2A2D" stroke-width="8" stroke-linecap="round"/>
+<g class="pan" id="pl"><path d="M90 70V120M40 120H140" stroke="#2A2A2D" stroke-width="3"/><rect x="62" y="124" width="56" height="64" rx="10" fill="#D32F36"/><rect x="70" y="132" width="40" height="42" rx="3" fill="#2A2A2D"/><text x="90" y="212" fill="#2A2A2D" text-anchor="middle" font-size="16" font-weight="700">Ekran</text></g>
+<g class="pan" id="pr"><path d="M510 70V120M460 120H560" stroke="#2A2A2D" stroke-width="3"/><circle cx="485" cy="152" r="22" fill="#7C7E84"/><rect x="513" y="136" width="30" height="36" rx="4" fill="#B3262C"/><text x="510" y="212" fill="#2A2A2D" text-anchor="middle" font-size="16" font-weight="700">Hayat</text></g></g>
+</svg>
+<input type="range" id="sl" min="0" max="100" value="50" aria-label="Ekran ile hayat arasındaki dengeyi ayarla">
+<div class="hint" id="hint" aria-hidden="true">← Yana kaydır →</div>
+<output id="so">Denge sende</output></div>
+</div></header>
+
+<section id="kesfet"><div class="wrap">
+<h2>Telefonunu sen mi kullanıyorsun, o mu seni yönetiyor?</h2>
+<p>Telefon, tablet ve bilgisayar tek başına düşmanımız değildir. Bunlar öğrenme, iletişim, araştırma ve eğlence için güçlü araçlardır.</p>
+<p>Ancak kullanımımızı kontrol etmekte zorlandığımızda ve ekran karşısında geçirdiğimiz zaman uyku, ders, hareket, aile ilişkileri ve arkadaşlıklarımızın önüne geçtiğinde alışkanlıklarımızı yeniden değerlendirmemiz gerekir.</p>
+<ol class="qs">
+<li>Yapmam gereken bir işi ekran nedeniyle erteliyor muyum?</li>
+<li>Telefonumu kontrol etmeden uzun süre durmakta zorlanıyor muyum?</li>
+<li>Uyku saatimi ekran kullanımı nedeniyle geciktiriyor muyum?</li>
+<li>Arkadaşlarımla yüz yüze vakit geçirmek yerine ekranı mı tercih ediyorum?</li>
+<li>Planladığımdan daha uzun süre çevrim içi kalıyor muyum?</li></ol>
+<div class="note">Bu sorular bir teşhis testi değildir; yalnızca kişisel farkındalık içindir.</div>
+</div></section>
+
+<section id="etki" class="alt"><div class="wrap">
+<h2>Ekranın görünmeyen etkileri</h2>
+<div class="grid g2 eff" id="eff"></div>
+<div class="note">Bu etkiler herkeste aynı şekilde ortaya çıkmaz. Amaç korkutmak değil, fark etmektir.</div>
+</div></section>
+
+<section id="oneri"><div class="wrap">
+<h2>Teknolojiyi bırakma, kontrolü elinde tut!</h2>
+<div class="grid g3" id="tips"></div>
+</div></section>
+
+<section id="dunya" class="alt"><div class="wrap">
+<h2>Dijital denge artık küresel bir konu!</h2>
+<p>Haritadaki noktalara dokun. Her kartta durumun türü ayrı etiketlenir: yürürlükteki kural, iptal edilen yasa, çalışma ya da politika.</p>
+<div class="mapbox"><svg viewBox="0 0 1000 420" role="group" aria-label="Şematik dünya haritası">
+<path class="land" d="M60,70L230,40L330,60L300,130L250,190L270,230L220,215L160,150L90,120Z"/>
+<path class="land" d="M270,250L340,260L360,310L320,400L290,390L280,320Z"/>
+<path class="land" d="M470,70L560,50L760,50L930,90L900,170L830,210L780,250L720,200L650,180L600,170L560,150L490,130Z"/>
+<path class="land" d="M480,170L590,170L620,250L580,330L540,350L510,290L470,230Z"/>
+<path class="land" d="M820,300L910,300L920,345L850,355Z"/>
+<g id="pins"></g></svg></div>
+<div class="cbtn" id="cbtn"></div>
+<div class="card" id="cinfo" style="margin-top:16px" aria-live="polite"></div>
+<div class="note">Harita şematiktir. Bilgiler 9 Kasım 2026 itibarıyla derlenmiştir; hukuki durum hızla değişebilir, güncel metin için ilgili ülkenin resmî kaynaklarına bakın.</div>
+</div></section>
+
+<section id="yedi"><div class="wrap">
+<h2>7 günde dijital denge yolculuğu</h2>
+<p>Her gün bir küçük adım. Büyük değişim, küçük alışkanlıklarla başlar.</p>
+<div class="bar"><i id="pbar"></i></div><strong id="ptxt">0 / 7 tamamlandı</strong>
+<div class="grid g2" id="days"></div>
+<div class="fb" id="cong" hidden>Tebrikler! 7 adımı tamamladın. Küçük adımlarla kontrol senin elinde.</div>
+<button class="sm" id="reset">Görevleri sıfırla</button>
+<div class="btns" style="margin-top:34px"><a class="btn" href="#test">Dijital Alışkanlıklarımı Keşfet</a><a class="btn" style="background:transparent;color:var(--tx);border-color:var(--tx)" href="#veli">Veliler İçin Rehber</a></div>
+</div></section>
+
+<section id="test" class="alt"><div class="wrap">
+<h2>Dijital alışkanlıklarımı tanıyorum!</h2>
+<div class="bar" aria-hidden="true"><i id="tbar"></i></div>
+<div id="tbox" aria-live="polite"></div>
+<div class="note">Bu test klinik veya bilimsel bir bağımlılık teşhis aracı değildir; yalnızca kişisel farkındalık etkinliğidir. Cevapların hiçbir yere gönderilmez.</div>
+</div></section>
+
+<section id="veli"><div class="wrap">
+<h2>Çocuğumun dijital dünyasında benim rolüm ne?</h2>
+<p>Çocuğun dijital alışkanlıklarını değiştirmek yalnızca telefonunu sınırlandırmakla mümkün değildir. Aile içindeki iletişim, yetişkinlerin örnek davranışları ve birlikte oluşturulan kurallar da önemlidir.</p>
+<div class="grid g3" id="ptips"></div>
+<div class="quote">Çocuğumuzun elinden telefonu almak yerine, ona telefonun hayatındaki yerini doğru belirlemeyi öğretelim.</div>
+<div class="tabs" role="tablist" id="ptabs"></div>
+<div class="par" id="pbody"></div>
+</div></section>
+
+<section id="senaryo" class="alt"><div class="wrap">
+<h2>Sen olsan ne yapardın?</h2>
+<p>Doğru cevabı ezberlemek yok. Her seçimin olası sonuçlarına bak.</p>
+<div id="scn"></div>
+</div></section>
+
+<section class="close"><div class="wrap"><img class="logo cl" src="data:image/png;base64,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" alt="İdeal Eğitim Koleji logosu">
+<h2>HAYAT EKRANIN DIŞINDA DA DEVAM EDİYOR!</h2>
+<div class="sub">Biraz daha az kaydır. Biraz daha fazla yaşa.</div>
+<p>İDEAL EĞİTİM olarak öğrencilerimizin yalnızca akademik başarılarını değil, sağlıklı, bilinçli ve dengeli bir yaşam sürmelerini de önemsiyoruz.</p>
+<p>Dijital dünya hayatımızın bir parçası. Ancak gerçek arkadaşlıklar, ailemiz, hayallerimiz, hobilerimiz ve keşfedeceğimiz daha nice güzellik de bizi bekliyor. Dijital denge senin elinde!</p>
+<p style="margin-top:34px;font-weight:700">İDEAL EĞİTİM · DİJİTAL DENGE<br>EKRANI SEN YÖNET, ZAMANINI SEN YAŞA!</p>
+</div></section>
+<footer>© İDEAL EĞİTİM. Bu sitede kişisel veri toplanmaz.</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const IC={
+bell:'<path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0"/>',
+moon:'<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>',
+users:'<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8M22 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/>',
+run:'<circle cx="13" cy="4" r="2"/><path d="M4 22l4-6 4 2 3-6M6 12l3-4 5 1 3 3h3"/>',
+focus:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/>',
+book:'<path d="M4 19.5A2.5 2.5 0 016.5 17H20V3H6.5A2.5 2.5 0 004 5.5zM4 19.5V22h16"/>',
+fork:'<path d="M7 2v20M4 2v6a3 3 0 006 0V2M17 22V2c-3 2-4 6-4 9h4"/>',
+phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+heart:'<path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/>',
+ear:'<path d="M6 8a6 6 0 1112 0c0 4-3 5-3 8a3 3 0 01-6 0"/>',
+scale:'<path d="M12 3v18M5 21h14M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0z"/>',
+eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>'};
+const ic=n=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
+
+// hero scale
+$('#sl').oninput=e=>{$('#hint').classList.add('off');const v=+e.target.value,a=(v-50)*.24;
+$('#beam').style.transform=`rotate(${a}deg)`;
+const dy=Math.sin(a*Math.PI/180)*210;
+$('#pl').style.transform=`translateY(${-dy}px) rotate(${-a}deg)`;$('#pr').style.transform=`translateY(${dy}px) rotate(${-a}deg)`;
+$('#so').textContent=v<40?'Ekran ağır basıyor':v>60?'Hayat ağır basıyor':'Denge sende';};
+
+// effects
+$('#eff').innerHTML=[['focus','Dikkat ve öğrenme','Sık bildirimler ve sürekli uygulama değiştirmek odaklanmayı zorlaştırabilir.'],['moon','Uyku düzeni','Özellikle gece ekran kullanımı uyku saatini geciktirebilir ve uyku kalitesini olumsuz etkileyebilir.'],['users','Sosyal ilişkiler','Ekran karşısında geçirilen aşırı zaman yüz yüze iletişime ayrılan zamanı azaltabilir.'],['run','Fiziksel hareket','Uzun süre hareketsiz kalmak aktif yaşamın önüne geçebilir.']].map(([i,t,d])=>`<div class="card">${ic(i)}<h3>${t}</h3><p>${d}</p></div>`).join('');
+
+// tips
+$('#tips').innerHTML=[['bell','Bildirimlerini yönet','Hangi uygulamanın seni ne zaman çağıracağına sen karar ver.'],['focus','Dikkat dağıtıcılardan uzaklaş','Ders çalışırken telefonu başka bir odaya bırak.'],['moon','Uykudan önce ara ver','Yatmadan önce ekranlardan uzak bir zaman aç.'],['fork','Yemekte telefonu bırak','Sofrada sohbet, telefondan daha lezzetli.'],['run','Spor, sanat, kitap, sosyal etkinlik','Ekran dışı zaman için takvimde yer ayır.'],['phone','Amaçla kullan','Açmadan önce kendine sor: Ne için açıyorum?'],['heart','Ekran dışı keyfini keşfet','Seni gerçekten mutlu eden bir etkinlik bul.']].map(([i,t,d])=>`<div class="card tip">${ic(i)}<div><h3>${t}</h3><p>${d}</p></div></div>`).join('');
+
+// parents
+$('#ptips').innerHTML=[['users','Örnek olun','Yemek sırasında ailece telefonları bir kenara bırakın.'],['scale','Birlikte karar verin','Ekran kullanımı kurallarını çocuğunuzla birlikte belirleyin.'],['moon','Uyku alanını koruyun','Yatmadan önce ekran kullanımına ara verin.'],['run','Alternatifler oluşturun','Spor, kitap, sanat ve aile etkinliklerine zaman ayırın.'],['ear','İletişimi açık tutun','Çocuğunuzun dijital dünyada neler yaptığını yargılamadan dinleyin.'],['eye','İçeriği de değerlendirin','Yalnızca süreyi değil, izlenen içeriğin niteliğini de önemseyin.'],['heart','Tutarlı olun','Kurallar hem çocuklar hem yetişkinler için mümkün olduğunca ortak olmalı.']].map(([i,t,d])=>`<div class="card">${ic(i)}<h3>${t}</h3><p>${d}</p></div>`).join('');
+const PT=[['Aile sözleşmesi',()=>`<div class="contract"><h3>Aile Dijital Kullanım Sözleşmesi</h3><label>Çocuğun adı<input type="text" id="c1" placeholder="Ad"></label><label>Veli adı<input type="text" id="c2" placeholder="Ad"></label>${['Yemekte telefonlar kapalı olur.','Yatmadan 1 saat önce ekranlara ara veririz.','Ders çalışırken telefon başka bir odada durur.','Haftada bir ekransız aile etkinliği yaparız.','Bu kurallar herkes için geçerlidir.'].map(x=>`<label class="chk"><input type="checkbox" checked>${x}</label>`).join('')}<button class="btn" onclick="window.print()" style="border:0;margin-top:8px">Yazdır</button><p style="font-size:.85rem;color:var(--mu)">Girdiğin adlar yalnızca bu sayfada kalır, hiçbir yere gönderilmez.</p></div>`],
+['Aile kuralları',()=>['Telefonlar yemek masasına gelmez.','Gece belirlenen saatte cihazlar şarja takılır.','Her kural ailece konuşularak seçilir.','Kuralı yetişkinler de uygular.','Kurallar iki haftada bir birlikte gözden geçirilir.'].map(x=>`<div class="card"><p style="margin:0;color:var(--tx)">${x}</p></div>`).join('')],
+['Ekransız etkinlikler',()=>['Aile yürüyüşü','Masa oyunu akşamı','Birlikte yemek hazırlama','Kitap saati','Puzzle ya da resim','Bisiklet turu'].map(x=>`<div class="card"><h3>${x}</h3></div>`).join('')],
+['Sorulabilecek sorular',()=>['Bugün ekranda en çok neyi sevdin?','Hangi içerik seni rahatsız etti?','Ekran olmasaydı bu saatte ne yapmak isterdin?','Kuralların hangisi sana zor geliyor?','Bana göstermek istediğin bir şey var mı?'].map(x=>`<div class="card"><p style="margin:0;color:var(--tx)">${x}</p></div>`).join('')]];
+function pt(i){$('#ptabs').innerHTML=PT.map((t,j)=>`<button role="tab" aria-selected="${i==j}" onclick="pt(${j})">${t[0]}</button>`).join('');$('#pbody').innerHTML=PT[i][1]();}pt(0);
+
+// world
+const C=[
+{n:'Avustralya',x:872,y:330,t:'Yürürlükte',w:0,d:'10 Aralık 2025’te yürürlüğe giren düzenlemeyle belirlenen sosyal medya platformlarının 16 yaşından küçüklerin hesap sahibi olmasını önlemek için makul tedbirler alması zorunlu hâle gelmiştir.'},
+{n:'Çin',x:790,y:150,t:'Uygulama / politika',w:1,d:'Çocuklara yönelik internet kullanımında yaş gruplarına göre süre, içerik ve erişim düzenlemelerini içeren özel modlar geliştirilmektedir.'},
+{n:'Fransa',x:506,y:115,t:'Yasa iptal edildi, yürürlükte değil',w:1,d:'Parlamento 15 yaş altına sosyal medyayı yasaklayan yasayı 21 Temmuz 2026’da onayladı; ancak Anayasa Konseyi 14 Ağustos 2026’da yasayı ifade ve iletişim özgürlüğüne orantısız müdahale gerekçesiyle iptal etti. Bu nedenle bu yasa şu an uygulanmıyor. Ebeveyn izni ve çevrim içi riskler konusundaki diğer düzenlemeler ayrıca incelenmelidir.'},
+{n:'İsveç',x:545,y:70,t:'Okul politikası',w:1,d:'Okullarda ders saatlerinde cep telefonu kullanımına yönelik kısıtlamalar uygulanmaktadır.'},
+{n:'Norveç ve Danimarka',x:520,y:92,t:'Çalışma / hazırlık aşaması',w:1,d:'Çocukların sosyal medya kullanımında yaş sınırları ve platform sorumluluklarına ilişkin düzenleme çalışmaları bulunmaktadır. Bunlar kesinleşmiş uygulama olarak okunmamalıdır.'},
+{n:'Türkiye',x:597,y:135,t:'Eğitim ve farkındalık çalışmaları',w:1,d:'Çocukların dijital güvenliği, bilinçli internet kullanımı ve dijital okuryazarlık konularında çalışmalar yürütülmektedir. Güncel ayrıntılar için resmî kurum açıklamalarına bakın.'}];
+$('#pins').innerHTML=C.map((c,i)=>`<g class="pin" id="p${i}" onclick="ct(${i})"><circle cx="${c.x}" cy="${c.y}" r="8"/></g>`).join('');
+$('#cbtn').innerHTML=C.map((c,i)=>`<button id="b${i}" onclick="ct(${i})">${c.n}</button>`).join('');
+function ct(i){C.forEach((_,j)=>{$('#p'+j).classList.toggle('on',i==j);$('#b'+j).classList.toggle('on',i==j)});const c=C[i];
+$('#cinfo').innerHTML=`<h3>${c.n}</h3><span class="badge ${c.w?'warn':''}">${c.t}</span><p>${c.d}</p>`;}ct(0);
+
+// test
+const Q=[['Telefonunu genellikle ne sıklıkla kontrol ediyorsun?','Yalnızca gerektiğinde','Gün içinde sık sık','Neredeyse her fırsatta'],['Bir işe başladığında bildirimler dikkatini dağıtıyor mu?','Nadiren','Bazen','Çok sık'],['Planladığından daha uzun süre ekran başında kaldığın oluyor mu?','Neredeyse hiç','Bazen','Sık sık'],['Yatmadan önce telefon veya tablet kullanıyor musun?','Hayır veya çok nadir','Bazen','Çoğu gece'],['Ekran kullanımı yüzünden aile, arkadaş veya hobilerine ayırdığın zaman azalıyor mu?','Hayır','Bazen','Evet, sık sık'],['Telefonunu bir kenara bıraktığında başka bir etkinliğe rahatlıkla geçebiliyor musun?','Evet','Bazen zorlanıyorum','Genellikle zorlanıyorum']];
+const R=[['Dijital dengeyi koruyorsun','Dijital alışkanlıkların konusunda iyi bir farkındalık sergiliyorsun. Bu dengeyi korumaya devam et!','#7C7E84',['Bu alışkanlıklarını arkadaşlarınla paylaş.','Ekran dışı hobilerini sürdür.','Ayda bir kendini yeniden değerlendir.']],['Alışkanlıklarını gözden geçir','Bazı alışkanlıkların üzerinde düşünmek sana iyi gelebilir. Küçük değişikliklerle daha dengeli bir kullanım oluşturabilirsin.','#B3262C',['En çok dikkatini dağıtan bildirimleri kapat.','Yatmadan önce telefonu yataktan uzağa koy.','7 günlük yolculuğa başla.']],['Dijital dengene birlikte bakalım','Ekran kullanımını ve günlük rutinlerini yeniden değerlendirmek faydalı olabilir. Kendine ekran dışındaki etkinlikler için daha fazla zaman ayırmayı deneyebilirsin.','#D32F36',['Güvendiğin bir yetişkinle (aile, öğretmen, rehber öğretmen) konuş.','Her gün bir ekransız etkinlik planla.','7 günlük yolculuğu aileninle birlikte yap.']]];
+let qi=0,sc=0;
+function tq(){const b=$('#tbox');$('#tbar').style.width=(qi/6*100)+'%';
+if(qi<6){const q=Q[qi];b.innerHTML=`<p><strong>Soru ${qi+1} / 6</strong></p><h3>${q[0]}</h3><div class="opts">${[1,2,3].map((k,j)=>`<button class="opt" onclick="ta(${j})">${q[k]}</button>`).join('')}</div>`;return}
+const p=sc<=4?0:sc<=9?1:2,r=R[p];
+b.innerHTML=`<div class="gauge" style="background:conic-gradient(${r[2]} ${sc/12*360}deg,var(--ln) 0)" role="img" aria-label="Puan ${sc} / 12"><span>${sc}/12</span></div><h3>${r[0]}</h3><p>${r[1]}</p><div class="grid g3">${r[3].map(x=>`<div class="card"><p style="margin:0;color:var(--tx)">${x}</p></div>`).join('')}</div><button class="sm" onclick="qi=0;sc=0;tq()">Testi yeniden başlat</button>`;}
+function ta(j){sc+=j;qi++;tq()}tq();
+
+// 7 days
+const D=[['Ekran kullanımını tanı','Günlük ekran süreni ve en çok kullandığın uygulamaları incele.'],['Bildirim molası','Gereksiz bildirimleri kapat.'],['Ekransız aile zamanı','Ailece bir öğünü telefonlardan uzak geçirin.'],['Harekete geç','Açık havada bir etkinliğe zaman ayır.'],['Kitap ve ekran dengesi','Ekran dışında sevdiğin bir etkinliği gerçekleştir.'],['Uykuya alan aç','Uyumadan önce ekranlardan uzak bir zaman oluştur.'],['Kendini değerlendir','İlk günkü alışkanlıklarınla bugünkü farkındalığını karşılaştır.']];
+$('#days').innerHTML=D.map((d,i)=>`<label class="card step" id="s${i}"><input type="checkbox" onchange="td()"><div><h3>${i+1}. gün: ${d[0]}</h3><p>${d[1]}</p></div></label>`).join('');
+function td(){let n=0;D.forEach((_,i)=>{const c=$('#s'+i);const k=c.querySelector('input').checked;c.classList.toggle('done',k);n+=k});
+$('#pbar').style.width=(n/7*100)+'%';$('#ptxt').textContent=n+' / 7 tamamlandı';$('#cong').hidden=n<7}
+$('#reset').onclick=()=>{document.querySelectorAll('#days input').forEach(x=>x.checked=false);td()};
+
+// scenarios
+const S=[['Yarın önemli bir sınavın var. Ders çalışmaya başladın ancak telefonuna sürekli bildirim geliyor. Ne yaparsın?',['Her bildirime bakarım.','Telefonu sessize alıp çalışmaya devam ederim.','Ders çalışırken telefonumu başka bir yerde tutarım.'],['Her bakış dikkatini böler; konuya yeniden girmek zaman alır ve çalışma uzar.','Bildirim sesi susar ama telefon yakındaysa bakma isteği sürebilir. Birçok kişi için işe yarar, bazıları için yetmez.','Telefon görüş alanında değilse bakma isteği azalır. Acil durumlar için aileni önceden bilgilendirebilirsin.']],
+['Arkadaşlarınla buluştuğunda herkes telefonuyla ilgileniyor. Ne yaparsın?',['Ben de telefonuma bakarım.','Herkesle kısa bir “telefonlar masada ters dursun” önerisi yaparım.','Sessizce kalkıp giderim.'],['Uyum sağlarsın ama buluşmanın amacı olan sohbet kaybolur.','Bu öneri çoğu zaman kabul görür; birlikte vakit geçirme isteğini nazikçe gösterir.','Ne istediğini anlatmadan ayrılmak yanlış anlaşılmaya yol açabilir; konuşmak daha açık bir yoldur.']],
+['Gece uyumadan önce bir video izlemeye başladın ve devamını merak ediyorsun. Nasıl davranırsın?',['Bitirene kadar izlerim.','Alarm kurarım, süre dolunca kapatırım.','Videoyu kaydeder, yarına bırakırım.'],['Otomatik oynatma seni sürükleyebilir; uyku saati kayar, ertesi gün yorgun kalabilirsin.','Net bir sınır koymak işe yarar; yine de sınırı sen uygulamalısın.','Merak yarına kalır ama uyku korunur. Otomatik oynatmayı kapatmak da yardımcı olur.']],
+['Sosyal medyada gördüğün bir içerik seni rahatsız etti. Ne yaparsın?',['Görmezden gelip kaydırırım.','İçeriği bildirir, gerekirse engellerim ve güvendiğim biriyle konuşurum.','Yorum yazıp tartışırım.'],['Kaydırmak kısa süreli çözüm olabilir ama rahatsızlık devam edebilir ve içerik başkalarına ulaşmaya devam eder.','Platform araçlarını kullanmak ve bir yetişkinle konuşmak hem seni hem başkalarını korur.','Tartışma çoğu zaman gerilimi artırır ve içeriğin daha çok görünmesine yol açabilir.']],
+['Ders çalışırken sürekli sosyal medya uygulamalarına yöneliyorsun. Nasıl bir çözüm üretirsin?',['Uygulamaları silerim.','25 dakika çalış, 5 dakika mola düzeni kurarım.','Hiçbir şey değiştirmem.'],['Güçlü bir adım ama bazıları için sürdürülemez. Zorlandığında geçici kısıtlama seçeneklerini de düşün.','Mola önceden planlandığı için “sadece bir bakayım” isteği azalır; molada gerçekten dinlenirsin.','Alışkanlık değişmezse sonuç da değişmez. Küçük bir deneme bile fark yaratabilir.']]];
+$('#scn').innerHTML=S.map((s,i)=>`<div class="card" style="margin-top:16px"><h3>${s[0]}</h3><div class="opts">${s[1].map((o,j)=>`<button class="opt" onclick="sa(${i},${j},this)">${'ABC'[j]}) ${o}</button>`).join('')}</div><div class="fb" id="f${i}" hidden></div></div>`).join('');
+function sa(i,j,el){el.parentNode.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');const f=$('#f'+i);f.hidden=false;f.textContent=S[i][2][j]}
+
+const mb=$('#mb'),mp=$('#mp');
+function mt(o){mp.hidden=!o;mb.setAttribute('aria-expanded',o)}
+mb.onclick=e=>{e.stopPropagation();mt(mp.hidden)};
+mp.onclick=e=>{if(e.target.tagName=='A')mt(false)};
+document.addEventListener('click',e=>{if(!mp.hidden&&!mp.contains(e.target))mt(false)});
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!mp.hidden){mt(false);mb.focus()}});
+const links=[...document.querySelectorAll('#mp a')],secs=links.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);
+function spy(){let cur=null;let best=-1e9;secs.forEach(x=>{const t=x.getBoundingClientRect().top;if(t<=140&&t>best){best=t;cur=x.id}});
+links.forEach(a=>{const on=a.hash=='#'+cur;a.classList.toggle('on',on);on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current')})}
+addEventListener('scroll',spy,{passive:true});spy();
+</script>
+</body>
+</html>
