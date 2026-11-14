@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akif Karabay – CV Read Aloud (British English)</title>
+<style>
+  :root{--navy:#1f3864;--grey:#595959;--line:#d9dee8;--hl:#fff3b0;--bg:#f2f4f8;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Calibri,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#1b1b1b;}
+  .bar{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .bar button{border:0;border-radius:8px;padding:9px 16px;font-size:15px;font-weight:600;cursor:pointer;background:#fff;color:var(--navy)}
+  .bar button.primary{background:#ffd54a}
+  .bar button:hover{filter:brightness(.94)}
+  .bar label{font-size:13px;display:flex;align-items:center;gap:6px}
+  .bar select{max-width:260px;padding:7px;border-radius:6px;border:0;font-size:13px}
+  .bar input[type=range]{width:110px}
+  #status{margin-left:auto;font-size:13px;opacity:.9}
+  #warn{display:none;background:#fff0cc;color:#6b4a00;padding:10px 16px;font-size:14px;border-bottom:1px solid #e8cf8a}
+  .page{max-width:860px;margin:22px auto;background:#fff;padding:38px 46px;box-shadow:0 2px 14px rgba(0,0,0,.12);border-radius:4px}
+  .u{padding:3px 6px;margin:0 -6px;border-radius:5px;cursor:pointer;transition:background .15s}
+  .u:hover{background:#eef2fb}
+  .u.on{background:var(--hl)}
+  .name{text-align:center;font-size:32px;font-weight:700;color:var(--navy);letter-spacing:.5px}
+  .sub{text-align:center;font-weight:700;color:var(--grey);font-size:16px;margin:2px 0}
+  .contact{text-align:center;font-size:14px;margin-bottom:6px;cursor:default}
+  .contact:hover{background:none}
+  h2{font-size:15px;color:var(--navy);text-transform:uppercase;border-bottom:2px solid var(--navy);margin:20px 0 8px;padding-bottom:3px;letter-spacing:.4px}
+  h2.u{margin-left:-6px;margin-right:-6px;padding-left:6px}
+  .role{margin-top:10px}
+  .role .l1{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .role b{font-size:15.5px}.role .loc{color:var(--grey);font-size:14px}
+  .role i{color:var(--grey);font-size:14px}
+  .role .t{color:var(--navy);font-weight:700;font-size:14.5px}
+  .bl{display:list-item;list-style:disc;margin-left:20px;font-size:14.5px;padding-left:2px}
+  .bl.u{margin-left:20px}
+  p.u{margin:4px 0;font-size:14.5px;text-align:justify}
+  .hint{max-width:860px;margin:14px auto 0;padding:0 8px;font-size:13px;color:var(--grey);text-align:center}
+  @media(max-width:640px){.page{padding:22px 18px;margin:12px 6px}.name{font-size:26px}#status{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <button class="primary" id="play">▶ Read CV</button>
+  <button id="pause">⏸ Pause</button>
+  <button id="stop">⏹ Stop</button>
+  <button id="prev" title="Previous">⏮</button>
+  <button id="next" title="Next">⏭</button>
+  <label>Voice <select id="voice"></select></label>
+  <label>Speed <input type="range" id="rate" min="0.6" max="1.3" step="0.05" value="0.9"><span id="rv">0.90×</span></label>
+  <span id="status">Ready</span>
+</div>
+<div id="warn">No British English (en-GB) voice was found on this device. Install one in your system's speech settings (e.g. "English (United Kingdom)" on Windows, "Daniel" on macOS/iOS). Meanwhile another English voice is used.</div>
+<div class="hint">Click any line to start reading from there. Press Space to pause / resume.</div>
+<div class="page" id="cv"></div>
+
+<script>
+const E = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const blocks = [];
+const N=(x,s)=>blocks.push({k:'name',x,s});
+const H=(x)=>blocks.push({k:'h',x,s:x});
+const R=(org,loc,dates,title)=>blocks.push({k:'role',org,loc,dates,title});
+const B=(x)=>blocks.push({k:'b',x,s:x});
+const L=(label,x)=>blocks.push({k:'lb',label,x,s:label+' '+x});
+const P=(x)=>blocks.push({k:'p',x,s:x});
+
+blocks.push({k:'name',x:'AKIF KARABAY',s:'Akif Karabay'});
+blocks.push({k:'sub',x:'English Language Instructor  |  Language Testing & Assessment Specialist',s:'English Language Instructor and Language Testing and Assessment Specialist'});
+blocks.push({k:'contact',x:'akifkarabayy@gmail.com   |   +90 551 145 05 64   |   Turkey',silent:true});
+
+H('Professional Summary');
+P('CELTA-qualified English language instructor and assessment specialist with 14 years of experience across university preparatory programmes, secondary schools and adult language education. Served four years on a university Testing & Evaluation Committee, designing and analysing CEFR-aligned proficiency, placement and achievement exams and developing speaking and writing rubrics. Completed MA ELT coursework in curriculum development, language testing and second language acquisition. Experienced in leading English departments, mentoring teaching staff and running examiner standardisation sessions.');
+
+H('Core Competencies');
+L('Language Testing & Assessment:','design, vetting and statistical analysis of proficiency, placement, mid-term and achievement exams aligned with CEFR.');
+L('Rubrics & Standardisation:','analytic and criteria-referenced rubrics for Speaking and Writing; norming and calibration sessions to ensure inter-rater reliability.');
+L('Curriculum & Syllabus Design:','course structures from A1 to exam-preparation levels, including intensive programmes for Turkish national university entrance and language exams (YKS-DİL, YDS).');
+L('Academic Leadership:','Head of Department and Institute Director; teacher mentoring, lesson-delivery standards and formative evaluation.');
+L('Technology:','Moodle, Audacity, OptiJet, Dijider, Microsoft Office; interactive online learning tools and video content for learners.');
+
+H('Professional Experience');
+R('İdeal Eğitim Kurumları','Kayseri, Turkey','Aug 2020 – Present','Head of English Department / Coordinator');
+B('Lead the English department and design exam-preparation curricula, including intensive YKS-DİL and YDS programmes and marathon revision camps.');
+B('Run large-scale diagnostic “Trial Clubs” (practice exam series), tracking results to set personalised student targets.');
+B('Supervise and mentor teaching staff, standardising lesson delivery and formative evaluation practices.');
+R('Trend English','Kayseri, Turkey','Jan 2019 – Aug 2020','Director');
+B('Managed the institute’s academic strategy and led curriculum modernisation projects for adult learners.');
+B('Designed tailored English modules for working professionals, aligned with international standards.');
+R('Kavram Koleji','Kayseri, Turkey','Jan 2017 – Jan 2018','Head of English Department');
+B('Led the implementation of student-centred English programmes at secondary level.');
+B('Standardised testing criteria across grade levels and introduced continuous assessment of productive skills.');
+R('American Life Language Institute','Kayseri, Turkey','Nov 2016 – Jan 2017','English Language Instructor');
+B('Taught communicative English to adult learners across multiple CEFR levels.');
+R('Melikşah University, School of Foreign Languages','Kayseri, Turkey','Aug 2012 – Jul 2016','English Language Instructor & Testing and Evaluation Committee Member');
+B('Served four years on the Testing & Evaluation Committee, improving the reliability of institution-wide exams.');
+B('Designed, vetted and analysed high-stakes proficiency, placement and mid-term assessments for the preparatory programme.');
+B('Created criteria-referenced rubrics for Speaking and Writing to reduce grading bias.');
+B('Organised and led norming and calibration workshops to standardise scoring among faculty.');
+
+H('Additional Professional Activity');
+R('Aktif İngilizce','Online English education brand','Oct 2025 – Present','Founder & Content Creator');
+B('Produce English-learning content for YouTube, TikTok and Instagram (@aktif.ingilizce).');
+B('Design interactive online practice tools for learners, including reading comprehension activities and TOEFL-style practice exams.');
+
+H('Education & Qualifications');
+R('Çağ University','Mersin, Turkey','Completed 2020','MA in English Language Teaching (coursework completed)');
+B('Postgraduate study in Curriculum Development, Language Testing and Assessment, and Second Language Acquisition.');
+R('CELTA','Cambridge English Language Assessment, Istanbul, Turkey','2014','Certificate in English Language Teaching to Adults');
+R('Erciyes University','Kayseri, Turkey','2008 – 2012','BA in English Language and Literature');
+B('Completed the Certificate in English Language Teaching (Pedagogical Formation) alongside the degree.');
+
+H('Professional Development');
+R('Testing, Evaluation and Assessment Masterclass','Erciyes University & SELT Academy, Kayseri, Turkey','2014 – 2016','');
+
+H('Honours');
+B('Certificate of Appreciation for outstanding contribution to the Testing & Evaluation Committee, School of Foreign Languages (June 2015).');
+
+H('Languages');
+blocks.push({k:'p',x:'Turkish: Native     English: Advanced / professional proficiency',s:'Turkish: native. English: advanced, professional proficiency.'});
+H('References');
+P('Available upon request.');
+
+/* ---------- pronunciation helpers ---------- */
+const months={Jan:'January',Feb:'February',Mar:'March',Apr:'April',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November',Dec:'December'};
+function say(t){
+  t=t.replace(/\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g,m=>months[m]);
+  t=t.replace(/(\d{4}) – Present/g,'$1 to present').replace(/ – /g,' to ').replace(/(\d{4})–(\d{4})/g,'$1 to $2');
+  const map=[[/YKS-DİL/g,'Y K S D I L'],[/\bYDS\b/g,'Y D S'],[/\bCEFR\b/g,'C E F R'],[/\bELT\b/g,'E L T'],[/\bMA\b/g,'M A'],[/\bBA\b/g,'B A'],
+    [/\bA1\b/g,'A one'],[/@aktif\.ingilizce/g,'at aktif ingilizce'],[/İngilizce/g,'Ingilizje'],[/İdeal Eğitim Kurumları/g,'Ideal Eetim Kurumlari'],
+    [/Melikşah/g,'Melik-shah'],[/Çağ/g,'Chaa'],[/Erciyes/g,'Er-ji-yes'],[/İ/g,'I'],[/ğ/g,'g'],[/ı/g,'i'],[/ş/g,'sh'],
+    [/ \/ /g,' and '],[/&/g,' and '],[/\s*\|\s*/g,', '],[/\(/g,', '],[/\)/g,','],[/;/g,','],[/TOEFL/g,'TOEFL']];
+  map.forEach(([a,b])=>t=t.replace(a,b));
+  return t.replace(/\s+/g,' ').trim();
+}
+
+/* ---------- build page ---------- */
+const cv=document.getElementById('cv'); const units=[];
+blocks.forEach(b=>{
+  let el;
+  if(b.k==='name'){el=document.createElement('div');el.className='name u';el.textContent=b.x;}
+  else if(b.k==='sub'){el=document.createElement('div');el.className='sub u';el.textContent=b.x;}
+  else if(b.k==='contact'){el=document.createElement('div');el.className='contact';el.textContent=b.x;cv.appendChild(el);return;}
+  else if(b.k==='h'){el=document.createElement('h2');el.className='u';el.textContent=b.x;}
+  else if(b.k==='p'){el=document.createElement('p');el.className='u';el.textContent=b.x;}
+  else if(b.k==='b'){el=document.createElement('div');el.className='bl u';el.textContent=b.x;}
+  else if(b.k==='lb'){el=document.createElement('div');el.className='bl u';el.innerHTML='<b>'+E(b.label)+'</b> '+E(b.x);}
+  else if(b.k==='role'){el=document.createElement('div');el.className='role u';
+    el.innerHTML='<div class="l1"><span><b>'+E(b.org)+'</b> <span class="loc">| '+E(b.loc)+'</span></span><i>'+E(b.dates)+'</i></div>'+(b.title?'<div class="t">'+E(b.title)+'</div>':'');
+    b.s=b.org+'. '+(b.title?b.title+'. ':'')+b.loc+'. '+b.dates+'.';}
+  el.dataset.i=units.length;
+  cv.appendChild(el);
+  units.push({el,text:say(b.s||b.x)});
+});
+
+/* ---------- speech ---------- */
+const synth=window.speechSynthesis||{getVoices:()=>[],cancel(){},speak(){},resume(){},pause(){}};
+const WARN_TXT=document.getElementById('warn').textContent;
+const $=id=>document.getElementById(id);
+let voices=[],cur=-1,token=0,playing=false,paused=false;
+
+function norm(l){return (l||'').replace('_','-')}
+function loadVoices(){
+  const all=synth.getVoices().filter(v=>/^en/i.test(v.lang));
+  const gb=all.filter(v=>norm(v.lang).toLowerCase()==='en-gb');
+  const pref=['Daniel','Google UK English Male','Serena','Kate','Google UK English Female','George','Hazel','Susan','Arthur','Martha','Oliver'];
+  const rank=v=>{const i=pref.findIndex(p=>v.name.includes(p));return i<0?99:i};
+  gb.sort((a,b)=>rank(a)-rank(b));
+  const rest=all.filter(v=>!gb.includes(v));
+  voices=[...gb,...rest];
+  const sel=$('voice'),keep=sel.value;
+  sel.innerHTML='';
+  voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name+' ('+norm(v.lang)+')'+(gb.includes(v)?' 🇬🇧':'');sel.appendChild(o)});
+  if(keep&&sel.querySelector('option[value="'+keep+'"]'))sel.value=keep;
+  if('speechSynthesis' in window){$('warn').textContent=WARN_TXT;$('warn').style.display=gb.length?'none':'block';}else showUnsupported();
+}
+loadVoices(); if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=loadVoices;
+
+function mark(i){units.forEach(u=>u.el.classList.remove('on'));if(i>=0&&units[i]){units[i].el.classList.add('on');units[i].el.scrollIntoView({block:'center',behavior:'smooth'});}}
+function setStatus(t){$('status').textContent=t}
+
+let watchdog=null;
+function speakFrom(i){
+  if(!('speechSynthesis' in window)){showUnsupported();return}
+  token++;const my=token;
+  clearTimeout(watchdog);
+  if(synth.speaking||synth.pending||synth.paused)synth.cancel();
+  if(i<0||i>=units.length){finish();return}
+  cur=i;playing=true;paused=false;mark(i);$('pause').textContent='⏸ Pause';
+  setStatus('Reading '+(i+1)+' / '+units.length);
+  const u=new SpeechSynthesisUtterance(units[i].text);
+  if(!voices.length)loadVoices();
+  const v=voices[+$('voice').value];
+  if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+  u.rate=+$('rate').value;u.pitch=1;u.volume=1;
+  let started=false;
+  u.onstart=()=>{started=true;clearTimeout(watchdog)};
+  u.onend=()=>{if(my!==token)return;speakFrom(i+1)};
+  u.onerror=e=>{if(my!==token)return;
+    if(e.error==='interrupted'||e.error==='canceled')return;
+    if(e.error==='not-allowed'){setStatus('Browser blocked audio – click ▶ Read CV again');playing=false;return}
+    setStatus('Voice error: '+e.error);speakFrom(i+1)};
+  synth.speak(u);
+  if(synth.paused)synth.resume();
+  watchdog=setTimeout(()=>{if(my===token&&!started&&!synth.speaking){
+    setStatus('No sound started – open this file directly in Chrome, Edge or Safari (not a preview window)');}},2500);
+}
+function showUnsupported(){
+  const w=$('warn');w.style.display='block';
+  w.textContent='This viewer does not support speech. Open the file directly in Chrome, Edge or Safari.';
+}
+function finish(){token++;synth.cancel();playing=false;paused=false;cur=-1;mark(-1);setStatus('Finished');$('pause').textContent='⏸ Pause'}
+function stop(){token++;synth.cancel();playing=false;paused=false;cur=-1;mark(-1);setStatus('Stopped');$('pause').textContent='⏸ Pause'}
+function togglePause(){
+  if(!playing)return;
+  if(paused){synth.resume();paused=false;$('pause').textContent='⏸ Pause';setStatus('Reading '+(cur+1)+' / '+units.length)}
+  else{synth.pause();paused=true;$('pause').textContent='▶ Resume';setStatus('Paused')}
+}
+$('play').onclick=()=>speakFrom(0);
+$('stop').onclick=stop;
+$('pause').onclick=togglePause;
+$('next').onclick=()=>speakFrom(Math.min(units.length-1,(cur<0?0:cur+1)));
+$('prev').onclick=()=>speakFrom(Math.max(0,(cur<0?0:cur-1)));
+$('rate').oninput=e=>{$('rv').textContent=(+e.target.value).toFixed(2)+'×';if(playing&&!paused)speakFrom(cur)};
+$('voice').onchange=()=>{if(playing&&!paused)speakFrom(cur)};
+cv.addEventListener('click',e=>{const el=e.target.closest('.u');if(el)speakFrom(+el.dataset.i)});
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&!/SELECT|INPUT|BUTTON/.test(document.activeElement.tagName)){e.preventDefault();playing?togglePause():speakFrom(0)}
+});
+window.addEventListener('beforeunload',()=>synth.cancel());
+</script>
+</body>
+</html>
